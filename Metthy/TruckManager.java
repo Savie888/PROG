@@ -162,7 +162,7 @@ public class TruckManager {
                     break;
             }
 
-            if (itemType == null){
+            if(itemType == null){
                 System.out.println("Invalid selection. Please try again.");
                 //Don't increment binIndex to allow retry
             }
@@ -188,57 +188,165 @@ public class TruckManager {
         System.out.println("\nInitial Loadout for " + truck.getName() + " complete!\n");
     }
 
-    public void displayDashboard(){
 
-        int i, j;
+    public int simulateTruck(){
 
-        if(trucks.isEmpty())
-            System.out.println("\nNo trucks available.");
+        int i, index = 0;
+        String repeat = "";
 
-        else{
-            System.out.println("\n===== Coffee Truck Dashboard =====");
+        do{
+            if(trucks.isEmpty()){
+                System.out.println("No trucks available");
+                index = -1;
+            }
 
-            for(i = 0; i < trucks.size(); i++){
+            else{
+                System.out.println("--- List of Trucks ---");
 
-                CoffeeTruck truck = trucks.get(i);
-                System.out.println("\nTruck: " + truck.getName());
+                for(i = 0; i < trucks.size(); i++){
 
-                ArrayList<StorageBin> bins = truck.getBins();
+                    CoffeeTruck truck = trucks.get(i);
+                    System.out.printf("Truck %d: Name - %s  Location - %s\n", i + 1, truck.getName(), truck.getLocation());
+                }
 
-                for(j = 0; j < bins.size(); j++){
+                System.out.println("Select truck number to simulate: ");
+                index = scanner.nextInt();
 
-                    StorageBin bin = bins.get(j);
-                    String item = bin.getItemType();
-
-                    if(item == null)
-                        item = "Empty";
-
-                    int quantity = bin.getQuantity();
-                    int capacity = bin.getCapacityForItem(item);
-
-                    System.out.printf("Bin #%d | Item: %-12s | Qty: %3d / %3d%n",
-                            bin.getBinNumber() + 1, item, quantity, capacity);
+                if(index < 1 || index > trucks.size()){
+                    System.out.println("Invalid truck number selected. Try Again? (yes/no): ");
+                    repeat = scanner.nextLine();
                 }
             }
+        }while(repeat.equalsIgnoreCase("yes"));
+
+        return index;
+    }
+
+    public double getEspressoGrams(String size){
+
+        double espressoGrams = 0;
+
+        switch(size){
+
+            case "Small":
+                espressoGrams = 10;
+                break;
+            case "Medium":
+                espressoGrams = 15;
+                break;
+            case "Large":
+                espressoGrams = 20;
+                break;
+            default:
+                System.out.println("Invalid Input. Cancelling.\n");
+                break;
+        }
+
+        return espressoGrams;
+    }
+
+    public void prepareDrink(CoffeeTruck truck){
+
+        String coffeeType, coffeeSize;
+        double espressoGrams;
+
+        System.out.println("\n--- Prepare Coffee Drink ---");
+        coffeeType = getDrinkType();
+        coffeeSize = getDrinkSize();
+
+        if(coffeeType == null || coffeeSize == null){
+            System.out.println("Invalid input! Drink preparation cancelled");
+        }
+
+        else{
+            // Example: You’d calculate required ingredients here
+            System.out.printf("Preparing %s (%s)...\n", coffeeType, coffeeSize);
+
+            // Placeholder: Deduct ingredients, compute cost, update sales
+            System.out.println("Drink prepared successfully!\n");
         }
     }
 
-    public void simulateTruck(){
+    private String getDrinkType(){
 
-        int i, index, option;
-
-        System.out.println("--- List of Trucks ---");
-        for(i = 0; i < trucks.size(); i++){
-
-            CoffeeTruck truck = trucks.get(i);
-            System.out.printf("Truck %d: Name - %s  Location - %s", i + 1, truck.getName(), truck.getLocation());
-        }
-
-        System.out.println("Select truck number to simulate: ");
-        index = scanner.nextInt();
+        int option;
+        String coffeeType = "", repeat = "";
 
         do{
+            System.out.println("Select drink type:");
+            System.out.println("1 - Café Americano");
+            System.out.println("2 - Latte");
+            System.out.println("3 - Cappuccino");
+            System.out.print("Enter choice: ");
+            option = scanner.nextInt();
+            scanner.nextLine();  //flush
 
+            switch(option){
+
+                case 1:
+                    coffeeType = "Café Americano";
+                    break;
+                case 2:
+                    coffeeType = "Latte";
+                    break;
+                case 3:
+                    coffeeType = "Cappuccino";
+                    break;
+                default:
+                    coffeeType = null;
+                    System.out.println("Invalid Choice. Try again? (yes/no): ");
+                    repeat = scanner.nextLine();
+                    break;
+            }
+        } while(repeat.equalsIgnoreCase("yes"));
+
+        return coffeeType;
+    }
+
+    private String getDrinkSize(){
+
+        int option;
+        String size = "", repeat = "";
+
+        do{
+            System.out.println("Select size:");
+            System.out.println("1 - Small");
+            System.out.println("2 - Medium");
+            System.out.println("3 - Large");
+            System.out.print("Enter choice: ");
+            option = scanner.nextInt();
+            scanner.nextLine();  //flush
+
+            switch(option){
+
+                case 1:
+                    size = "Small";
+                    break;
+                case 2:
+                    size = "Medium";
+                    break;
+                case 3:
+                    size = "Large";
+                    break;
+                default:
+                    size = null;
+                    System.out.println("Invalid Choice. Try again? (yes/no): ");
+                    repeat = scanner.nextLine();
+                    break;
+            }
+
+        } while(repeat.equalsIgnoreCase("yes"));
+
+        return size;
+    }
+
+    public void simulateMenu(){
+
+        int index, option;
+
+        index = simulateTruck();
+
+        do{
             System.out.println("=== Simulation Menu ===");
             System.out.println("1 - Prepare Coffee Drinks");
             System.out.println("2 - View Truck Information");
@@ -250,13 +358,22 @@ public class TruckManager {
             switch(option){
 
                 case 1:
+                    prepareDrink(trucks.get(index));
+                    break;
                 case 2:
+                    // viewTruckInformation(selectedTruck);
+                    break;
                 case 3:
+                    // performMaintenance(selectedTruck);
+                    break;
                 case 4:
+                    System.out.println("Returning to main menu...");
+                    break;
                 default:
+                    System.out.println("Invalid option.");
+                    break;
             }
-        }while(option != 4);
-
+        } while(option != 4);
     }
 }
 /*
@@ -320,3 +437,4 @@ public class TruckManager {
     }
 }
 */
+
