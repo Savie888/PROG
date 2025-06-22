@@ -5,7 +5,7 @@ public class StorageBin {
     private String itemType;
     private int binNumber;
     private int itemCapacity;
-    private int itemQuantity;
+    private double itemQuantity;
 
     public StorageBin(int binNumber){
 
@@ -33,7 +33,7 @@ public class StorageBin {
         this.itemQuantity = 0;
     }
 
-    public boolean addQuantity(int amount){
+    public boolean addQuantity(double amount){
 
         boolean flag = false;
 
@@ -45,7 +45,7 @@ public class StorageBin {
         return flag;
     }
 
-    public boolean useQuantity(int amount){
+    public boolean useQuantity(double amount){
 
         boolean flag = false;
         if(itemQuantity >= amount){
@@ -61,9 +61,19 @@ public class StorageBin {
         return itemType;
     }
 
-    public int getQuantity(){
+    public void setItemType(String itemType){
+
+        this.itemType = itemType;
+    }
+
+    public double getItemQuantity(){
 
         return itemQuantity;
+    }
+
+    public void setItemQuantity(double itemQuantity){
+
+        this.itemQuantity = itemQuantity;
     }
 
     public int getCapacity(){
@@ -71,6 +81,10 @@ public class StorageBin {
         return itemCapacity;
     }
 
+    public void setItemCapacity(int capacity){
+
+        this.itemCapacity = capacity;
+    }
     public boolean isEmpty(){
 
         return itemQuantity == 0;

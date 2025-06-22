@@ -46,7 +46,8 @@ public class CoffeeTruck {
 
     public void displayBins(){
 
-        int i, quantity, capacity, binNumber;
+        int i, capacity, binNumber;
+        double quantity;
         String item;
 
         System.out.println("--- Storage Bins ---");
@@ -55,7 +56,7 @@ public class CoffeeTruck {
 
             StorageBin bin = bins.get(i);
             item = bin.getItemType();
-            quantity = bin.getQuantity();
+            quantity = bin.getItemQuantity();
             capacity = bin.getCapacity();
             binNumber = i + 1;
 
@@ -65,6 +66,17 @@ public class CoffeeTruck {
             else
                 System.out.println("Bin #" + binNumber + ": " + item + " - " + quantity + "/" + capacity);
         }
+    }
+
+    //needs simplifying
+    public boolean getFromBin(String itemName, double amount){
+
+        for(StorageBin bin : bins){
+            if (bin != null && bin.getItemType().equalsIgnoreCase(itemName)) {
+                return bin.useQuantity(amount);
+            }
+        }
+        return false;
     }
 
     public String getName(){
@@ -78,10 +90,24 @@ public class CoffeeTruck {
         return bins;
     }
 
-    //Return bin based on index
-    public StorageBin getBin(int index){
+    public StorageBin findBin(String itemName){
 
-        return bins.get(index);
+        int i;
+        StorageBin result = null;
+
+        bins = getBins();
+        String item;
+
+        for(i = 0; i < bins.size(); i++){
+
+            StorageBin bin = bins.get(i);
+            item = bin.getItemType();
+
+            if(item != null && item.equalsIgnoreCase(itemName))
+                result = bin;
+        }
+
+        return result;
     }
 
     public String getLocation(){

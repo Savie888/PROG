@@ -30,11 +30,9 @@ public class Menu {
 
                     break;
                 case 2:
-                    System.out.println("Simulating Coffee Trucks...");
-                    // TODO: Add simulation logic
+                    manager.simulateMenu();
                     break;
                 case 3:
-                    System.out.println("Displaying Dashboard...");
                     manager.displayDashboard();
                     break;
                 case 4:
