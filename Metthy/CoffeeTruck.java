@@ -1,4 +1,4 @@
-package Metthys_Folder;
+package Metthy;
 
 import java.util.ArrayList;
 
@@ -49,7 +49,7 @@ public class CoffeeTruck {
         int i, quantity, capacity, binNumber;
         String item;
 
-        System.out.println("== Storage Bins ==");
+        System.out.println("--- Storage Bins ---");
 
         for(i = 0; i < bins.size(); i++){
 

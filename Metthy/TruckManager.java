@@ -1,4 +1,4 @@
-package Metthys_Folder;
+package Metthy;
 
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -7,8 +7,9 @@ public class TruckManager {
 
     private Scanner scanner = new Scanner(System.in);
     private ArrayList<CoffeeTruck> trucks = new ArrayList<>(); //ArrayList containing all created trucks
-
-    private ArrayList<StorageBin> bins;
+    private ArrayList<StorageBin> bins = new ArrayList<>();
+    private DrinkManager drinkManager = new DrinkManager();
+    boolean pricesSet = false;
 
     public void createTruck() {
 
@@ -17,40 +18,58 @@ public class TruckManager {
         String name, location = "";
         System.out.println("Creating a Coffee Truck...");
 
-        while (repeat.toLowerCase().equals("yes")) {
+        while(repeat.toLowerCase().equals("yes")){
+
             flag = 0;
             System.out.print("Enter truck name: ");
             name = scanner.nextLine();
 
-            if (!checkName(name, trucks)) {
+            if(!checkName(name, trucks)){
                 System.out.println("Error. Name is already taken");
                 flag = 1;
             }
 
-            if (flag == 0) {
+            if(flag == 0){
                 System.out.print("Enter truck location: ");
                 location = scanner.nextLine();
 
-                if (!checkLocation(location, trucks)) {
+                if(!checkLocation(location, trucks)){
                     System.out.println("Error. Location is already taken");
                     flag = 1;
                 }
             }
 
-            if (flag == 1){
-                System.out.println("Try Again? (yes/no): ");
+            if(flag == 1){
+                System.out.print("Try Again? (yes/no): ");
                 repeat = scanner.nextLine();
             }
 
             else{
-                CoffeeTruck truck = new CoffeeTruck(name, location); //Create new Truck
+                CoffeeTruck truck = new CoffeeTruck(name, location);
                 setInitialLoadout(truck);
                 trucks.add(truck);
+
                 System.out.println("Coffee Truck Created");
-                truck.displayInfo();
-                repeat = "";
+                System.out.print("Create another truck? (yes/no): ");
+                repeat = scanner.nextLine();
             }
         }
+
+        //After all trucks are created, set up DrinkManager and prices
+        if(trucks.size() > 0 && !pricesSet){
+            drinkManager.setPrices();
+            pricesSet = true;
+        }
+
+        else{
+            System.out.println("Update Prices?: ");
+            String updatePrices = scanner.nextLine();
+
+            if(updatePrices.equalsIgnoreCase("yes"))
+                drinkManager.setPrices();
+        }
+
+        drinkManager.displayDrinkMenu();
     }
 
     public boolean checkName(String name, ArrayList<CoffeeTruck> trucks) {
@@ -144,13 +163,11 @@ public class TruckManager {
             }
 
             if (itemType == null){
-
                 System.out.println("Invalid selection. Please try again.");
                 //Don't increment binIndex to allow retry
             }
 
             else{
-
                 maxCapacity = bin.getCapacityForItem(itemType);
                 System.out.print("Enter quantity (max " + maxCapacity + "): ");
                 quantity = scanner.nextInt();
@@ -160,7 +177,7 @@ public class TruckManager {
                     System.out.println("Invalid quantity. Must be between 0 and " + maxCapacity + ".");
 
                 else {
-
+                    //grammar for itemType
                     truck.assignItemToBin(binIndex, itemType, quantity);
                     System.out.println("Bin #" + binNumber + " loaded with " + quantity + " of " + itemType);
                     binIndex++;
@@ -171,10 +188,6 @@ public class TruckManager {
         System.out.println("\nInitial Loadout for " + truck.getName() + " complete!\n");
     }
 
-    public void setInitialPrices(){
-
-
-    }
     public void displayDashboard(){
 
         int i, j;
@@ -207,10 +220,44 @@ public class TruckManager {
                             bin.getBinNumber() + 1, item, quantity, capacity);
                 }
             }
-
         }
     }
 
+    public void simulateTruck(){
+
+        int i, index, option;
+
+        System.out.println("--- List of Trucks ---");
+        for(i = 0; i < trucks.size(); i++){
+
+            CoffeeTruck truck = trucks.get(i);
+            System.out.printf("Truck %d: Name - %s  Location - %s", i + 1, truck.getName(), truck.getLocation());
+        }
+
+        System.out.println("Select truck number to simulate: ");
+        index = scanner.nextInt();
+
+        do{
+
+            System.out.println("=== Simulation Menu ===");
+            System.out.println("1 - Prepare Coffee Drinks");
+            System.out.println("2 - View Truck Information");
+            System.out.println("3 - Bin Maintenance");
+            System.out.println("4 - Exit to Main Menu");
+            System.out.println("Select an Option: ");
+            option = scanner.nextInt();
+
+            switch(option){
+
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                default:
+            }
+        }while(option != 4);
+
+    }
 }
 /*
     public void binSetupMenu(CoffeeTruck truck){

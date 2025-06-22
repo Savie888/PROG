@@ -1,4 +1,4 @@
-package Metthys_Folder;
+package Metthy;
 
 public class StorageBin {
 

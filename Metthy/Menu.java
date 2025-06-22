@@ -1,4 +1,4 @@
-package Metthys_Folder;
+package Metthy;
 
 import java.util.Scanner;
 
@@ -14,7 +14,7 @@ public class Menu {
         System.out.println("Welcome to Java Jeeps Coffee Truck Simulator\n");
 
         do{
-            System.out.println("Main Menu");
+            System.out.println("=== Main Menu ===");
             System.out.println("1 - Create a Coffee Truck");
             System.out.println("2 - Simulate Coffee Truck Business");
             System.out.println("3 - View Dashboard");

@@ -1,8 +1,36 @@
-package Metthys_Folder;
+package Metthy;
 
 public class Drink {
 
-    public Drink(String coffeeType, String cupSize, int coffeeBeans, int milk, int water){
+    private String coffeeType;
+    private String size;
+    private double price;
 
+    public Drink(String coffeeType, String size, double price){
+
+        this.coffeeType = coffeeType;
+        this.size = size;
+        this.price = price;
     }
+
+    public String getCoffeeType(){
+
+        return coffeeType;
+    }
+
+    public String getSize(){
+
+        return size;
+    }
+
+    public double getPrice(){
+
+        return price;
+    }
+
+    public void setPrice(double price){
+
+        this.price = price;
+    }
+
 }

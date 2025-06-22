@@ -1,4 +1,4 @@
-package Metthys_Folder;
+package Metthy;
 
 //Entry point of program
 public class Driver {
