@@ -5,31 +5,54 @@ import java.util.ArrayList;
 
 public class DrinkManager {
 
-    //private CoffeeTruck truck;
     private Scanner scanner = new Scanner(System.in);
     private ArrayList<Drink> drinks = new ArrayList<>();
     private ArrayList<CoffeeTruck> trucks;
     private ArrayList<StorageBin> bins;
-    private double coffee_price_per_gram;
-    private double milk_price_per_ounce;
-    private double water_price_per_ounce;
+    private double coffeeGramPrice;
+    private double milkOzPrice;
+    private double waterOzPrice;
+    private boolean drinkMenuSet = false;
 
     public DrinkManager(ArrayList<CoffeeTruck> trucks, ArrayList<StorageBin> bins){
 
         this.trucks = trucks;
         this.bins = bins;
+
+        if(!drinkMenuSet){
+            setupDrinkMenu();
+            drinkMenuSet = true;
+        }
+    }
+
+    //Initialize the drink menu
+    private void setupDrinkMenu(){
+
+        int i, j;
+
+        String[] types = {"Latte", "Cappuccino", "Americano"};
+        String[] sizes = {"Small", "Medium", "Large"};
+
+        for(i = 0; i < types.length; i++){
+            for(j = 0; j < sizes.length; j++){
+
+                String type = types[i];
+                String size = sizes[j];
+                drinks.add(new Drink(type, size, 0.0));
+            }
+        }
     }
 
     public void setIngredientPrices() {
 
         System.out.println("Enter price of coffee bean per gram: ");
-        coffee_price_per_gram = scanner.nextDouble();
+        coffeeGramPrice = scanner.nextDouble();
 
         System.out.println("Enter price of milk per ounce: ");
-        milk_price_per_ounce = scanner.nextDouble();
+        milkOzPrice = scanner.nextDouble();
 
         System.out.println("Enter price of water per ounce: ");
-        water_price_per_ounce = scanner.nextDouble();
+        waterOzPrice = scanner.nextDouble();
     }
 
     public double getCupSize(String size){
@@ -220,6 +243,40 @@ public class DrinkManager {
         return flag;
     }
 
+    //Display drinks menu
+    public void displayDrinksMenu(){
+
+        int i, j, k;
+        String[] types = {"Americano", "Latte", "Cappuccino"};
+        String[] sizes = {"Small", "Medium", "Large"};
+
+        System.out.println("\n--- Drinks Menu ---");
+
+        for(i = 0; i < types.length; i++){
+
+            String type = types[i];
+            System.out.println(type + ":");
+
+            for(j = 0; j < sizes.length; j++){
+
+                String size = sizes[j];
+
+                //Find the matching drink
+                for(k = 0; k < drinks.size(); k++){
+
+                    Drink drink = drinks.get(k);
+
+                    if(drink.getCoffeeType().equals(type) && drink.getSize().equals(size)){
+                        double price = calculateCoffeeCost(type, size);
+                        drink.setPrice(price);
+
+                        System.out.printf("  %s - $%.2f\n", size, price);
+                    }
+                }
+            }
+        }
+    }
+
     public void prepareDrink(CoffeeTruck truck){
 
         String coffeeType, coffeeSize;
@@ -250,6 +307,7 @@ public class DrinkManager {
                 double milkOz = ingredients[1];
                 double waterOz = ingredients[2];
                 double grams = (espressoOz * 28.34952) / 18.0;
+                double price = calculateCoffeeCost(coffeeType, coffeeSize);
 
                 beanBin.useQuantity(grams);
                 milkBin.useQuantity(milkOz);
@@ -258,6 +316,11 @@ public class DrinkManager {
 
                 System.out.printf("Used: %.2f g beans, %.2f oz milk, %.2f oz water, 1 %s cup\n",
                         grams, milkOz, waterOz, coffeeSize.toLowerCase());
+
+                System.out.printf("Total Price: $%.2f\n", price);
+
+                truck.addToTotalSales(price); //Update total sales
+                truck.recordSale(coffeeType, coffeeSize, grams, milkOz, waterOz, price); //Update sales log
             }
 
             else
@@ -265,41 +328,13 @@ public class DrinkManager {
         }
     }
 
-
     public double calculateCoffeeCost(String coffeeType, String coffeeSize){
 
-        double coffeeCost = coffee_price_per_gram * getCoffeeGrams(coffeeType, coffeeSize);
-        double milkCost = milk_price_per_ounce * getMilkOz(coffeeType, coffeeSize);
-        double waterCost = water_price_per_ounce * getWaterOz(coffeeType, coffeeSize);
+        double coffeeCost = coffeeGramPrice * getCoffeeGrams(coffeeType, coffeeSize);
+        double milkCost = milkOzPrice * getMilkOz(coffeeType, coffeeSize);
+        double waterCost = waterOzPrice * getWaterOz(coffeeType, coffeeSize);
 
         return  coffeeCost + milkCost + waterCost;
-    }
-
-
-    public void displayDrinkMenu(){
-
-        int i, j, k;
-        String[] types = {"Latte", "Cappuccino", "Americano"};
-        String[] sizes = {"Small", "Medium", "Large"};
-
-        System.out.println("\n--- Drinks Menu ---");
-
-        for(i = 0; i < types.length; i++){
-
-            for(j = 0; j < sizes.length; j++){
-
-                String type = types[i];
-                String size = sizes[j];
-                double price = calculateCoffeeCost(type, size);
-                drinks.add(new Drink(type, size, price));
-            }
-        }
-
-        for(k = 0; k < drinks.size(); k++){
-
-            Drink drink = drinks.get(k);
-            System.out.printf("%s %s - $%.2f\n", drink.getSize(), drink.getCoffeeType(), drink.getPrice());
-        }
     }
 
     public void coffeeMenu(CoffeeTruck truck){
@@ -317,7 +352,7 @@ public class DrinkManager {
             switch(option){
 
                 case 1:
-                    displayDrinkMenu();
+                    displayDrinksMenu();
                     break;
                 case 2:
                     prepareDrink(truck);
@@ -332,18 +367,4 @@ public class DrinkManager {
         } while(option != 3);
     }
 
-    public double getCoffee_price_per_gram(){
-
-        return coffee_price_per_gram;
-    }
-
-    public double getMilk_price_per_ounce(){
-
-        return milk_price_per_ounce;
-    }
-
-    public double getWater_price_per_ounce(){
-
-        return water_price_per_ounce;
-    }
 }

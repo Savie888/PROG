@@ -15,7 +15,7 @@ public class StorageBin {
         this.itemQuantity = 0; //Initialize to 0
     }
 
-    public void assignItem(String itemType, int itemQuantity){
+    public void assignItem(String itemType, double itemQuantity){
 
         this.itemType = itemType;
         this.itemQuantity = itemQuantity;
@@ -27,33 +27,34 @@ public class StorageBin {
         return binNumber;
     }
 
+    public boolean isEmpty(){
+
+        return itemQuantity == 0 && itemType == null;
+    }
+
+    public boolean isFull(){
+
+        return itemQuantity == itemCapacity && itemType != null;
+    }
+
+    public void fill(){
+
+        if(itemType != null && !isFull())
+            this.itemQuantity = 1.0 * itemCapacity;
+    }
+
     public void empty(){
 
-        this.itemType = null;
-        this.itemQuantity = 0;
+        if(!isEmpty()){
+
+            this.itemType = null;
+            this.itemQuantity = 0;
+        }
     }
 
-    public boolean addQuantity(double amount){
+    public void useQuantity(double amount){
 
-        boolean flag = false;
-
-        if(itemQuantity + amount <= itemCapacity){
-            itemQuantity += amount;
-            flag = true;
-        }
-
-        return flag;
-    }
-
-    public boolean useQuantity(double amount){
-
-        boolean flag = false;
-        if(itemQuantity >= amount){
-            itemQuantity -= amount;
-            flag = true;
-        }
-
-        return flag;
+        itemQuantity -= amount;
     }
 
     public String getItemType(){
@@ -71,29 +72,9 @@ public class StorageBin {
         return itemQuantity;
     }
 
-    public void setItemQuantity(double itemQuantity){
-
-        this.itemQuantity = itemQuantity;
-    }
-
     public int getCapacity(){
 
         return itemCapacity;
-    }
-
-    public void setItemCapacity(int capacity){
-
-        this.itemCapacity = capacity;
-    }
-
-    public boolean isEmpty(){
-
-        return itemQuantity == 0;
-    }
-
-    public boolean isFull(){
-
-        return itemQuantity == itemCapacity;
     }
 
     public int getCapacityForItem(String itemType){
