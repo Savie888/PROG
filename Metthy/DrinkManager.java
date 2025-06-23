@@ -199,9 +199,9 @@ public class DrinkManager {
 
     private boolean hasSufficientIngredients(StorageBin beanBin, StorageBin milkBin, StorageBin waterBin, StorageBin cupBin, double[] ingredients){
 
-        int requiredBeans = (int) Math.ceil(ingredients[0]);
-        int requiredMilk = (int) Math.ceil(ingredients[1]);
-        int requiredWater = (int) Math.ceil(ingredients[2]);
+        double requiredBeans = ingredients[0];
+        double requiredMilk = ingredients[1];
+        double requiredWater = ingredients[2];
 
         boolean flag = true;
 
@@ -278,12 +278,26 @@ public class DrinkManager {
 
     public void displayDrinkMenu(){
 
-        int i;
+        int i, j, k;
+        String[] types = {"Latte", "Cappuccino", "Americano"};
+        String[] sizes = {"Small", "Medium", "Large"};
+
         System.out.println("\n--- Drinks Menu ---");
 
-        for(i = 0; i < drinks.size(); i++){
+        for(i = 0; i < types.length; i++){
 
-            Drink drink = drinks.get(i);
+            for(j = 0; j < sizes.length; j++){
+
+                String type = types[i];
+                String size = sizes[j];
+                double price = calculateCoffeeCost(type, size);
+                drinks.add(new Drink(type, size, price));
+            }
+        }
+
+        for(k = 0; k < drinks.size(); k++){
+
+            Drink drink = drinks.get(k);
             System.out.printf("%s %s - $%.2f\n", drink.getSize(), drink.getCoffeeType(), drink.getPrice());
         }
     }

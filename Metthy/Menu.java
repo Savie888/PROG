@@ -27,7 +27,6 @@ public class Menu {
 
                 case 1:
                     manager.createTruck();
-
                     break;
                 case 2:
                     manager.simulateMenu();

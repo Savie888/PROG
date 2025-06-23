@@ -256,6 +256,51 @@ public class TruckManager {
         return index;
     }
 
+    public void truckMaintenanceMenu(CoffeeTruck truck){
+
+        int option;
+
+        do{
+            System.out.println("\n=== Truck Maintenance ===");
+            System.out.println("1 - Restock Bins");
+            System.out.println("2 - Modify Storage Bin Contents");
+            System.out.println("3 - Empty Storage Bins");
+            System.out.println("4 - Edit Truck Name");
+            System.out.println("5 - Edit Truck Location");
+            System.out.println("6 - Exit Menu");
+            System.out.println("Select an Option: ");
+            option = scanner.nextInt();
+
+            switch(option){
+
+                case 1:
+
+                    break;
+                case 2:
+                    // viewTruckInformation(selectedTruck);
+                    break;
+                case 3:
+                    // performMaintenance(selectedTruck);
+                    break;
+                case 4:
+                    System.out.println("Enter new name: ");
+                    String name = scanner.nextLine();
+                    truck.setName(name);
+                    break;
+                case 5:
+                    System.out.println("Enter new location: ");
+                    String location = scanner.nextLine();
+                    truck.setLocation(location);
+                    break;
+                case 6:
+                    System.out.println("Exiting Menu...");
+                default:
+                    System.out.println("Invalid option.");
+                    break;
+            }
+        } while(option != 5);
+    }
+
     public void simulateMenu(){
 
         int index, option;
@@ -266,7 +311,7 @@ public class TruckManager {
             System.out.println("\n=== Simulation Menu ===");
             System.out.println("1 - Prepare Coffee Drinks");
             System.out.println("2 - View Truck Information");
-            System.out.println("3 - Bin Maintenance");
+            System.out.println("3 - Truck Maintenance");
             System.out.println("4 - Exit to Main Menu");
             System.out.println("Select an Option: ");
             option = scanner.nextInt();
@@ -277,10 +322,10 @@ public class TruckManager {
                     drinkManager.coffeeMenu(trucks.get(index));
                     break;
                 case 2:
-                    // viewTruckInformation(selectedTruck);
+                    trucks.get(index).displayInfo();
                     break;
                 case 3:
-                    // performMaintenance(selectedTruck);
+                    truckMaintenanceMenu(trucks.get(index));
                     break;
                 case 4:
                     System.out.println("Returning to main menu...");
@@ -294,15 +339,21 @@ public class TruckManager {
 
     public void displayDashboard(){
 
-        int i, j;
+        int i;
 
         if(trucks.isEmpty())
             System.out.println("No trucks to display");
 
         else{
 
-            System.out.println("\n--- Dashboard ---");
+            System.out.println("\n=== Dashboard ===\n");
 
+            for(i = 0; i < trucks.size(); i++) {
+
+                CoffeeTruck truck = trucks.get(i);
+                truck.displayInfo();
+            }
+            /*
             for(i = 0; i < trucks.size(); i++){
 
                 CoffeeTruck truck = trucks.get(i);
@@ -314,17 +365,14 @@ public class TruckManager {
                     StorageBin bin = bins.get(j);
                     String type = bin.getItemType() == null ? "[empty]" : bin.getItemType();
 
-                    System.out.println("Raw quantity: " + bin.getItemQuantity());
-
                     System.out.printf("Bin %d: %-12s | Quantity: %.2f / %d\n",
                             j + 1,
                             type,
                             bin.getItemQuantity(),
                             bin.getCapacity());
                 }
-            }
+            }*/
         }
-
     }
 }
 /*

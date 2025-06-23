@@ -20,30 +20,6 @@ public class CoffeeTruck {
         }
     }
 
-    public void displayInfo(){
-
-        System.out.println("Name: "+ this.name);
-        System.out.println("Location: "+ this.location);
-        displayBins();
-    }
-
-    public void assignItemToBin(int binNumber, String itemType, int itemQuantity){
-
-        bins.get(binNumber).assignItem(itemType, itemQuantity);
-    }
-
-    public void emptyBin(int binNumber){
-
-        if (binNumber >= 1 && binNumber <= bins.size()){
-
-            bins.get(binNumber - 1).empty();
-            System.out.println("Bin #" + binNumber + " emptied.");
-        }
-
-        else
-            System.out.println("Invalid bin number.");
-    }
-
     public void displayBins(){
 
         int i, capacity, binNumber;
@@ -68,6 +44,31 @@ public class CoffeeTruck {
         }
     }
 
+    public void displayInfo(){
+
+        System.out.println("Name - " + this.name + " | " + "Location: " + this.location);
+        displayBins();
+    }
+
+    public void assignItemToBin(int binNumber, String itemType, int itemQuantity){
+
+        bins.get(binNumber).assignItem(itemType, itemQuantity);
+    }
+
+    public void emptyBin(int binNumber){
+
+        if (binNumber >= 1 && binNumber <= bins.size()){
+
+            bins.get(binNumber - 1).empty();
+            System.out.println("Bin #" + binNumber + " emptied.");
+        }
+
+        else
+            System.out.println("Invalid bin number.");
+    }
+
+
+
     //needs simplifying
     public boolean getFromBin(String itemName, double amount){
 
@@ -82,6 +83,21 @@ public class CoffeeTruck {
     public String getName(){
 
         return name;
+    }
+
+    public String getLocation(){
+
+        return location;
+    }
+
+    public void setName(String name){
+
+        this.name = name;
+    }
+
+    public void setLocation(String location){
+
+        this.location = location;
     }
 
     //Return arraylist containing storage bins
@@ -110,8 +126,4 @@ public class CoffeeTruck {
         return result;
     }
 
-    public String getLocation(){
-
-        return location;
-    }
 }

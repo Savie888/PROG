@@ -85,6 +85,7 @@ public class StorageBin {
 
         this.itemCapacity = capacity;
     }
+
     public boolean isEmpty(){
 
         return itemQuantity == 0;
