@@ -12,6 +12,13 @@ public class CoffeeTruck {
     private double totalSales;
     private Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructs a CoffeeTruck with the given name and location.
+     * Initializes 8 storage bins and an empty sales log.
+     *
+     * @param name     the name of the coffee truck
+     * @param location the initial location of the truck
+     */
     public CoffeeTruck(String name, String location){
 
         int i;
@@ -25,6 +32,10 @@ public class CoffeeTruck {
         salesLog = new ArrayList<>();
     }
 
+    /**
+     * Displays the current contents of all storage bins in the truck.
+     * Empty bins are marked as [Empty].
+     */
     public void displayBins(){
 
         int i, capacity, binNumber;
@@ -49,6 +60,10 @@ public class CoffeeTruck {
         }
     }
 
+    /**
+     * Displays the truck's name, location, storage bin contents,
+     * transaction history, and total sales.
+     */
     public void displayInfo(){
 
         int i;
@@ -71,11 +86,23 @@ public class CoffeeTruck {
         System.out.printf("\nTotal Sales: $%.2f", getTotalSales());
     }
 
+    /**
+     * Assigns a specific item type and quantity to a given bin number.
+     *
+     * @param binNumber   the index of the bin (0-based)
+     * @param itemType    the type of item to store in the bin
+     * @param itemQuantity the quantity of the item to assign
+     */
     public void assignItemToBin(int binNumber, String itemType, double itemQuantity){
 
         bins.get(binNumber).assignItem(itemType, itemQuantity);
     }
 
+    /**
+     * Modifies the contents of a specified bin.
+     *
+     * @param binNumber the 1-based bin number (for display and user selection)
+     */
     public void modifyBin(int binNumber){
 
         int choice;
@@ -149,6 +176,11 @@ public class CoffeeTruck {
         } while(bin.getItemType() == null);
     }
 
+    /**
+     * Fills the first 6 bins of a truck with Small Cups, Medium Cups, Large Cups, Coffee Beans, Milk,
+     * and Water respectively.
+     * Remaining bins are left empty.
+     */
     public void setMaxLoadout(){
 
         int i;
@@ -173,6 +205,9 @@ public class CoffeeTruck {
         }
     }
 
+    /**
+     * Allows user to set up the loadout of a truck.
+     */
     public void setLoadout(){
 
         int i;
@@ -199,21 +234,33 @@ public class CoffeeTruck {
         }
     }
 
+    /**
+     * Restocks a specific storage bin to its full capacity.
+     *
+     * @param binNumber the bin number to restock
+     */
     public void restockOneBin(int binNumber){
 
         if(binNumber >= 1 && binNumber <= bins.size()){
 
-            bins.get(binNumber - 1).fill();
-            System.out.println("Bin #" + binNumber + " restocked.");
-        }
+            StorageBin bin = bins.get(binNumber - 1);
+            if(bin.getItemType() == null)
+                System.out.println("Error, bin isn't assigned any item");
 
-        else if(bins.get(binNumber - 1).getItemType() == null)
-            System.out.println("Error, bin isn't assigned any item");
+            else{
+                bins.get(binNumber - 1).fill(); //Restock bin
+                System.out.println("Bin #" + binNumber + " restocked.");
+            }
+        }
 
         else
             System.out.println("Invalid bin number.");
     }
 
+    /**
+     * Restocks all bins that have an assigned item.
+     * Displays an error if no bins are assigned.
+     */
     public void restockAllBins(){
 
         int i;
@@ -249,6 +296,10 @@ public class CoffeeTruck {
         }
     }
 
+    /**
+     * Allows the user to modify all storage bins.
+     * User can choose to set bins to maximum capacity or manually adjust each bin.
+     */
     public void modifyAllBins(){
 
         int i;
@@ -261,14 +312,16 @@ public class CoffeeTruck {
             setMaxLoadout();
 
         else{
-            for(i = 0; i < bins.size(); i++){
-
-                StorageBin bin = bins.get(i);
+            for(i = 0; i < bins.size(); i++)
                 modifyBin(i+1);
-            }
         }
     }
 
+    /**
+     * Empties a specific storage bin.
+     *
+     * @param binNumber the bin number to empty (1-based index)
+     */
     public void emptyOneBin(int binNumber){
 
         if(binNumber >= 1 && binNumber <= bins.size()){
@@ -281,6 +334,9 @@ public class CoffeeTruck {
             System.out.println("Invalid bin number.");
     }
 
+    /**
+     * Empties all storage bins.
+     */
     public void emptyAllBins(){
 
         int i;
@@ -291,35 +347,64 @@ public class CoffeeTruck {
             bin.empty(); //Empty bin
         }
         System.out.println("All bins empty");
-
     }
 
+    /**
+     * Returns the name of a truck.
+     *
+     * @return the name of the truck
+     */
     public String getName(){
 
         return name;
     }
 
+    /**
+     * Returns the current location of a truck.
+     *
+     * @return the truck location
+     */
     public String getLocation(){
 
         return location;
     }
 
+    /**
+     * Sets a truck's name.
+     *
+     * @param name the new name for the truck
+     */
     public void setName(String name){
 
         this.name = name;
     }
 
+    /**
+     * Sets a truck's location.
+     *
+     * @param location the new location for the truck
+     */
     public void setLocation(String location){
 
         this.location = location;
     }
 
-    //Return arraylist containing storage bins
+    /**
+     * Returns the list of storage bins associated with a truck.
+     *
+     * @return an ArrayList of StorageBin objects
+     */
     public ArrayList<StorageBin> getBins(){
 
         return bins;
     }
 
+    /**
+     * Finds and returns the first bin that matches the given item name.
+     *
+     * @param itemName the name of the item to search for
+     * @return the matching StorageBin, or null if not found
+     */
     public StorageBin findBin(String itemName){
 
         int i;
@@ -340,22 +425,47 @@ public class CoffeeTruck {
         return result;
     }
 
+    /**
+     * Records a drink sale to a truck's sales log.
+     *
+     * @param coffeeType the type of coffee sold
+     * @param size the size of the drink
+     * @param grams the grams of coffee beans used
+     * @param milk the ounces of milk used
+     * @param water the ounces of water used
+     * @param price the price of the drink
+     */
     public void recordSale(String coffeeType, String size, double grams, double milk, double water, double price){
 
         salesLog.add(String.format("Drink: %s (%s) | %.2f g beans, %.2f oz milk, %.2f oz water | $%.2f",
                 coffeeType, size, grams, milk, water, price));
     }
 
+    /**
+     * Returns the list of recorded drink sales for the truck.
+     *
+     * @return an ArrayList of sales log entries
+     */
     public ArrayList<String> getSalesLog(){
 
         return salesLog;
     }
 
+    /**
+     * Adds a specified amount to the truck's total sales.
+     *
+     * @param amount the amount to add to total sales
+     */
     public void addToTotalSales(double amount){
 
         totalSales += amount;
     }
 
+    /**
+     * Returns the total sales revenue for the truck.
+     *
+     * @return the total sales amount
+     */
     public double getTotalSales(){
 
         return totalSales;

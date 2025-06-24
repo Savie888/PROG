@@ -9,7 +9,7 @@ public class TruckManager {
     private ArrayList<CoffeeTruck> trucks = new ArrayList<>(); //ArrayList containing all created trucks
     private ArrayList<StorageBin> bins = new ArrayList<>();
     private final DrinkManager drinkManager = new DrinkManager(trucks, bins);
-    private boolean pricesInitialized = false;
+    private boolean pricesInitialized = false; //Flag to check if prices have been initialized
 
     /**
      * Checks if the given truck name is already taken.
@@ -121,7 +121,7 @@ public class TruckManager {
         //After all trucks are created, set up DrinkManager and prices
         if(!trucks.isEmpty() && !pricesInitialized){
             drinkManager.setIngredientPrices();
-            pricesInitialized = true;
+            pricesInitialized = true; //Set flag to true to avoid repeating price initialization
         }
     }
 
@@ -138,7 +138,7 @@ public class TruckManager {
         do{
             if(trucks.isEmpty()){
                 System.out.println("No trucks available");
-                truckIndex = -1;
+                truckIndex = -1; //Assign index to -1 if no trucks available
             }
 
             else{
@@ -146,6 +146,7 @@ public class TruckManager {
 
                 for(i = 0; i < trucks.size(); i++){
 
+                    //Display list of available trucks
                     CoffeeTruck truck = trucks.get(i);
                     System.out.printf("Truck %d: Name - %s  Location - %s\n", i + 1, truck.getName(), truck.getLocation());
                 }
@@ -180,15 +181,15 @@ public class TruckManager {
      */
     public void truckMaintenanceMenu(CoffeeTruck truck){
 
-        int option;
+        int option, restock;
 
         do{
             System.out.println("\n=== Truck Maintenance ===");
             System.out.println("1 - Restock Bins (only works if bin is assigned an item already)");
             System.out.println("2 - Modify Storage Bin Contents");
             System.out.println("3 - Empty Storage Bins");
-            System.out.println("4 - Edit Truck Name"); //works
-            System.out.println("5 - Edit Truck Location"); //works
+            System.out.println("4 - Edit Truck Name");
+            System.out.println("5 - Edit Truck Location");
             System.out.println("6 - Edit Pricing (will affect pricing for all trucks)");
             System.out.println("7 - Exit Menu");
             System.out.println("Select an Option: ");
@@ -201,7 +202,7 @@ public class TruckManager {
                     System.out.println("1 - Restock all bins");
                     System.out.println("2 - Restock one bin");
                     System.out.println("Select an option: ");
-                    int restock  = scanner.nextInt();
+                    restock  = scanner.nextInt();
 
                     if(restock == 1)
                         truck.restockAllBins(); //Restock all bins
@@ -209,7 +210,7 @@ public class TruckManager {
                     else if(restock == 2){
                         System.out.println("Enter Bin Number: ");
                         int binNumber = scanner.nextInt();
-                        truck.restockOneBin(binNumber); //Restock bin
+                        truck.restockOneBin(binNumber); //Restock selected bin
                     }
                     break;
                 case 2:
@@ -219,12 +220,12 @@ public class TruckManager {
                     int modify = scanner.nextInt();
 
                     if(modify == 1)
-                        truck.modifyAllBins();
+                        truck.modifyAllBins(); //Modify all bins
 
                     else if(modify == 2){
                         System.out.println("Enter bin number to modify: ");
                         int binNum = scanner.nextInt();
-                        truck.modifyBin(binNum);
+                        truck.modifyBin(binNum); //Modify selected bin
                     }
                     break;
                 case 3:
@@ -234,26 +235,26 @@ public class TruckManager {
                     int empty = scanner.nextInt();
 
                     if(empty == 1)
-                        truck.emptyAllBins(); //Restock all bins
+                        truck.emptyAllBins(); //Empty all bins
 
                     else if(empty == 2){
                         System.out.println("Enter Bin Number: ");
                         int binNumber = scanner.nextInt();
-                        truck.emptyOneBin(binNumber); //Restock bin
+                        truck.emptyOneBin(binNumber); //Empty selected bin
                     }
                     break;
                 case 4:
                     System.out.println("Enter new name: ");
                     String name = scanner.nextLine();
-                    truck.setName(name);
+                    truck.setName(name); //Set new name
                     break;
                 case 5:
                     System.out.println("Enter new location: ");
                     String location = scanner.nextLine();
-                    truck.setLocation(location);
+                    truck.setLocation(location); //Set new location
                     break;
                 case 6:
-                    drinkManager.setIngredientPrices();
+                    drinkManager.setIngredientPrices(); //Set ingredient prices
                     break;
                 case 7:
                     System.out.println("Exiting Menu...");
@@ -279,7 +280,7 @@ public class TruckManager {
 
         int index, option;
 
-        index = selectTruck();
+        index = selectTruck(); //Let user select a truck
 
         do{
             System.out.println("\n=== Simulation Menu ===");
@@ -294,13 +295,13 @@ public class TruckManager {
             switch(option){
 
                 case 1:
-                    drinkManager.coffeeMenu(trucks.get(index));
+                    drinkManager.coffeeMenu(trucks.get(index)); //Display Coffee Menu
                     break;
                 case 2:
-                    trucks.get(index).displayInfo();
+                    trucks.get(index).displayInfo(); //Display truck information
                     break;
                 case 3:
-                    truckMaintenanceMenu(trucks.get(index));
+                    truckMaintenanceMenu(trucks.get(index)); //Display truck maintenance menu
                     break;
                 case 4:
                     System.out.println("Returning to main menu...");
@@ -312,23 +313,32 @@ public class TruckManager {
         } while(option != 4);
     }
 
+    /**
+     * Displays the total number of deployed trucks and their respective types (Regular or Special).
+     * Currently, only shows regular trucks; special truck count is planned for future expansion.
+     *
+     * @param trucks the list of all deployed coffee trucks
+     */
     public void displayTruckDeployment(ArrayList<CoffeeTruck> trucks){
 
         System.out.println("\n--- Truck Deployment ---");
-        System.out.println("Total Trucks     : " + trucks.size());
-        System.out.println("Regular Trucks   : " + trucks.size());
-        //System.out.println("Special Trucks   : " + totalSpecial); MCO2
+        System.out.println("Total Trucks     : " + trucks.size()); //Display total number of trucks
+        System.out.println("Regular Trucks   : " + trucks.size()); //Display total number of regular trucks
+        //System.out.println("Special Trucks   : " + totalSpecial); For MCO2
     }
 
+    /**
+     * Aggregates and displays the total inventory across all deployed trucks.
+     * Includes coffee beans (grams), milk (oz), water (oz), and cup counts by size.
+     *
+     * @param trucks the list of all deployed coffee trucks
+     */
     public void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
 
         int i, j;
-        int totalSmallCups = 0;
-        int totalMediumCups = 0;
-        int totalLargeCups = 0;
-        double totalCoffeeGrams = 0;
-        double totalMilkOz = 0;
-        double totalWaterOz = 0;
+        int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
+        double totalCoffeeGrams = 0, totalMilkOz = 0, totalWaterOz = 0, quantity;
+        String item;
         ArrayList<StorageBin> bins;
 
         for(i = 0; i < trucks.size(); i++){
@@ -343,29 +353,31 @@ public class TruckManager {
                 if(bin == null || bin.getItemType() == null)
                     continue; //Skip if bin is empty
 
-                String item = bin.getItemType();
-                double qty = bin.getItemQuantity();
+                item = bin.getItemType();
+                quantity = bin.getItemQuantity();
 
+                //Calculate total inventory
                 if(item.equals("Coffee Beans"))
-                    totalCoffeeGrams += qty;
+                    totalCoffeeGrams += quantity;
 
                 else if (item.equals("Milk"))
-                    totalMilkOz += qty;
+                    totalMilkOz += quantity;
 
                 else if (item.equals("Water"))
-                    totalWaterOz += qty;
+                    totalWaterOz += quantity;
 
                 else if (item.equals("Small Cup"))
-                    totalSmallCups += (int)qty;
+                    totalSmallCups += (int)quantity;
 
                 else if (item.equals("Medium Cup"))
-                    totalMediumCups += (int)qty;
+                    totalMediumCups += (int)quantity;
 
                 else if (item.equals("Large Cup"))
-                    totalLargeCups += (int)qty;
+                    totalLargeCups += (int)quantity;
             }
         }
 
+        //Display inventory
         System.out.println("\n--- Aggregate Inventory ---");
         System.out.printf("Coffee Beans     : %.2f g\n", totalCoffeeGrams);
         System.out.printf("Milk             : %.2f oz\n", totalMilkOz);
@@ -375,6 +387,12 @@ public class TruckManager {
         System.out.println("Large Cups       : " + totalLargeCups);
     }
 
+    /**
+     * Displays the sales log and total revenue across all deployed trucks.
+     * Also displays the individual sales log and revenue of each truck.
+     *
+     * @param trucks the list of all deployed coffee trucks
+     */
     public void displayTotalSales(ArrayList<CoffeeTruck> trucks){
 
         int i, j;
@@ -390,12 +408,19 @@ public class TruckManager {
 
             for(j = 0; j < log.size(); j++)
                 System.out.println("[" + truck.getName() + "] " + log.get(j));
+
+            //Display total sales of a truck
+            System.out.printf("Total for [%s]   : $%.2f\n", truck.getName(), truck.getTotalSales());
         }
 
+        //Display combined total sales of all truck
         System.out.printf("Total Revenue    : $%.2f\n", combinedSales);
     }
 
-    //Display dashboard
+    /**
+     * Displays the full dashboard summary of the Coffee Truck Business.
+     * Includes truck deployment stats, total inventory, and a full sales report.
+     */
     public void displayDashboard(){
 
         ArrayList<CoffeeTruck> trucks = getTrucks();
@@ -418,6 +443,11 @@ public class TruckManager {
         }
     }
 
+    /**
+     * Returns the list of all deployed coffee trucks.
+     *
+     * @return the list of deployed {@code CoffeeTruck} instances
+     */
     public ArrayList<CoffeeTruck> getTrucks(){
 
         return trucks;
