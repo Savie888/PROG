@@ -189,13 +189,13 @@ public class DrinkManager {
         String size = "", repeat = "";
 
         do{
-            System.out.println("Select size:");
+            System.out.println("\nSelect drink size:");
             System.out.println("1 - Small");
             System.out.println("2 - Medium");
             System.out.println("3 - Large");
             System.out.print("Enter choice: ");
             option = scanner.nextInt();
-            scanner.nextLine();  //flush
+            scanner.nextLine();  //Clear new line
 
             switch(option){
 
