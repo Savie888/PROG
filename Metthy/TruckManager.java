@@ -414,7 +414,7 @@ public class TruckManager {
         }
 
         //Display combined total sales of all truck
-        System.out.printf("Total Revenue    : $%.2f\n", combinedSales);
+        System.out.printf("\nTotal Sales    : $%.2f\n", combinedSales);
     }
 
     /**

@@ -83,7 +83,7 @@ public class CoffeeTruck {
             }
         }
 
-        System.out.printf("\nTotal Sales: $%.2f", getTotalSales());
+        System.out.printf("\nTotal Sales: $%.2f\n", getTotalSales());
     }
 
     /**
