@@ -8,41 +8,61 @@ public class TruckManager {
     private Scanner scanner = new Scanner(System.in);
     private ArrayList<CoffeeTruck> trucks = new ArrayList<>(); //ArrayList containing all created trucks
     private ArrayList<StorageBin> bins = new ArrayList<>();
-    private DrinkManager drinkManager = new DrinkManager(trucks, bins);
+    private final DrinkManager drinkManager = new DrinkManager(trucks, bins);
     private boolean pricesInitialized = false;
 
-    public boolean checkName(String name, ArrayList<CoffeeTruck> trucks) {
+    /**
+     * Checks if the given truck name is already taken.
+     *
+     * @param name The name to check.
+     * @return true if the name is taken; false if it's available.
+     */
+    public boolean checkName(String name) {
 
-        int i, flag = 0;
-        name = name.toLowerCase();
+        int i;
+        boolean flag = false;
 
-        for (i = 0; i < trucks.size() && flag == 0; i++) {
-
-            CoffeeTruck truck = trucks.get(i);
-
-            if (name.equals(truck.getName().toLowerCase()))
-                flag = 1; //Set flag to 1 if the name is already taken
-        }
-
-        return flag == 0; //If flag is 0, then name is still available
-    }
-
-    public boolean checkLocation(String location, ArrayList<CoffeeTruck> trucks) {
-
-        int i, flag = 0;
-        location = location.toLowerCase();
-
-        for (i = 0; i < trucks.size() && flag == 0; i++) {
+        for(i = 0; i < trucks.size() && !flag; i++){
 
             CoffeeTruck truck = trucks.get(i);
 
-            if (location.equals(truck.getLocation().toLowerCase()))
-                flag = 1; //Set flag to 1 if the location is already taken
+            if(name.equalsIgnoreCase(truck.getName()))
+                flag = true; //Set flag to true if the name is already taken
         }
 
-        return flag == 0; //If flag is 0, then location is still available
+        return flag; //Return true if name is taken, false otherwise
     }
 
+    /**
+     * Checks if the given truck location is already taken.
+     *
+     * @param location The location to check.
+     * @return true if the location is taken; false if it's available.
+     */
+    public boolean checkLocation(String location) {
+
+        int i;
+        boolean flag = false;
+
+        for(i = 0; i < trucks.size() && !flag; i++){
+
+            CoffeeTruck truck = trucks.get(i);
+
+            if (location.equalsIgnoreCase(truck.getLocation()))
+                flag = true; //Set flag to true if the location is already taken
+        }
+
+        return flag; //Return true if location is taken, false otherwise
+    }
+
+    /**
+     * Allows user to:
+     * <ul>
+     *  <li>Create a coffee truck by entering a unique name and location.</li>
+     *  <li>Set up the truck's storage bins.</li>
+     *  <li>Initialize the drink ingredient prices after a successful truck creation.</li>
+     * </ul>
+     */
     public void createTruck(){
 
         int flag;
@@ -56,7 +76,8 @@ public class TruckManager {
             System.out.print("Enter truck name: ");
             name = scanner.nextLine();
 
-            if(!checkName(name, trucks)){
+            //Check if name is available
+            if(checkName(name)){
                 System.out.println("Error. Name is already taken");
                 flag = 1;
             }
@@ -65,7 +86,8 @@ public class TruckManager {
                 System.out.print("Enter truck location: ");
                 location = scanner.nextLine();
 
-                if(!checkLocation(location, trucks)){
+                //Check if location is available
+                if(checkLocation(location)){
                     System.out.println("Error. Location is already taken");
                     flag = 1;
                 }
@@ -77,14 +99,17 @@ public class TruckManager {
             }
 
             else{
+                //Create new Coffee Truck
                 CoffeeTruck truck = new CoffeeTruck(name, location);
 
+                //Option to set up storage bins
                 System.out.println("Set up storage bins?: (yes/no)");
                 String loadout = scanner.nextLine();
 
                 if(loadout.equalsIgnoreCase("yes"))
                     truck.setLoadout(); //Set up storage bins
 
+                //Add new truck to arraylist of trucks
                 trucks.add(truck);
 
                 System.out.println("Coffee Truck Created\n");
@@ -100,15 +125,20 @@ public class TruckManager {
         }
     }
 
+    /**
+     * Displays a list of available trucks and allows the user to select one.
+     *
+     * @return The index of the selected truck in the list; -1 if no trucks are available.
+     */
     public int selectTruck(){
 
-        int i, index;
+        int i, truckIndex;
         String repeat = "";
 
         do{
             if(trucks.isEmpty()){
                 System.out.println("No trucks available");
-                index = -1;
+                truckIndex = -1;
             }
 
             else{
@@ -121,19 +151,33 @@ public class TruckManager {
                 }
 
                 System.out.println("Select truck number: ");
-                index = scanner.nextInt();
-                index -= 1;
+                truckIndex = scanner.nextInt();
+                scanner.nextLine(); //Consume leftover newline
+                truckIndex -= 1;
 
-                if(index < 0 || index > trucks.size()){
+                if(truckIndex < 0 || truckIndex >= trucks.size()){
                     System.out.println("Invalid truck number selected. Try Again? (yes/no): ");
                     repeat = scanner.nextLine();
                 }
             }
         }while(repeat.equalsIgnoreCase("yes"));
 
-        return index;
+        return truckIndex;
     }
 
+    /**
+     * Displays the truck maintenance menu for a specific coffee truck.
+     * <p>Allows the user to:</p>
+     * <ul>
+     *   <li>Restock bins (either all or individually)</li>
+     *   <li>Modify storage bin contents (either all or individually)</li>
+     *   <li>Empty bins (either all or individually)</li>
+     *   <li>Edit the truck's name or location</li>
+     *   <li>Edit global drink ingredient prices</li>
+     * </ul>
+     *
+     * @param truck The {@code CoffeeTruck} to perform maintenance on
+     */
     public void truckMaintenanceMenu(CoffeeTruck truck){
 
         int option;
@@ -150,6 +194,7 @@ public class TruckManager {
             System.out.println("Select an Option: ");
             option = scanner.nextInt();
             scanner.nextLine(); //Absorb new line
+
             switch(option){
 
                 case 1:
@@ -220,6 +265,16 @@ public class TruckManager {
         } while(option != 7);
     }
 
+    /**
+     * Displays the truck simulation menu for performing actions on a selected coffee truck.
+     * <p>Allows user to:</p>
+     * <ul>
+     *   <li>Prepare coffee drinks using the truck's inventory</li>
+     *   <li>View the selected truck's information</li>
+     *   <li>Enter the truck maintenance submenu</li>
+     *   <li>Exit to the main menu</li>
+     * </ul>
+     */
     public void simulateMenu(){
 
         int index, option;
@@ -234,6 +289,7 @@ public class TruckManager {
             System.out.println("4 - Exit to Main Menu");
             System.out.println("Select an Option: ");
             option = scanner.nextInt();
+            scanner.nextLine(); //Absorb new line
 
             switch(option){
 
