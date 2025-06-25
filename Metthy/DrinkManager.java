@@ -3,29 +3,39 @@ package Metthy;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+/**
+ * Centralized manager for handling drink configurations, pricing, and ingredient calculations.
+ *
+ * <p>This class is responsible for:
+ * <ul>
+ *     <li>Initializing a standard menu of espresso-based drinks</li>
+ *     <li>Accepting and storing ingredient prices (coffee beans, milk, water)</li>
+ *     <li>Calculating ingredient quantities based on drink type and size</li>
+ *     <li>Converting between fluid ounces and grams using brew ratios</li>
+ *     <li>Displaying ingredient breakdowns for individual drinks</li>
+ * </ul>
+ *
+ */
 public class DrinkManager {
 
-    private Scanner scanner = new Scanner(System.in);
-    private ArrayList<Drink> drinks = new ArrayList<>();
-    private ArrayList<CoffeeTruck> trucks;
-    private ArrayList<StorageBin> bins;
+    private final Scanner scanner = new Scanner(System.in);
+    private final ArrayList<Drink> drinks = new ArrayList<>();
     private double coffeeGramPrice;
     private double milkOzPrice;
     private double waterOzPrice;
-    private boolean drinkMenuSet = false;
 
-    public DrinkManager(ArrayList<CoffeeTruck> trucks, ArrayList<StorageBin> bins){
+    /**
+     * Constructs a new DrinkManager and sets up the drink menu
+     */
+    public DrinkManager(){
 
-        this.trucks = trucks;
-        this.bins = bins;
-
-        if(!drinkMenuSet){
-            setupDrinkMenu();
-            drinkMenuSet = true;
-        }
+        setupDrinkMenu(); //Set up the drink menu
     }
 
-    //Initialize the drink menu
+    /**
+     * Initializes the drink menu with all combinations of coffee types and sizes.
+     *
+     */
     private void setupDrinkMenu(){
 
         int i, j;
@@ -43,6 +53,10 @@ public class DrinkManager {
         }
     }
 
+    /**
+     * Prompts the user to input the unit prices for coffee ingredients (coffee beans, milk, and water).
+     *
+     */
     public void setIngredientPrices() {
 
         System.out.println("Enter price of coffee bean per gram: ");
@@ -55,6 +69,12 @@ public class DrinkManager {
         waterOzPrice = scanner.nextDouble();
     }
 
+    /**
+     * Calculates the total fluid ounces corresponding to the size of a drink.
+     *
+     * @param size the drink size (e.g., "Small", "Medium", "Large")
+     * @return the size of the cup in fluid ounces, or 0 if the size is invalid
+     */
     public double getCupSize(String size){
 
         double cupSize;
@@ -77,6 +97,13 @@ public class DrinkManager {
         return cupSize;
     }
 
+    /**
+     * Calculates the amount of each ingredient required to prepare a drink.
+     *
+     * @param coffeeType the type of coffee
+     * @param coffeeSize the size of the drink
+     * @return a double array containing the required ingredients [coffeeGrams, milkOz, totalWaterOz]
+     */
     public double[] getIngredients(String coffeeType, String coffeeSize){
 
         double cupSize = getCupSize(coffeeSize);
@@ -99,9 +126,8 @@ public class DrinkManager {
                     espressoOz = cupSize * (1.0 / 3);
                     milkOz = cupSize * (2.0 / 3);
                 }
-                default -> {
+                default ->
                     System.out.println("Invalid drink type.");
-                }
             }
         }
 
@@ -117,22 +143,49 @@ public class DrinkManager {
         return new double[] {coffeeGrams, milkOz, totalWaterOz};
     }
 
+    /**
+     * Returns the amount of coffee beans (in grams) required for the given drink.
+     *
+     * @param coffeeType the type of coffee (e.g., "Latte", "Cappuccino", "Americano")
+     * @param size       the drink size (e.g., "Small", "Medium", "Large")
+     * @return the amount of coffee beans required, in grams
+     */
     public double getCoffeeGrams(String coffeeType, String size){
 
         double espressoOz = getIngredients(coffeeType, size)[0];
         return (espressoOz * 28.34952) / 18.0;
     }
 
+    /**
+     * Returns the amount of milk (in fluid ounces) required for the given drink.
+     *
+     * @param coffeeType the type of coffee (e.g., "Latte", "Cappuccino", "Americano")
+     * @param size       the drink size (e.g., "Small", "Medium", "Large")
+     * @return the amount of milk required, in fluid ounces
+     */
     public double getMilkOz(String coffeeType, String size){
 
         return getIngredients(coffeeType, size)[1];
     }
 
+    /**
+     * Returns the total amount of water (in fluid ounces) required for the given drink.
+     *
+     * @param coffeeType the type of coffee (e.g., "Latte", "Cappuccino", "Americano")
+     * @param size       the drink size (e.g., "Small", "Medium", "Large")
+     * @return the total amount of water required, in fluid ounces
+     */
     public double getWaterOz(String coffeeType, String size){
 
         return getIngredients(coffeeType, size)[2];
     }
 
+    /**
+     * Displays the required ingredient amounts for a given coffee type and size.
+     *
+     * @param coffeeType the type of coffee (e.g., "Latte", "Cappuccino", "Americano")
+     * @param coffeeSize the size of the drink (e.g., "Small", "Medium", "Large")
+     */
     public void showIngredients(String coffeeType, String coffeeSize){
 
         double[] ingredients = getIngredients(coffeeType, coffeeSize);
@@ -150,7 +203,7 @@ public class DrinkManager {
     private String getDrinkType(){
 
         int option;
-        String coffeeType = "", repeat = "";
+        String coffeeType, repeat = "";
 
         do{
             System.out.println("Select drink type:");
@@ -186,7 +239,7 @@ public class DrinkManager {
     private String getDrinkSize(){
 
         int option;
-        String size = "", repeat = "";
+        String size, repeat = "";
 
         do{
             System.out.println("\nSelect drink size:");

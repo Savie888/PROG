@@ -3,12 +3,24 @@ package Metthy;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+/**
+ * Manages the creation, tracking, and operations of all coffee trucks in the simulation.
+ *
+ * <p>This class is responsible for:
+ * <ul>
+ *     <li>Initializing new trucks (regular and special types)</li>
+ *     <li>Setting up truck inventory and loadout</li>
+ *     <li>Configuring drink prices via a single shared {@code DrinkManager}</li>
+ *     <li>Displaying an interactive menu for user commands</li>
+ *     <li>Tracking and summarizing sales across all trucks</li>
+ * </ul>
+ *
+ */
 public class TruckManager {
 
-    private Scanner scanner = new Scanner(System.in);
-    private ArrayList<CoffeeTruck> trucks = new ArrayList<>(); //ArrayList containing all created trucks
-    private ArrayList<StorageBin> bins = new ArrayList<>();
-    private final DrinkManager drinkManager = new DrinkManager(trucks, bins);
+    private final Scanner scanner = new Scanner(System.in);
+    private final ArrayList<CoffeeTruck> trucks = new ArrayList<>(); //ArrayList containing all created trucks
+    private final DrinkManager drinkManager = new DrinkManager();
     private boolean pricesInitialized = false; //Flag to check if prices have been initialized
 
     /**
@@ -182,7 +194,6 @@ public class TruckManager {
     public void truckMaintenanceMenu(CoffeeTruck truck){
 
         int option, restock, binNumber;
-        double quantity;
 
         do{
             System.out.println("\n=== Truck Maintenance ===");
@@ -342,7 +353,7 @@ public class TruckManager {
         String item;
         ArrayList<StorageBin> bins;
 
-        for(i = 0; i < trucks.size(); i++){
+        for(i = 0; i < trucks.size(); i++) {
 
             CoffeeTruck truck = trucks.get(i);
             bins = truck.getBins();
@@ -358,23 +369,32 @@ public class TruckManager {
                 quantity = bin.getItemQuantity();
 
                 //Calculate total inventory
-                if(item.equals("Coffee Beans"))
-                    totalCoffeeGrams += quantity;
+                switch(item){
 
-                else if (item.equals("Milk"))
-                    totalMilkOz += quantity;
+                    case "Coffee Beans":
+                        totalCoffeeGrams += quantity;
+                        break;
 
-                else if (item.equals("Water"))
-                    totalWaterOz += quantity;
+                    case "Milk":
+                        totalMilkOz += quantity;
+                        break;
 
-                else if (item.equals("Small Cup"))
-                    totalSmallCups += (int)quantity;
+                    case "Water":
+                        totalWaterOz += quantity;
+                        break;
 
-                else if (item.equals("Medium Cup"))
-                    totalMediumCups += (int)quantity;
+                    case "Small Cup":
+                        totalSmallCups += (int) quantity;
+                        break;
 
-                else if (item.equals("Large Cup"))
-                    totalLargeCups += (int)quantity;
+                    case "Medium Cup":
+                        totalMediumCups += (int) quantity;
+                        break;
+
+                    case "Large Cup":
+                        totalLargeCups += (int) quantity;
+                        break;
+                }
             }
         }
 

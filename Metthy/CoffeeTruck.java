@@ -8,9 +8,9 @@ public class CoffeeTruck {
     private String name;
     private String location;
     private ArrayList<StorageBin> bins;
-    private ArrayList<String> salesLog;
+    private final ArrayList<String> salesLog;
     private double totalSales;
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
 
     /**
      * Constructs a CoffeeTruck with the given name and location.
@@ -241,7 +241,7 @@ public class CoffeeTruck {
     }
 
     /**
-     * Restocks a specific storage bin to its full capacity.
+     * Restocks a specific storage bin.
      *
      * @param binNumber the bin number to restock
      */
@@ -276,7 +276,7 @@ public class CoffeeTruck {
 
     /**
      * Restocks all bins that have an assigned item.
-     * Displays an error if no bins are assigned.
+     *
      */
     public void restockAllBins(){
 
