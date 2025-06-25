@@ -57,6 +57,18 @@ public class StorageBin {
         itemQuantity -= amount;
     }
 
+    public void addQuantity(double amount){
+
+        if(itemQuantity + amount <= itemCapacity){
+
+            itemQuantity += amount;
+            System.out.println("Bin #" + binNumber + " restocked.");
+        }
+
+        else
+            System.out.println("Added quantity would go over capacity. Restock failed");
+    }
+
     public String getItemType(){
 
         return itemType;

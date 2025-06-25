@@ -1,6 +1,7 @@
 package Metthy;
 
-//Working on Documentation
+//Continue working on Documentation
+//Continue testing simulate menu
 
 /**
  * This is a simulation of a Coffee Truck Business.
@@ -16,7 +17,7 @@ package Metthy;
  * </ul>
  * <p>
  * This class contains the main method to start the program.
- * @author Adrian Matthew Dee and Queeni Salao
+ * @author Adrian Matthew Dee and Queenie Salao
  * @version 1.0
  */
 

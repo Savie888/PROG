@@ -106,12 +106,15 @@ public class CoffeeTruck {
     public void modifyBin(int binNumber){
 
         int choice;
-        System.out.println("\nSetting up Bin #" + binNumber);
+        int number = binNumber + 1;
+        boolean invalidQuantity = false;
 
-        StorageBin bin = bins.get(binNumber - 1);
+        System.out.println("\nSetting up Bin #" + number);
+
+        StorageBin bin = bins.get(binNumber);
 
         do{
-            System.out.println("Choose item to store in Bin #" + binNumber + ":");
+            System.out.println("Choose item to store in Bin #" + number + ":");
             System.out.println("1. Small Cup");
             System.out.println("2. Medium Cup");
             System.out.println("3. Large Cup");
@@ -124,7 +127,7 @@ public class CoffeeTruck {
             scanner.nextLine(); //Consume newline
 
             if(choice == 0){
-                System.out.println("Skipping Bin #" + binNumber);
+                System.out.println("Skipping Bin #" + number);
                 break;
             }
 
@@ -163,17 +166,20 @@ public class CoffeeTruck {
                     double quantity = scanner.nextDouble();
                     scanner.nextLine(); //Consume newline
 
-                    if(quantity < 0 || quantity > maxCapacity)
+                    if(quantity < 0 || quantity > maxCapacity){
+
                         System.out.println("Invalid quantity. Must be between 0 and " + maxCapacity + ".");
+                        invalidQuantity = true;
+                    }
 
                     else{
                         //grammar for itemType
                         assignItemToBin(binNumber, bin.getItemType(), quantity);
-                        System.out.println("Bin #" + binNumber + " loaded with " + quantity + " of " + bin.getItemType());
+                        System.out.println("Bin #" + number + " loaded with " + quantity + " of " + bin.getItemType());
                     }
                 }
             }
-        } while(bin.getItemType() == null);
+        } while(bin.getItemType() == null || invalidQuantity);
     }
 
     /**
@@ -225,7 +231,7 @@ public class CoffeeTruck {
         else{
             for(i = 0; i < bins.size(); i++){
                 StorageBin bin = bins.get(i);
-                int binNumber = bin.getBinNumber() + 1;
+                int binNumber = bin.getBinNumber();
 
                 modifyBin(binNumber);
             }
@@ -241,15 +247,26 @@ public class CoffeeTruck {
      */
     public void restockOneBin(int binNumber){
 
+        double quantity;
+
         if(binNumber >= 1 && binNumber <= bins.size()){
 
             StorageBin bin = bins.get(binNumber - 1);
             if(bin.getItemType() == null)
-                System.out.println("Error, bin isn't assigned any item");
+                System.out.println("Bin isn't assigned any item, restock failed");
 
             else{
-                bins.get(binNumber - 1).fill(); //Restock bin
-                System.out.println("Bin #" + binNumber + " restocked.");
+
+                System.out.println("Enter quantity to restock (0 for full restock): ");
+                quantity = scanner.nextDouble();
+
+                if(quantity == 0){
+                    bins.get(binNumber - 1).fill(); //Fill bin to max capacity
+                    System.out.printf("Bin %d restocked to max capacity\n", binNumber);
+                }
+
+                else
+                    bin.addQuantity(quantity); //Add entered quantity to bin
             }
         }
 
@@ -312,8 +329,9 @@ public class CoffeeTruck {
             setMaxLoadout();
 
         else{
-            for(i = 0; i < bins.size(); i++)
-                modifyBin(i+1);
+            for(i = 0; i < bins.size(); i++){
+                modifyBin(i);
+            }
         }
     }
 
@@ -346,7 +364,7 @@ public class CoffeeTruck {
             StorageBin bin = bins.get(i);
             bin.empty(); //Empty bin
         }
-        System.out.println("All bins empty");
+        System.out.println("All bins emptied");
     }
 
     /**

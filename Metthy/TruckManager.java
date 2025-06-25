@@ -181,11 +181,12 @@ public class TruckManager {
      */
     public void truckMaintenanceMenu(CoffeeTruck truck){
 
-        int option, restock;
+        int option, restock, binNumber;
+        double quantity;
 
         do{
             System.out.println("\n=== Truck Maintenance ===");
-            System.out.println("1 - Restock Bins (only works if bin is assigned an item already)");
+            System.out.println("1 - Restock Bins (only works on bins with an assigned item)");
             System.out.println("2 - Modify Storage Bin Contents");
             System.out.println("3 - Empty Storage Bins");
             System.out.println("4 - Edit Truck Name");
@@ -209,7 +210,7 @@ public class TruckManager {
 
                     else if(restock == 2){
                         System.out.println("Enter Bin Number: ");
-                        int binNumber = scanner.nextInt();
+                        binNumber = scanner.nextInt();
                         truck.restockOneBin(binNumber); //Restock selected bin
                     }
                     break;
@@ -239,7 +240,7 @@ public class TruckManager {
 
                     else if(empty == 2){
                         System.out.println("Enter Bin Number: ");
-                        int binNumber = scanner.nextInt();
+                        binNumber = scanner.nextInt();
                         truck.emptyOneBin(binNumber); //Empty selected bin
                     }
                     break;
