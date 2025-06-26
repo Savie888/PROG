@@ -38,9 +38,10 @@ public class Menu {
         do{
             System.out.println("\n=== Main Menu ===");
             System.out.println("1 - Create a Coffee Truck");
-            System.out.println("2 - Simulate Coffee Truck Business");
-            System.out.println("3 - View Dashboard");
-            System.out.println("4 - Exit");
+            System.out.println("2 - Decommission a Coffee Truck");
+            System.out.println("3 - Simulate Coffee Truck Business");
+            System.out.println("4 - View Dashboard");
+            System.out.println("5 - Exit");
 
             System.out.println("Select an option: ");
             option = scanner.nextInt();
@@ -52,12 +53,15 @@ public class Menu {
                     manager.createTruck();
                     break;
                 case 2:
-                    manager.simulateMenu();
+                    manager.removeTruck();
                     break;
                 case 3:
-                    manager.displayDashboard();
+                    manager.simulateMenu();
                     break;
                 case 4:
+                    manager.displayDashboard();
+                    break;
+                case 5:
                     System.out.println("Exiting program. Goodbye!");
                     break;
                 default:
@@ -66,7 +70,7 @@ public class Menu {
 
             System.out.println();
 
-        } while(option != 4);
+        } while(option != 5);
 
         scanner.close();
     }

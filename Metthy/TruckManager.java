@@ -183,6 +183,21 @@ public class TruckManager {
     }
 
     /**
+     * Removes a coffee truck selected by the user.
+     *
+     */
+    public void removeTruck(){
+
+        int truckIndex = selectTruck();
+
+        if(truckIndex != -1){
+
+            trucks.remove(truckIndex);
+            System.out.println("Truck removed");
+        }
+    }
+
+    /**
      * Displays the truck maintenance menu for a specific coffee truck.
      * <p>Allows the user to:</p>
      * <ul>
