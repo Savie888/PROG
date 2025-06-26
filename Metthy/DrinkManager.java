@@ -248,7 +248,7 @@ public class DrinkManager {
      * @return The selected coffee size as a String ("Small", "Medium", or "Large"),
      *         or null if the user cancels.
      */
-    private String getDrinkSize(){
+    private String selectDrinkSize(){
 
         int option;
         String size, repeat = "";
@@ -295,7 +295,8 @@ public class DrinkManager {
      * @param ingredients An array containing required amounts: [beans (g), milk (oz), water (oz)].
      * @return true if all ingredients and one cup are available, false otherwise.
      */
-    private boolean hasSufficientIngredients(StorageBin beanBin, StorageBin milkBin, StorageBin waterBin, StorageBin cupBin, double[] ingredients){
+    private boolean hasSufficientIngredients(StorageBin beanBin, StorageBin milkBin, StorageBin waterBin,
+                                             StorageBin cupBin, double[] ingredients){
 
         double requiredBeans = ingredients[0];
         double requiredMilk = ingredients[1];
@@ -316,6 +317,26 @@ public class DrinkManager {
             flag = false;
 
         return flag;
+    }
+    /**
+     * Deducts the required quantities of ingredients from the corresponding storage bins
+     * during drink preparation.
+     *
+     * @param beanBin   the storage bin holding coffee beans
+     * @param espressoGrams the amount of coffee beans used in grams
+     * @param milkBin   the storage bin holding milk
+     * @param milkOz    the amount of milk used in fluid ounces
+     * @param waterBin  the storage bin holding water
+     * @param waterOz   the amount of water used in fluid ounces
+     * @param cupBin    the storage bin holding cups for the selected drink size
+     */
+    private void useIngredients(StorageBin beanBin, double espressoGrams, StorageBin milkBin, double milkOz,
+                                StorageBin waterBin, double waterOz, StorageBin cupBin){
+
+        beanBin.useQuantity(espressoGrams);
+        milkBin.useQuantity(milkOz);
+        waterBin.useQuantity(waterOz);
+        cupBin.useQuantity(1);
     }
 
     /**
@@ -356,6 +377,31 @@ public class DrinkManager {
     }
 
     /**
+     * Searches the drink menu for a drink that matches the specified type and size.
+     *
+     * @param type the type of coffee drink (e.g., "Latte", "Cappuccino")
+     * @param size the size of the drink (e.g., "Small", "Medium", "Large")
+     * @return the matching Drink object, or null if not found
+     */
+    public Drink getDrink(String type, String size){
+
+        int i, found = 0;
+        Drink drink = null;
+
+        for(i = 0; i < drinks.size() && found == 0; i++){
+
+            Drink d = drinks.get(i);
+
+            if(d.getCoffeeType().equalsIgnoreCase(type) && d.getSize().equalsIgnoreCase(size)){
+                found = 1;
+                drink = d;
+            }
+        }
+
+        return drink;
+    }
+
+    /**
      * Handles the process of preparing a drink.
      *
      * @param truck The coffee truck preparing the drink.
@@ -363,48 +409,57 @@ public class DrinkManager {
     public void prepareDrink(CoffeeTruck truck){
 
         String coffeeType, coffeeSize;
-        double price;
+        double espressoOz, milkOz, waterOz, espressoGrams, price;
         double[] ingredients;
 
         System.out.println("\n--- Prepare Coffee Drink ---");
         coffeeType = selectDrinkType();
-        coffeeSize = getDrinkSize();
+        coffeeSize = selectDrinkSize();
 
         if(coffeeType == null || coffeeSize == null)
             System.out.println("Invalid input! Drink preparation cancelled");
 
         else{
 
+            Drink drink = getDrink(coffeeType, coffeeSize);
+
             System.out.printf("Preparing %s (%s)...\n", coffeeType, coffeeSize);
             showIngredients(coffeeType, coffeeSize);
 
-            ingredients = getIngredients(coffeeType, coffeeSize);
+            ingredients = getIngredients(coffeeType, coffeeSize); //Get the ingredients needed for the drink
 
-            StorageBin beanBin = truck.findBin("Coffee Beans");
-            StorageBin milkBin = truck.findBin("Milk");
-            StorageBin waterBin = truck.findBin("Water");
-            StorageBin cupBin = truck.findBin(coffeeSize + " Cup");
+            StorageBin beanBin = truck.findBin("Coffee Beans"); //Find bin with coffee beans
+            StorageBin milkBin = truck.findBin("Milk"); //Find bin with milk
+            StorageBin waterBin = truck.findBin("Water"); //Find bin with water
+            StorageBin cupBin = truck.findBin(coffeeSize + " Cup"); //Find bin with specified cup size
 
+            //Check if storage bins have sufficient ingredients
             if(hasSufficientIngredients(beanBin, milkBin, waterBin, cupBin, ingredients)){
 
-                double espressoOz = ingredients[0];
-                double milkOz = ingredients[1];
-                double waterOz = ingredients[2];
-                double grams = (espressoOz * 28.34952) / 18.0;
-                price = calculateCoffeeCost(coffeeType, coffeeSize);
+                espressoOz = ingredients[0];
+                milkOz = ingredients[1];
+                waterOz = ingredients[2];
+                espressoGrams = (espressoOz * 28.34952) / 18.0;
+                price = drink.getPrice();
 
-                beanBin.useQuantity(grams);
-                milkBin.useQuantity(milkOz);
-                waterBin.useQuantity(waterOz);
-                cupBin.useQuantity(1);
+                //Deduct ingredients from storage bins
+                useIngredients(beanBin, espressoGrams, milkBin, milkOz, waterBin, waterOz, cupBin);
 
-                System.out.printf("Used: %.2f g beans, %.2f oz milk, %.2f oz water, 1 %s cup\n",
-                        grams, milkOz, waterOz, coffeeSize.toLowerCase());
+                System.out.printf(">>> \nPreparing %s Cup...\n", coffeeSize);
+                System.out.printf(">>> Brewing Standard espresso - %.2f grams of coffee...\n", espressoGrams);
+
+                if(milkOz > 0)
+                    System.out.println(">>> Adding Milk...");
+
+                if(coffeeType.equalsIgnoreCase("Americano"))
+                    System.out.println(">>> Adding Water...");
+
+                System.out.printf(">>> %s Done!\n", coffeeType);
 
                 System.out.printf("Total Price: $%.2f\n", price);
 
                 truck.addToTotalSales(price); //Update total sales
-                truck.recordSale(coffeeType, coffeeSize, grams, milkOz, waterOz, price); //Update sales log
+                truck.recordSale(coffeeType, coffeeSize, espressoGrams, milkOz, waterOz, price); //Update sales log
             }
 
             else
@@ -425,7 +480,7 @@ public class DrinkManager {
         double milkCost = milkOzPrice * getMilkOz(coffeeType, coffeeSize);
         double waterCost = waterOzPrice * getWaterOz(coffeeType, coffeeSize);
 
-        return  coffeeCost + milkCost + waterCost;
+        return coffeeCost + milkCost + waterCost;
     }
 
     /**

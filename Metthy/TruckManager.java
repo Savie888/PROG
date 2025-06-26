@@ -34,6 +34,8 @@ public class TruckManager {
         int i;
         boolean flag = false;
 
+        name = name.trim(); //Trim white spaces
+
         for(i = 0; i < trucks.size() && !flag; i++){
 
             CoffeeTruck truck = trucks.get(i);
@@ -55,6 +57,8 @@ public class TruckManager {
 
         int i;
         boolean flag = false;
+
+        location = location.trim();
 
         for(i = 0; i < trucks.size() && !flag; i++){
 

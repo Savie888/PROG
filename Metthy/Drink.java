@@ -5,8 +5,8 @@ package Metthy;
  */
 public class Drink {
 
-    private String coffeeType;
-    private String size;
+    private final String coffeeType;
+    private final String size;
     private double price;
 
     /**
@@ -41,6 +41,16 @@ public class Drink {
     public String getSize(){
 
         return size;
+    }
+
+    /**
+     * Returns the price of the drink.
+     *
+     * @return The drink price.
+     */
+    public double getPrice(){
+
+        return price;
     }
 
     /**
