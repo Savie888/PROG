@@ -196,7 +196,7 @@ public class CoffeeTruck {
      * and Water respectively.
      * Remaining bins are left empty.
      */
-    public void setMaxLoadout(){
+    public void setDefaultLoadout(){
 
         int i;
         double quantity;
@@ -235,7 +235,7 @@ public class CoffeeTruck {
         max = scanner.nextLine();
 
         if(max.equalsIgnoreCase("yes"))
-            setMaxLoadout();
+            setDefaultLoadout();
 
         else{
             for(i = 0; i < bins.size(); i++){
@@ -349,7 +349,7 @@ public class CoffeeTruck {
         max = scanner.nextLine();
 
         if(max.equalsIgnoreCase("yes"))
-            setMaxLoadout();
+            setDefaultLoadout();
 
         else{
             for(i = 0; i < bins.size(); i++){
