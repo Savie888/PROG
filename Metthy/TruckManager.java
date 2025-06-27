@@ -29,7 +29,7 @@ public class TruckManager {
      * @param name The name to check.
      * @return true if the name is taken; false if it's available.
      */
-    public boolean checkName(String name) {
+    private boolean checkName(String name) {
 
         int i;
         boolean flag = false;
@@ -53,7 +53,7 @@ public class TruckManager {
      * @param location The location to check.
      * @return true if the location is taken; false if it's available.
      */
-    public boolean checkLocation(String location) {
+    private boolean checkLocation(String location) {
 
         int i;
         boolean flag = false;
@@ -210,7 +210,7 @@ public class TruckManager {
      *
      * @param truck The {@code CoffeeTruck} to perform maintenance on
      */
-    public void truckMaintenanceMenu(CoffeeTruck truck){
+    private void truckMaintenanceMenu(CoffeeTruck truck){
 
         int option, restock, binNumber;
 
@@ -350,7 +350,7 @@ public class TruckManager {
      *
      * @param trucks the list of all deployed coffee trucks
      */
-    public void displayTruckDeployment(ArrayList<CoffeeTruck> trucks){
+    private void displayTruckDeployment(ArrayList<CoffeeTruck> trucks){
 
         System.out.println("\n--- Truck Deployment ---");
         System.out.println("Total Trucks     : " + trucks.size()); //Display total number of trucks
@@ -364,7 +364,7 @@ public class TruckManager {
      *
      * @param trucks the list of all deployed coffee trucks
      */
-    public void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
+    private void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
 
         int i, j;
         int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
@@ -433,7 +433,7 @@ public class TruckManager {
      *
      * @param trucks the list of all deployed coffee trucks
      */
-    public void displayTotalSales(ArrayList<CoffeeTruck> trucks){
+    private void displayTotalSales(ArrayList<CoffeeTruck> trucks){
 
         int i, j;
         double combinedSales = 0;
@@ -488,7 +488,7 @@ public class TruckManager {
      *
      * @return the list of deployed {@code CoffeeTruck} instances
      */
-    public ArrayList<CoffeeTruck> getTrucks(){
+    private ArrayList<CoffeeTruck> getTrucks(){
 
         return trucks;
     }

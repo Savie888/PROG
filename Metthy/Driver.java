@@ -27,7 +27,7 @@ public class Driver {
 
     public static void main(String[] args){
 
-        Menu menu = new Menu(); //Create the menu
+        Menu menu = new Menu();
 
         menu.displayMenu(); //Display the menu
     }

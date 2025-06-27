@@ -7,7 +7,7 @@ package Metthy;
 public class StorageBin {
 
     private String itemType;
-    private int binNumber;
+    private final int binNumber;
     private int itemCapacity;
     private double itemQuantity;
 

@@ -13,8 +13,8 @@ import java.util.Scanner;
 
 public class Menu {
 
-    private Scanner scanner = new Scanner(System.in);
-    private TruckManager manager = new TruckManager();
+    private final Scanner scanner = new Scanner(System.in);
+    private final TruckManager manager = new TruckManager();
 
     /**
      * Displays the main menu and handles user interaction.

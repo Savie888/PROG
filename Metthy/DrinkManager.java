@@ -75,7 +75,7 @@ public class DrinkManager {
      * @param size the drink size (e.g., "Small", "Medium", "Large")
      * @return the size of the cup in fluid ounces, or 0 if the size is invalid
      */
-    public double getCupSize(String size){
+    private double getCupSize(String size){
 
         double cupSize;
 
@@ -104,7 +104,7 @@ public class DrinkManager {
      * @param coffeeSize the size of the drink
      * @return a double array containing the required ingredients [coffeeGrams, milkOz, totalWaterOz]
      */
-    public double[] getIngredients(String coffeeType, String coffeeSize){
+    private double[] getIngredients(String coffeeType, String coffeeSize){
 
         double cupSize = getCupSize(coffeeSize);
         double espressoOz = 0, milkOz = 0, waterOz = 0;
@@ -150,7 +150,7 @@ public class DrinkManager {
      * @param size       the drink size (e.g., "Small", "Medium", "Large")
      * @return the amount of coffee beans required, in grams
      */
-    public double getCoffeeGrams(String coffeeType, String size){
+    private double getCoffeeGrams(String coffeeType, String size){
 
         double espressoOz = getIngredients(coffeeType, size)[0];
         return (espressoOz * 28.34952) / 18.0;
@@ -163,7 +163,7 @@ public class DrinkManager {
      * @param size       the drink size (e.g., "Small", "Medium", "Large")
      * @return the amount of milk required, in fluid ounces
      */
-    public double getMilkOz(String coffeeType, String size){
+    private double getMilkOz(String coffeeType, String size){
 
         return getIngredients(coffeeType, size)[1];
     }
@@ -175,7 +175,7 @@ public class DrinkManager {
      * @param size       the drink size (e.g., "Small", "Medium", "Large")
      * @return the total amount of water required, in fluid ounces
      */
-    public double getWaterOz(String coffeeType, String size){
+    private double getWaterOz(String coffeeType, String size){
 
         return getIngredients(coffeeType, size)[2];
     }
@@ -186,7 +186,7 @@ public class DrinkManager {
      * @param coffeeType the type of coffee (e.g., "Latte", "Cappuccino", "Americano")
      * @param coffeeSize the size of the drink (e.g., "Small", "Medium", "Large")
      */
-    public void showIngredients(String coffeeType, String coffeeSize){
+    private void showIngredients(String coffeeType, String coffeeSize){
 
         double[] ingredients = getIngredients(coffeeType, coffeeSize);
         double espressoOz = ingredients[0];
@@ -383,7 +383,7 @@ public class DrinkManager {
      * @param size the size of the drink (e.g., "Small", "Medium", "Large")
      * @return the matching Drink object, or null if not found
      */
-    public Drink getDrink(String type, String size){
+    private Drink getDrink(String type, String size){
 
         int i, found = 0;
         Drink drink = null;
@@ -474,7 +474,7 @@ public class DrinkManager {
      * @param coffeeSize The size of the drink (e.g., "Medium").
      * @return The total price of the drink.
      */
-    public double calculateCoffeeCost(String coffeeType, String coffeeSize){
+    private double calculateCoffeeCost(String coffeeType, String coffeeSize){
 
         double coffeeCost = coffeeGramPrice * getCoffeeGrams(coffeeType, coffeeSize);
         double milkCost = milkOzPrice * getMilkOz(coffeeType, coffeeSize);
