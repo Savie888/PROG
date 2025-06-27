@@ -36,7 +36,7 @@ public class Menu {
         System.out.println("Welcome to Java Jeeps Coffee Truck Simulator");
 
         do{
-            System.out.println("\n=== Main Menu ===");
+            System.out.print("\n=== Main Menu ===\n");
             System.out.println("1 - Create a Coffee Truck");
             System.out.println("2 - Decommission a Coffee Truck");
             System.out.println("3 - Simulate Coffee Truck Business");

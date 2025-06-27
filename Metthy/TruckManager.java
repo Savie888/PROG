@@ -146,12 +146,14 @@ public class TruckManager {
      *
      * @return The index of the selected truck in the list; -1 if no trucks are available.
      */
-    public int selectTruck(){
+    private int selectTruck(){
 
         int i, truckIndex;
-        String repeat = "";
+        String repeat;
 
         do{
+            repeat = "";
+
             if(trucks.isEmpty()){
                 System.out.println("No trucks available");
                 truckIndex = -1; //Assign index to -1 if no trucks available
@@ -190,7 +192,7 @@ public class TruckManager {
 
         int truckIndex = selectTruck();
 
-        if(truckIndex != -1){
+        if(truckIndex >= 0 && truckIndex < trucks.size()){
 
             trucks.remove(truckIndex);
             System.out.println("Truck removed");
@@ -450,7 +452,7 @@ public class TruckManager {
                 System.out.println("[" + truck.getName() + "] " + log.get(j));
 
             //Display total sales of a truck
-            System.out.printf("Total for [%s]   : $%.2f\n", truck.getName(), truck.getTotalSales());
+            System.out.printf("Total for [%s]   : $%.2f\n\n", truck.getName(), truck.getTotalSales());
         }
 
         //Display combined total sales of all truck

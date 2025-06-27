@@ -26,7 +26,7 @@ public class CoffeeTruck {
         this.location = location;
         this.bins = new ArrayList<>(8);
 
-        for(i = 0; i < 8; i++)
+        for(i = 1; i <= 8; i++)
             bins.add(new StorageBin(i));
 
         salesLog = new ArrayList<>();
@@ -105,16 +105,17 @@ public class CoffeeTruck {
     public void modifyBin(int binNumber){
 
         int choice, maxCapacity;
-        int number = binNumber + 1;
+        int binIndex = binNumber - 1;
         double quantity;
         boolean invalidQuantity = false;
+        String itemType;
 
-        System.out.println("\nSetting up Bin #" + number);
+        System.out.println("\nSetting up Bin #" + binNumber);
 
-        StorageBin bin = bins.get(binNumber);
+        StorageBin bin = bins.get(binIndex);
 
         do{
-            System.out.println("Choose item to store in Bin #" + number + ":");
+            System.out.println("Choose item to store in Bin #" + binNumber + ":");
             System.out.println("1. Small Cup");
             System.out.println("2. Medium Cup");
             System.out.println("3. Large Cup");
@@ -127,7 +128,7 @@ public class CoffeeTruck {
             scanner.nextLine(); //Consume newline
 
             if(choice == 0){
-                System.out.println("Skipping Bin #" + number);
+                System.out.println("Skipping Bin #" + binNumber);
                 break;
             }
 
@@ -172,9 +173,18 @@ public class CoffeeTruck {
                         invalidQuantity = true;
                     }
 
-                    else{
-                        assignItemToBin(binNumber, bin.getItemType(), quantity);
-                        System.out.println("Bin #" + number + " loaded with " + quantity + " of " + bin.getItemType());
+                    else {
+                        itemType = bin.getItemType();
+                        assignItemToBin(binIndex, itemType, quantity);
+
+                        if(itemType.equalsIgnoreCase("Water") || (itemType.equalsIgnoreCase("Milk")))
+                            System.out.println("Bin #" + binNumber + " loaded with " + quantity + " ounces of " + itemType);
+
+                        else if(itemType.equalsIgnoreCase("Coffee Beans"))
+                            System.out.println("Bin #" + binNumber + " loaded with " + quantity + " grams of " + itemType);
+
+                        else
+                            System.out.println("Bin #" + binNumber + " loaded with " + (int)quantity + " cups ");
                     }
                 }
             }
@@ -294,21 +304,35 @@ public class CoffeeTruck {
             System.out.println("Error Restocking. Bins have no items assigned");
 
         else{
-            for(i = 0; i < bins.size(); i++){
 
-                StorageBin bin = bins.get(i);
+            System.out.println("Fully restock bins? (yes/no): ");
+            String fullRestock = scanner.nextLine();
 
-                if(bin.getItemType() == null)
-                    flag = 0;
+            if(fullRestock.equalsIgnoreCase("yes")){
+                for(i = 0; i < bins.size(); i++){
 
-                else
-                    bin.fill(); //Fill bin
+                    StorageBin bin = bins.get(i);
+                    bin.fill();
+                }
             }
 
-            if(flag == 1)
-                System.out.println("All bins restocked");
-            else
-                System.out.println("Some bins have no items assigned yet.");
+            else{
+                for(i = 0; i < bins.size(); i++){
+
+                    StorageBin bin = bins.get(i);
+
+                    if(bin.getItemType() == null)
+                        flag = 0;
+
+                    else
+                        restockOneBin(bin.getBinNumber()); //Restock bin
+
+                    if(flag == 1)
+                        System.out.println("All bins restocked");
+                    else
+                        System.out.println("Some bins have no items assigned yet.");
+                }
+            }
         }
     }
 
@@ -329,7 +353,7 @@ public class CoffeeTruck {
 
         else{
             for(i = 0; i < bins.size(); i++){
-                modifyBin(i);
+                modifyBin(i + 1);
             }
         }
     }

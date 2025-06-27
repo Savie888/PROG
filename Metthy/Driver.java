@@ -1,9 +1,8 @@
 package Metthy;
 
-//Continue testing simulate menu
-//Test Drink Manager for duplication
+//Test simulate menu
 //Test prepare Drink after modifications
-//Starting Test Script
+//Work on Test Script
 
 /**
  * This is a simulation of a Coffee Truck Business.
