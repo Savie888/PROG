@@ -231,7 +231,7 @@ public class CoffeeTruck {
 
         System.out.println("\n--- Setting Loadout for " + name + " ---");
 
-        System.out.println("Set Storage Bins to maximum capacity? (yes/no): ");
+        System.out.println("Set Storage Bins to default loadout? (yes/no): ");
         max = scanner.nextLine();
 
         if(max.equalsIgnoreCase("yes"))

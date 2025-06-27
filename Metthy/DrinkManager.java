@@ -445,7 +445,7 @@ public class DrinkManager {
                 //Deduct ingredients from storage bins
                 useIngredients(beanBin, espressoGrams, milkBin, milkOz, waterBin, waterOz, cupBin);
 
-                System.out.printf(">>> \nPreparing %s Cup...\n", coffeeSize);
+                System.out.printf("\n>>> Preparing %s Cup...\n", coffeeSize);
                 System.out.printf(">>> Brewing Standard espresso - %.2f grams of coffee...\n", espressoGrams);
 
                 if(milkOz > 0)
