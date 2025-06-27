@@ -13,7 +13,14 @@ import java.util.Scanner;
 
 public class Menu {
 
+    /**
+     * Scanner object for reading user input from the console.
+     */
     private final Scanner scanner = new Scanner(System.in);
+
+    /**
+     * Manages all truck-related operations such as creation, simulation, and viewing.
+     */
     private final TruckManager manager = new TruckManager();
 
     /**

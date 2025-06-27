@@ -18,10 +18,25 @@ import java.util.ArrayList;
  */
 public class DrinkManager {
 
+    /**
+     * Scanner object for reading user input from the console.
+     */
     private final Scanner scanner = new Scanner(System.in);
+    /**
+     * List of available drinks that can be prepared by the coffee trucks.
+     */
     private final ArrayList<Drink> drinks = new ArrayList<>();
+    /**
+     * Price per gram of coffee beans.
+     */
     private double coffeeGramPrice;
+    /**
+     * Price per fluid ounce of milk.
+     */
     private double milkOzPrice;
+    /**
+     * Price per fluid ounce of water.
+     */
     private double waterOzPrice;
 
     /**

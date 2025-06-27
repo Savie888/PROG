@@ -1,9 +1,5 @@
 package Metthy;
 
-//Test simulate menu
-//Test prepare Drink after modifications
-//Work on Test Script
-
 /**
  * This is a simulation of a Coffee Truck Business.
  * <p>

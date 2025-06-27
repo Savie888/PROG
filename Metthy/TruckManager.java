@@ -18,9 +18,21 @@ import java.util.ArrayList;
  */
 public class TruckManager {
 
+    /**
+     * Scanner object for reading user input from the console.
+     */
     private final Scanner scanner = new Scanner(System.in);
-    private final ArrayList<CoffeeTruck> trucks = new ArrayList<>(); //ArrayList containing all created trucks
+    /**
+     * Arraylist containing all created coffee trucks.
+     */
+    private final ArrayList<CoffeeTruck> trucks = new ArrayList<>();
+    /**
+     * Manages drink preparation, ingredient calculations, and pricing.
+     */
     private final DrinkManager drinkManager = new DrinkManager();
+    /**
+     * Flag to indicate whether drink prices have been initialized.
+     */
     private boolean pricesInitialized = false; //Flag to check if prices have been initialized
 
     /**

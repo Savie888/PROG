@@ -6,9 +6,21 @@ package Metthy;
  */
 public class StorageBin {
 
+    /**
+     * The type of item stored in this bin.
+     */
     private String itemType;
+    /**
+     * The bin's identification number.
+     */
     private final int binNumber;
+    /**
+     * The maximum capacity of this bin, based on the item type.
+     */
     private int itemCapacity;
+    /**
+     * The current quantity of the item stored in this bin.
+     */
     private double itemQuantity;
 
     /**

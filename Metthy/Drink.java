@@ -5,8 +5,17 @@ package Metthy;
  */
 public class Drink {
 
+    /**
+     * The type of coffee.
+     */
     private final String coffeeType;
+    /**
+     * The size of the drink (e.g., Small, Medium, Large).
+     */
     private final String size;
+    /**
+     * The calculated price of the drink based on its ingredients.
+     */
     private double price;
 
     /**
