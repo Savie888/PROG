@@ -82,7 +82,6 @@ public class CoffeeTruck {
                 System.out.println(sale);
             }
         }
-
         System.out.printf("\nTotal Sales: $%.2f\n", getTotalSales());
     }
 
@@ -105,8 +104,9 @@ public class CoffeeTruck {
      */
     public void modifyBin(int binNumber){
 
-        int choice;
+        int choice, maxCapacity;
         int number = binNumber + 1;
+        double quantity;
         boolean invalidQuantity = false;
 
         System.out.println("\nSetting up Bin #" + number);
@@ -161,9 +161,9 @@ public class CoffeeTruck {
                     System.out.println("Invalid selection. Please try again.");
 
                 else{
-                    int maxCapacity = bin.getCapacityForItem(bin.getItemType());
+                    maxCapacity = bin.getCapacityForItem(bin.getItemType());
                     System.out.print("Enter quantity (max " + maxCapacity + "): ");
-                    double quantity = scanner.nextDouble();
+                    quantity = scanner.nextDouble();
                     scanner.nextLine(); //Consume newline
 
                     if(quantity < 0 || quantity > maxCapacity){
@@ -173,7 +173,6 @@ public class CoffeeTruck {
                     }
 
                     else{
-                        //grammar for itemType
                         assignItemToBin(binNumber, bin.getItemType(), quantity);
                         System.out.println("Bin #" + number + " loaded with " + quantity + " of " + bin.getItemType());
                     }
@@ -216,7 +215,7 @@ public class CoffeeTruck {
      */
     public void setLoadout(){
 
-        int i;
+        int i, binNumber;
         String max;
         ArrayList<StorageBin> bins = getBins();
 
@@ -231,7 +230,7 @@ public class CoffeeTruck {
         else{
             for(i = 0; i < bins.size(); i++){
                 StorageBin bin = bins.get(i);
-                int binNumber = bin.getBinNumber();
+                binNumber = bin.getBinNumber();
 
                 modifyBin(binNumber);
             }
