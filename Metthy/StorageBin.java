@@ -107,12 +107,9 @@ public class StorageBin {
      */
     public void empty(){
 
-        //Check if bin is already empty
-        if(!isEmpty()){
+        itemType = null;
+        itemQuantity = 0;
 
-            itemType = null;
-            itemQuantity = 0;
-        }
     }
 
     /**

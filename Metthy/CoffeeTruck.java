@@ -289,7 +289,9 @@ public class CoffeeTruck {
                 System.out.println("Enter quantity to restock (0 for full restock): ");
                 quantity = scanner.nextDouble();
 
-                if(quantity == 0){
+                //Check if bin already full
+                if(quantity == 0 && !bins.get(binNumber - 1).isFull()){
+
                     bins.get(binNumber - 1).fill(); //Fill bin to max capacity
                     System.out.printf("Bin %d restocked to max capacity\n", binNumber);
                 }
@@ -320,8 +322,8 @@ public class CoffeeTruck {
                 counter++;
         }
 
-        if(counter >= bins.size())
-            System.out.println("Error Restocking. Bins have no items assigned");
+        if(counter > 0)
+            System.out.println("Error Restocking. Some bins have no items assigned");
 
         else{
 
@@ -346,11 +348,6 @@ public class CoffeeTruck {
 
                     else
                         restockOneBin(bin.getBinNumber()); //Restock bin
-
-                    if(flag == 1)
-                        System.out.println("All bins restocked");
-                    else
-                        System.out.println("Some bins have no items assigned yet.");
                 }
             }
         }
@@ -365,7 +362,7 @@ public class CoffeeTruck {
         int i;
         String max;
 
-        System.out.println("Set Storage Bins to maximum capacity? (yes/no): ");
+        System.out.println("Set Storage Bins to default loadout? (yes/no): ");
         max = scanner.nextLine();
 
         if(max.equalsIgnoreCase("yes"))
@@ -387,8 +384,11 @@ public class CoffeeTruck {
 
         if(binNumber >= 1 && binNumber <= bins.size()){
 
-            bins.get(binNumber - 1).empty();
-            System.out.println("Bin #" + binNumber + " emptied.");
+            //Check if bin is already empty
+            if(bins.get(binNumber - 1).isEmpty()){
+                bins.get(binNumber - 1).empty();
+                System.out.println("Bin #" + binNumber + " emptied.");
+            }
         }
 
         else
