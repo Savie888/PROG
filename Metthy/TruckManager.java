@@ -386,7 +386,7 @@ public class TruckManager {
         String item;
         ArrayList<StorageBin> bins;
 
-        for(i = 0; i < trucks.size(); i++) {
+        for(i = 0; i < trucks.size(); i++){
 
             CoffeeTruck truck = trucks.get(i);
             bins = truck.getBins();

@@ -44,6 +44,7 @@ public class CoffeeTruck {
         this.location = location;
         this.bins = new ArrayList<>(8);
 
+        //Create the 8 storage bins
         for(i = 1; i <= 8; i++)
             bins.add(new StorageBin(i));
 
@@ -70,6 +71,7 @@ public class CoffeeTruck {
             capacity = bin.getCapacity();
             binNumber = i + 1;
 
+            //Bin is empty if no item assigned
             if(item == null)
                 System.out.println("Bin #" + binNumber + ": [Empty]");
 

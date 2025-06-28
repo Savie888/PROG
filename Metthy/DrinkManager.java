@@ -382,8 +382,8 @@ public class DrinkManager {
                     Drink drink = drinks.get(k);
 
                     if(drink.getCoffeeType().equalsIgnoreCase(type) && drink.getSize().equalsIgnoreCase(size)){
-                        price = calculateCoffeeCost(type, size);
-                        drink.setPrice(price);
+                        price = calculateCoffeeCost(type, size); //Calculate total coffee cost
+                        drink.setPrice(price); //Set it as the coffee's price
                         System.out.printf("  %s - $%.2f\n", size, price);
                     }
                 }

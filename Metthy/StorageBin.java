@@ -67,8 +67,13 @@ public class StorageBin {
      */
     public boolean isEmpty(){
 
-        //Bin is considered empty if there is no item assigned and item quantity is 0
-        return itemQuantity == 0 && itemType == null;
+        boolean flag = false;
+
+        //Bin is considered empty if there is no item assigned or item quantity is 0
+        if(itemQuantity == 0)
+            flag = true;
+
+        return flag;
     }
 
     /**
@@ -78,7 +83,13 @@ public class StorageBin {
      */
     public boolean isFull(){
 
-        return itemQuantity == itemCapacity && itemType != null;
+        boolean flag = false;
+
+        //Bin is considered full if item quantity is equal to capacity and an item is assigned
+        if(itemQuantity == itemCapacity)
+            flag = true;
+
+        return flag;
     }
 
     /**
@@ -88,7 +99,7 @@ public class StorageBin {
 
         //Check first if there is an item assigned and if it's already full
         if(itemType != null && !isFull())
-            this.itemQuantity = 1.0 * itemCapacity;
+            itemQuantity = 1.0 * itemCapacity;
     }
 
     /**
@@ -99,8 +110,8 @@ public class StorageBin {
         //Check if bin is already empty
         if(!isEmpty()){
 
-            this.itemType = null;
-            this.itemQuantity = 0;
+            itemType = null;
+            itemQuantity = 0;
         }
     }
 
@@ -112,7 +123,9 @@ public class StorageBin {
      */
     public void useQuantity(double amount){
 
-        itemQuantity -= amount;
+        //Only deduct if there is enough in storage
+        if(itemQuantity >= amount)
+            itemQuantity -= amount;
     }
 
     /**
