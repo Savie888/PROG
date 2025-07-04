@@ -421,7 +421,7 @@ public class DrinkManager {
      *
      * @param truck The coffee truck preparing the drink.
      */
-    public void prepareDrink(CoffeeTruck truck){
+    public void prepareDrink(RegularCoffeeTruck truck){
 
         String coffeeType, coffeeSize;
         double espressoOz, milkOz, waterOz, espressoGrams, price;
@@ -504,7 +504,7 @@ public class DrinkManager {
      *
      * @param truck The coffee truck accessing the drink features.
      */
-    public void coffeeMenu(CoffeeTruck truck){
+    public void coffeeMenu(RegularCoffeeTruck truck){
 
         int option;
 

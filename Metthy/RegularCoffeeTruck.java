@@ -3,7 +3,10 @@ package Metthy;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CoffeeTruck {
+/**
+ * This class represents a regular coffee truck
+ */
+public class RegularCoffeeTruck {
 
     /**
      * The name of the coffee truck.
@@ -37,7 +40,7 @@ public class CoffeeTruck {
      * @param name     the name of the coffee truck
      * @param location the initial location of the truck
      */
-    public CoffeeTruck(String name, String location){
+    public RegularCoffeeTruck(String name, String location){
 
         int i;
         this.name = name;

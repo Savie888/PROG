@@ -25,7 +25,7 @@ public class TruckManager {
     /**
      * Arraylist containing all created coffee trucks.
      */
-    private final ArrayList<CoffeeTruck> trucks = new ArrayList<>();
+    private final ArrayList<RegularCoffeeTruck> trucks = new ArrayList<>();
     /**
      * Manages drink preparation, ingredient calculations, and pricing.
      */
@@ -34,6 +34,48 @@ public class TruckManager {
      * Flag to indicate whether drink prices have been initialized.
      */
     private boolean pricesInitialized = false; //Flag to check if prices have been initialized
+
+    private String getUniqueName(){
+
+        int flag;
+        String name;
+
+        do{
+            flag = 0;
+
+            System.out.print("Enter truck name: ");
+            name = scanner.nextLine();
+
+            if(checkName(name)){
+                System.out.println("Error. Name is already taken");
+                flag = 1;
+            }
+
+        } while(flag == 1);
+
+        return name;
+    }
+
+    private String getUniqueLocation(){
+
+        int flag;
+        String location;
+
+        do{
+            flag = 0;
+
+            System.out.print("Enter truck location: ");
+            location = scanner.nextLine();
+
+            if(checkLocation(location)){
+                System.out.println("Error. Location is already taken");
+                flag = 1;
+            }
+
+        } while(flag == 1);
+
+        return location;
+    }
 
     /**
      * Checks if the given truck name is already taken.
@@ -50,7 +92,7 @@ public class TruckManager {
 
         for(i = 0; i < trucks.size() && !flag; i++){
 
-            CoffeeTruck truck = trucks.get(i);
+            RegularCoffeeTruck truck = trucks.get(i);
 
             if(name.equalsIgnoreCase(truck.getName()))
                 flag = true; //Set flag to true if the name is already taken
@@ -74,7 +116,7 @@ public class TruckManager {
 
         for(i = 0; i < trucks.size() && !flag; i++){
 
-            CoffeeTruck truck = trucks.get(i);
+            RegularCoffeeTruck truck = trucks.get(i);
 
             if (location.equalsIgnoreCase(truck.getLocation()))
                 flag = true; //Set flag to true if the location is already taken
@@ -93,58 +135,53 @@ public class TruckManager {
      */
     public void createTruck(){
 
-        int flag;
-        String repeat = "yes";
-        String name, location = "";
+        int choice;
+        String name, location;
+        String repeat;
+
         System.out.println("Creating a Coffee Truck...");
 
-        while(repeat.equalsIgnoreCase("yes")){
+        do{
+            name = getUniqueName();
+            location = getUniqueLocation();
 
-            flag = 0;
-            System.out.print("Enter truck name: ");
-            name = scanner.nextLine();
+            do{
+                System.out.println("Choose Truck Type:");
+                System.out.println("1. Regular Coffee Truck");
+                System.out.println("2. Special Coffee Truck");
+                choice = scanner.nextInt();
+                scanner.nextLine(); //Clear excess line
 
-            //Check if name is available
-            if(checkName(name)){
-                System.out.println("Error. Name is already taken");
-                flag = 1;
-            }
+                if((choice != 1 && choice != 2))
+                    System.out.println("Invalid choice. Please try again");
 
-            if(flag == 0){
-                System.out.print("Enter truck location: ");
-                location = scanner.nextLine();
+            } while(choice != 1 && choice != 2);
 
-                //Check if location is available
-                if(checkLocation(location)){
-                    System.out.println("Error. Location is already taken");
-                    flag = 1;
-                }
-            }
+            RegularCoffeeTruck truck;
 
-            if(flag == 1){
-                System.out.print("Try Again? (yes/no): ");
-                repeat = scanner.nextLine();
-            }
+            //Create a Regular Coffee Truck
+            if(choice == 1)
+                truck = new RegularCoffeeTruck(name, location);
 
-            else{
-                //Create new Coffee Truck
-                CoffeeTruck truck = new CoffeeTruck(name, location);
+            //Create a Special Coffee Truck
+            else
+                truck = new SpecialCoffeeTruck(name, location);
 
-                //Option to set up storage bins
-                System.out.println("Set up storage bins?: (yes/no)");
-                String loadout = scanner.nextLine();
+            //Option to set up storage bins
+            System.out.println("Set up storage bins?: (yes/no)");
+            String loadout = scanner.nextLine();
 
-                if(loadout.equalsIgnoreCase("yes"))
-                    truck.setLoadout(); //Set up storage bins
+            if(loadout.equalsIgnoreCase("yes"))
+                truck.setLoadout(); //Set up storage bins
 
-                //Add new truck to arraylist of trucks
-                trucks.add(truck);
+            //Add new truck to arraylist of trucks
+            trucks.add(truck);
 
-                System.out.println("Coffee Truck Created\n");
-                System.out.print("Create another truck? (yes/no): ");
-                repeat = scanner.nextLine();
-            }
-        }
+            System.out.println("Coffee Truck Created\n");
+            System.out.print("Create another truck? (yes/no): ");
+            repeat = scanner.nextLine();
+
+        } while(repeat.equalsIgnoreCase("yes"));
 
         //After all trucks are created, set up DrinkManager and prices
         if(!trucks.isEmpty() && !pricesInitialized){
@@ -177,7 +214,7 @@ public class TruckManager {
                 for(i = 0; i < trucks.size(); i++){
 
                     //Display list of available trucks
-                    CoffeeTruck truck = trucks.get(i);
+                    RegularCoffeeTruck truck = trucks.get(i);
                     System.out.printf("Truck %d: Name - %s  Location - %s\n", i + 1, truck.getName(), truck.getLocation());
                 }
 
@@ -224,7 +261,7 @@ public class TruckManager {
      *
      * @param truck The {@code CoffeeTruck} to perform maintenance on
      */
-    private void truckMaintenanceMenu(CoffeeTruck truck){
+    private void truckMaintenanceMenu(RegularCoffeeTruck truck){
 
         int option, restock, binNumber;
 
@@ -364,12 +401,28 @@ public class TruckManager {
      *
      * @param trucks the list of all deployed coffee trucks
      */
-    private void displayTruckDeployment(ArrayList<CoffeeTruck> trucks){
+    private void displayTruckDeployment(ArrayList<RegularCoffeeTruck> trucks){
+
+        int i;
+        int regularCount = 0;
+        int specialCount = 0;
+
+        for(i = 0; i < trucks.size(); i++){
+
+            RegularCoffeeTruck truck = trucks.get(i);
+
+            if(truck instanceof SpecialCoffeeTruck)
+                specialCount++;
+
+            else
+                regularCount++;
+        }
 
         System.out.println("\n--- Truck Deployment ---");
+        System.out.println("Regular Trucks   : " + regularCount); //Display total number of regular trucks
+        System.out.println("Special Trucks   : " + specialCount); //Display total number of regular trucks
+        System.out.println("------------------------");
         System.out.println("Total Trucks     : " + trucks.size()); //Display total number of trucks
-        System.out.println("Regular Trucks   : " + trucks.size()); //Display total number of regular trucks
-        //System.out.println("Special Trucks   : " + totalSpecial); For MCO2
     }
 
     /**
@@ -378,7 +431,7 @@ public class TruckManager {
      *
      * @param trucks the list of all deployed coffee trucks
      */
-    private void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
+    private void displayTotalInventory(ArrayList<RegularCoffeeTruck> trucks){
 
         int i, j;
         int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
@@ -388,7 +441,7 @@ public class TruckManager {
 
         for(i = 0; i < trucks.size(); i++){
 
-            CoffeeTruck truck = trucks.get(i);
+            RegularCoffeeTruck truck = trucks.get(i);
             bins = truck.getBins();
 
             for(j = 0; j < bins.size(); j++){
@@ -447,7 +500,7 @@ public class TruckManager {
      *
      * @param trucks the list of all deployed coffee trucks
      */
-    private void displayTotalSales(ArrayList<CoffeeTruck> trucks){
+    private void displayTotalSales(ArrayList<RegularCoffeeTruck> trucks){
 
         int i, j;
         double combinedSales = 0;
@@ -456,7 +509,7 @@ public class TruckManager {
 
         for(i = 0; i < trucks.size(); i++){
 
-            CoffeeTruck truck = trucks.get(i);
+            RegularCoffeeTruck truck = trucks.get(i);
             combinedSales += truck.getTotalSales(); //Compute combined sales across all trucks
             ArrayList<String> log = truck.getSalesLog();
 
@@ -477,7 +530,7 @@ public class TruckManager {
      */
     public void displayDashboard(){
 
-        ArrayList<CoffeeTruck> trucks = getTrucks();
+        ArrayList<RegularCoffeeTruck> trucks = getTrucks();
 
         if(trucks.isEmpty())
             System.out.println("Create Trucks First!!!");
@@ -502,7 +555,7 @@ public class TruckManager {
      *
      * @return the list of deployed {@code CoffeeTruck} instances
      */
-    private ArrayList<CoffeeTruck> getTrucks(){
+    private ArrayList<RegularCoffeeTruck> getTrucks(){
 
         return trucks;
     }
