@@ -11,15 +11,15 @@ public class RegularCoffeeTruck {
     /**
      * The name of the coffee truck.
      */
-    private String name;
+    protected String name;
     /**
      * The current location of the coffee truck.
      */
-    private String location;
+    protected String location;
     /**
      * List of storage bins.
      */
-    private ArrayList<StorageBin> bins;
+    private ArrayList<StorageBin> bins = new ArrayList<>(8);;
     /**
      * Log of all sales made by this truck.
      */
@@ -45,7 +45,6 @@ public class RegularCoffeeTruck {
         int i;
         this.name = name;
         this.location = location;
-        this.bins = new ArrayList<>(8);
 
         //Create the 8 storage bins
         for(i = 1; i <= 8; i++)
@@ -90,8 +89,15 @@ public class RegularCoffeeTruck {
     public void displayInfo(){
 
         int i;
+        String truckType;
 
-        System.out.println("\nName - " + this.name + " | " + "Location: " + this.location);
+        if(this instanceof SpecialCoffeeTruck)
+            truckType = "Special Truck";
+        else
+            truckType = "Regular Truck";
+
+        System.out.println("\n[" + truckType + "]");
+        System.out.println("Name - " + this.name + " | " + "Location: " + this.location);
         displayBins();
         System.out.println("--- Transactions ---");
 
@@ -111,13 +117,13 @@ public class RegularCoffeeTruck {
     /**
      * Assigns a specific item type and quantity to a given bin number.
      *
-     * @param binNumber   the index of the bin (0-based)
+     * @param binIndex   the index of the bin (0-based)
      * @param itemType    the type of item to store in the bin
      * @param itemQuantity the quantity of the item to assign
      */
-    public void assignItemToBin(int binNumber, String itemType, double itemQuantity){
+    public void assignItemToBin(int binIndex, String itemType, double itemQuantity){
 
-        bins.get(binNumber).assignItem(itemType, itemQuantity);
+        bins.get(binIndex).assignItem(itemType, itemQuantity);
     }
 
     /**
@@ -130,7 +136,7 @@ public class RegularCoffeeTruck {
         int choice, maxCapacity;
         int binIndex = binNumber - 1;
         double quantity;
-        boolean invalidQuantity = false;
+        boolean invalidQuantity;
         String itemType;
 
         System.out.println("\nSetting up Bin #" + binNumber);
@@ -138,6 +144,8 @@ public class RegularCoffeeTruck {
         StorageBin bin = bins.get(binIndex);
 
         do{
+            invalidQuantity = false;
+
             System.out.println("Choose item to store in Bin #" + binNumber + ":");
             System.out.println("1. Small Cup");
             System.out.println("2. Medium Cup");
@@ -196,7 +204,7 @@ public class RegularCoffeeTruck {
                         invalidQuantity = true;
                     }
 
-                    else {
+                    else{
                         itemType = bin.getItemType();
                         assignItemToBin(binIndex, itemType, quantity);
 

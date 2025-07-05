@@ -1,5 +1,8 @@
 package Metthy;
 
+//Special truck display info
+//Modify truck maintenance and simulate menu
+
 /**
  * This is a simulation of a Coffee Truck Business.
  * <p>

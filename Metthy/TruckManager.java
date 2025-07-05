@@ -22,60 +22,21 @@ public class TruckManager {
      * Scanner object for reading user input from the console.
      */
     private final Scanner scanner = new Scanner(System.in);
+
     /**
      * Arraylist containing all created coffee trucks.
      */
     private final ArrayList<RegularCoffeeTruck> trucks = new ArrayList<>();
+
     /**
      * Manages drink preparation, ingredient calculations, and pricing.
      */
     private final DrinkManager drinkManager = new DrinkManager();
+
     /**
      * Flag to indicate whether drink prices have been initialized.
      */
     private boolean pricesInitialized = false; //Flag to check if prices have been initialized
-
-    private String getUniqueName(){
-
-        int flag;
-        String name;
-
-        do{
-            flag = 0;
-
-            System.out.print("Enter truck name: ");
-            name = scanner.nextLine();
-
-            if(checkName(name)){
-                System.out.println("Error. Name is already taken");
-                flag = 1;
-            }
-
-        } while(flag == 1);
-
-        return name;
-    }
-
-    private String getUniqueLocation(){
-
-        int flag;
-        String location;
-
-        do{
-            flag = 0;
-
-            System.out.print("Enter truck location: ");
-            location = scanner.nextLine();
-
-            if(checkLocation(location)){
-                System.out.println("Error. Location is already taken");
-                flag = 1;
-            }
-
-        } while(flag == 1);
-
-        return location;
-    }
 
     /**
      * Checks if the given truck name is already taken.
@@ -126,6 +87,58 @@ public class TruckManager {
     }
 
     /**
+     * Prompts user to enter a unique truck name
+     *
+     * @return the unique name entered
+     */
+    private String getUniqueName(){
+
+        int flag;
+        String name;
+
+        do{
+            flag = 0;
+
+            System.out.print("Enter truck name: ");
+            name = scanner.nextLine();
+
+            if(checkName(name)){
+                System.out.println("Error. Name is already taken");
+                flag = 1;
+            }
+
+        } while(flag == 1);
+
+        return name;
+    }
+
+    /**
+     * Prompts user to enter a unique truck location
+     *
+     * @return the unique location entered
+     */
+    private String getUniqueLocation(){
+
+        int flag;
+        String location;
+
+        do{
+            flag = 0;
+
+            System.out.print("Enter truck location: ");
+            location = scanner.nextLine();
+
+            if(checkLocation(location)){
+                System.out.println("Error. Location is already taken");
+                flag = 1;
+            }
+
+        } while(flag == 1);
+
+        return location;
+    }
+
+    /**
      * Allows user to:
      * <ul>
      *  <li>Create a coffee truck by entering a unique name and location.</li>
@@ -171,8 +184,14 @@ public class TruckManager {
             System.out.println("Set up storage bins?: (yes/no)");
             String loadout = scanner.nextLine();
 
-            if(loadout.equalsIgnoreCase("yes"))
-                truck.setLoadout(); //Set up storage bins
+            if(loadout.equalsIgnoreCase("yes")){
+
+                if(truck instanceof SpecialCoffeeTruck)
+                    ((SpecialCoffeeTruck) truck).setSpecialLoadout(); //Set up special truck storage bins
+
+                else
+                    truck.setLoadout(); //Set up regular truck storage bins
+            }
 
             //Add new truck to arraylist of trucks
             trucks.add(truck);
@@ -307,7 +326,15 @@ public class TruckManager {
                     else if(modify == 2){
                         System.out.println("Enter bin number to modify: ");
                         int binNum = scanner.nextInt();
-                        truck.modifyBin(binNum); //Modify selected bin
+
+                        if(binNum == 9 || binNum == 10){
+                            if(truck instanceof SpecialCoffeeTruck)
+                                ((SpecialCoffeeTruck) truck).modifySyrupBin(binNum); //Modify syrup bin
+                            else
+                                System.out.println("This truck does not support syrup bins.");
+                        }
+                        else
+                            truck.modifyBin(binNum); //Modify regular bin
                     }
                     break;
                 case 3:
