@@ -192,32 +192,20 @@ public class StorageBin {
      */
     public int getCapacityForItem(String itemType){
 
-        int capacity;
+        int capacity = switch(itemType){
 
-        switch(itemType){
-
-            case "Small Cup":
-                capacity = 80;
-                break;
-            case "Medium Cup":
-                capacity = 64;
-                break;
-            case "Large Cup":
-                capacity = 40;
-                break;
-            case "Coffee Beans":
-                capacity = 1008;
-                break;
-            case "Milk":
-                capacity = 640;
-                break;
-            case "Water":
-                capacity = 640;
-                break;
-            default:
-                capacity = 0;
-                break;
-        }
+            case "Small Cup"      -> 80;
+            case "Medium Cup"     -> 64;
+            case "Large Cup"      -> 40;
+            case "Coffee Beans"   -> 1008;
+            case "Milk",
+                 "Water",
+                 "Hazelnut",
+                 "Chocolate",
+                 "Almond",
+                 "Sucrose"        -> 640;
+            default               -> 0;
+        };
 
         return capacity;
     }

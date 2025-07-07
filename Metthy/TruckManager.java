@@ -174,11 +174,11 @@ public class TruckManager {
 
             //Create a Regular Coffee Truck
             if(choice == 1)
-                truck = new RegularCoffeeTruck(name, location);
+                truck = new RegularCoffeeTruck(name, location, drinkManager);
 
             //Create a Special Coffee Truck
             else
-                truck = new SpecialCoffeeTruck(name, location);
+                truck = new SpecialCoffeeTruck(name, location, drinkManager);
 
             //Option to set up storage bins
             System.out.println("Set up storage bins?: (yes/no)");
@@ -268,212 +268,6 @@ public class TruckManager {
     }
 
     /**
-     * Displays the truck maintenance menu for a specific coffee truck.
-     * <p>Allows the user to:</p>
-     * <ul>
-     *   <li>Restock bins (either all or individually)</li>
-     *   <li>Modify storage bin contents (either all or individually)</li>
-     *   <li>Empty bins (either all or individually)</li>
-     *   <li>Edit the truck's name or location</li>
-     *   <li>Edit global drink ingredient prices</li>
-     * </ul>
-     *
-     * @param truck The {@code CoffeeTruck} to perform maintenance on
-     */
-    private void regularTruckMaintenanceMenu(RegularCoffeeTruck truck){
-
-        int option, restock, binNumber;
-
-        do{
-            System.out.println("\n=== Truck Maintenance ===");
-            System.out.println("1 - Restock Bins (only works on bins with an assigned item)");
-            System.out.println("2 - Modify Storage Bin Contents");
-            System.out.println("3 - Empty Storage Bins");
-            System.out.println("4 - Edit Truck Name");
-            System.out.println("5 - Edit Truck Location");
-            System.out.println("6 - Edit Pricing (will affect pricing for all trucks)");
-            System.out.println("7 - Exit Menu");
-            System.out.println("Select an Option: ");
-            option = scanner.nextInt();
-            scanner.nextLine(); //Absorb new line
-
-            switch(option){
-
-                case 1:
-                    System.out.println("1 - Restock all bins");
-                    System.out.println("2 - Restock one bin");
-                    System.out.println("Select an option: ");
-                    restock  = scanner.nextInt();
-
-                    if(restock == 1)
-                        truck.restockAllBins(); //Restock all bins
-
-                    else if(restock == 2){
-                        System.out.println("Enter Bin Number: ");
-                        binNumber = scanner.nextInt();
-                        truck.restockOneBin(binNumber); //Restock selected bin
-                    }
-                    break;
-                case 2:
-                    System.out.println("1 - Modify all bins");
-                    System.out.println("2 - Modify one bin");
-                    System.out.println("Select an option: ");
-                    int modify = scanner.nextInt();
-
-                    if(modify == 1)
-                        truck.modifyAllBins(); //Modify all bins
-
-                    else if(modify == 2){
-                        System.out.println("Enter bin number to modify: ");
-                        int binNum = scanner.nextInt();
-
-                        truck.modifyBin(binNum); //Modify bin
-                    }
-                    break;
-                case 3:
-                    System.out.println("1 - Empty all bins");
-                    System.out.println("2 - Empty one bin");
-                    System.out.println("Select an option: ");
-                    int empty = scanner.nextInt();
-
-                    if(empty == 1)
-                        truck.emptyAllBins(); //Empty all bins
-
-                    else if(empty == 2){
-                        System.out.println("Enter Bin Number: ");
-                        binNumber = scanner.nextInt();
-                        truck.emptyOneBin(binNumber); //Empty selected bin
-                    }
-                    break;
-                case 4:
-                    System.out.println("Enter new name: ");
-                    String name = scanner.nextLine();
-                    truck.setName(name); //Set new name
-                    break;
-                case 5:
-                    System.out.println("Enter new location: ");
-                    String location = scanner.nextLine();
-                    truck.setLocation(location); //Set new location
-                    break;
-                case 6:
-                    drinkManager.setIngredientPrices(); //Set ingredient prices
-                    break;
-                case 7:
-                    System.out.println("Exiting Menu...");
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again");
-                    break;
-            }
-        } while(option != 7);
-    }
-
-    /**
-     * Displays the truck maintenance menu for a specific coffee truck.
-     * <p>Allows the user to:</p>
-     * <ul>
-     *   <li>Restock bins (either all or individually)</li>
-     *   <li>Modify storage bin contents (either all or individually)</li>
-     *   <li>Empty bins (either all or individually)</li>
-     *   <li>Edit the truck's name or location</li>
-     *   <li>Edit global drink ingredient prices</li>
-     * </ul>
-     *
-     * @param truck The {@code CoffeeTruck} to perform maintenance on
-     */
-    private void specialTruckMaintenanceMenu(SpecialCoffeeTruck truck){
-
-        int option, restock, binNumber;
-
-        do{
-            System.out.println("\n=== Truck Maintenance ===");
-            System.out.println("1 - Restock Bins (only works on bins with an assigned item)");
-            System.out.println("2 - Modify Storage Bin Contents");
-            System.out.println("3 - Empty Storage Bins");
-            System.out.println("4 - Edit Truck Name");
-            System.out.println("5 - Edit Truck Location");
-            System.out.println("6 - Edit Pricing (will affect pricing for all trucks)");
-            System.out.println("7 - Exit Menu");
-            System.out.println("Select an Option: ");
-            option = scanner.nextInt();
-            scanner.nextLine(); //Absorb new line
-
-            switch(option){
-
-                case 1:
-                    System.out.println("1 - Restock all bins");
-                    System.out.println("2 - Restock one bin");
-                    System.out.println("Select an option: ");
-                    restock  = scanner.nextInt();
-
-                    if(restock == 1)
-                        truck.restockAllBins(); //Restock all bins
-
-                    else if(restock == 2){
-                        System.out.println("Enter Bin Number: ");
-                        binNumber = scanner.nextInt();
-                        truck.restockOneBin(binNumber); //Restock selected bin
-                    }
-                    break;
-                case 2:
-                    System.out.println("1 - Modify all bins");
-                    System.out.println("2 - Modify one bin");
-                    System.out.println("Select an option: ");
-                    int modify = scanner.nextInt();
-
-                    if(modify == 1)
-                        truck.modifyAllBins(); //Modify all bins
-
-                    else if(modify == 2){
-                        System.out.println("Enter bin number to modify: ");
-                        int binNum = scanner.nextInt();
-
-                        if(binNum == 9 || binNum == 10)
-                            truck.modifySyrupBin(binNum); //Modify syrup bin
-
-                        else
-                            truck.modifyBin(binNum); //Modify regular bin
-                    }
-                    break;
-                case 3:
-                    System.out.println("1 - Empty all bins");
-                    System.out.println("2 - Empty one bin");
-                    System.out.println("Select an option: ");
-                    int empty = scanner.nextInt();
-
-                    if(empty == 1)
-                        truck.emptyAllBins(); //Empty all bins
-
-                    else if(empty == 2){
-                        System.out.println("Enter Bin Number: ");
-                        binNumber = scanner.nextInt();
-                        truck.emptyOneBin(binNumber); //Empty selected bin
-                    }
-                    break;
-                case 4:
-                    System.out.println("Enter new name: ");
-                    String name = scanner.nextLine();
-                    truck.setName(name); //Set new name
-                    break;
-                case 5:
-                    System.out.println("Enter new location: ");
-                    String location = scanner.nextLine();
-                    truck.setLocation(location); //Set new location
-                    break;
-                case 6:
-                    drinkManager.setIngredientPrices(); //Set ingredient prices
-                    break;
-                case 7:
-                    System.out.println("Exiting Menu...");
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again");
-                    break;
-            }
-        } while(option != 7);
-    }
-
-    /**
      * Displays the truck simulation menu for performing actions on a selected coffee truck.
      * <p>Allows user to:</p>
      * <ul>
@@ -486,14 +280,10 @@ public class TruckManager {
     public void simulateMenu(){
 
         int index, option;
-        boolean isSpecial = false;
         RegularCoffeeTruck selectedTruck;
 
         index = selectTruck(); //Let user select a truck
         selectedTruck = trucks.get(index);
-
-        if(selectedTruck instanceof SpecialCoffeeTruck)
-            isSpecial = true;
 
         do{
             System.out.println("\n=== Simulation Menu ===");
@@ -508,16 +298,13 @@ public class TruckManager {
             switch(option){
 
                 case 1:
-                    drinkManager.coffeeMenu(trucks.get(index)); //Display Coffee Menu
+                    drinkManager.coffeeMenu(selectedTruck); //Display Coffee Menu
                     break;
                 case 2:
-                    trucks.get(index).displayInfo(); //Display truck information
+                    selectedTruck.displayInfo(); //Display truck information
                     break;
                 case 3:
-                    if(isSpecial)
-                        specialTruckMaintenanceMenu((SpecialCoffeeTruck) selectedTruck); //Display special truck maintenance menu
-                    else
-                        regularTruckMaintenanceMenu(selectedTruck); //Display regular truck maintenance menu
+                    selectedTruck.truckMaintenanceMenu(); //Display truck maintenance menu
                     break;
                 case 4:
                     System.out.println("Returning to main menu...");

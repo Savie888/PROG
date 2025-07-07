@@ -16,10 +16,13 @@ public class RegularCoffeeTruck {
      * The current location of the coffee truck.
      */
     protected String location;
+
+    protected final DrinkManager drinkManager;
+
     /**
      * List of storage bins.
      */
-    private ArrayList<StorageBin> bins = new ArrayList<>(8);;
+    protected ArrayList<StorageBin> bins = new ArrayList<>(8);
     /**
      * Log of all sales made by this truck.
      */
@@ -40,11 +43,12 @@ public class RegularCoffeeTruck {
      * @param name     the name of the coffee truck
      * @param location the initial location of the truck
      */
-    public RegularCoffeeTruck(String name, String location){
+    public RegularCoffeeTruck(String name, String location, DrinkManager drinkManager){
 
         int i;
         this.name = name;
         this.location = location;
+        this.drinkManager = drinkManager;
 
         //Create the 8 storage bins
         for(i = 1; i <= 8; i++)
@@ -323,25 +327,25 @@ public class RegularCoffeeTruck {
     public void restockAllBins(){
 
         int i;
-        int counter = 0, flag = 1;
+        int flag = 0;
 
-        for(i = 0; i < bins.size(); i++){
+        for(i = 0; i < bins.size() && flag == 0; i++){
 
             StorageBin bin = bins.get(i);
 
             if(bin.getItemType() == null)
-                counter++;
+                flag = 1;
         }
 
-        if(counter > 0)
+        if(flag == 1)
             System.out.println("Error Restocking. Some bins have no items assigned");
 
         else{
-
             System.out.println("Fully restock bins? (yes/no): ");
             String fullRestock = scanner.nextLine();
 
             if(fullRestock.equalsIgnoreCase("yes")){
+
                 for(i = 0; i < bins.size(); i++){
 
                     StorageBin bin = bins.get(i);
@@ -354,11 +358,7 @@ public class RegularCoffeeTruck {
 
                     StorageBin bin = bins.get(i);
 
-                    if(bin.getItemType() == null)
-                        flag = 0;
-
-                    else
-                        restockOneBin(bin.getBinNumber()); //Restock bin
+                    restockOneBin(bin.getBinNumber()); //Restock bin
                 }
             }
         }
@@ -459,6 +459,106 @@ public class RegularCoffeeTruck {
     public void setLocation(String location){
 
         this.location = location;
+    }
+
+    /**
+     * Displays the truck maintenance menu for a specific coffee truck.
+     * <p>Allows the user to:</p>
+     * <ul>
+     *   <li>Restock bins (either all or individually)</li>
+     *   <li>Modify storage bin contents (either all or individually)</li>
+     *   <li>Empty bins (either all or individually)</li>
+     *   <li>Edit the truck's name or location</li>
+     *   <li>Edit global drink ingredient prices</li>
+     * </ul>
+     *
+     */
+    public void truckMaintenanceMenu(){
+
+        int option, restock, binNumber;
+
+        do{
+            System.out.println("\n=== Truck Maintenance ===");
+            System.out.println("1 - Restock Bins (only works on bins with an assigned item)");
+            System.out.println("2 - Modify Storage Bin Contents");
+            System.out.println("3 - Empty Storage Bins");
+            System.out.println("4 - Edit Truck Name");
+            System.out.println("5 - Edit Truck Location");
+            System.out.println("6 - Edit Pricing (will affect pricing for all trucks)");
+            System.out.println("7 - Exit Menu");
+            System.out.println("Select an Option: ");
+            option = scanner.nextInt();
+            scanner.nextLine(); //Absorb new line
+
+            switch(option){
+
+                case 1:
+                    System.out.println("1 - Restock all bins");
+                    System.out.println("2 - Restock one bin");
+                    System.out.println("Select an option: ");
+                    restock  = scanner.nextInt();
+
+                    if(restock == 1)
+                        restockAllBins(); //Restock all bins
+
+                    else if(restock == 2){
+                        System.out.println("Enter Bin Number: ");
+                        binNumber = scanner.nextInt();
+                        restockOneBin(binNumber); //Restock selected bin
+                    }
+                    break;
+                case 2:
+                    System.out.println("1 - Modify all bins");
+                    System.out.println("2 - Modify one bin");
+                    System.out.println("Select an option: ");
+                    int modify = scanner.nextInt();
+
+                    if(modify == 1)
+                        modifyAllBins(); //Modify all bins
+
+                    else if(modify == 2){
+                        System.out.println("Enter bin number to modify: ");
+                        int binNum = scanner.nextInt();
+
+                        modifyBin(binNum); //Modify regular bin
+                    }
+                    break;
+                case 3:
+                    System.out.println("1 - Empty all bins");
+                    System.out.println("2 - Empty one bin");
+                    System.out.println("Select an option: ");
+                    int empty = scanner.nextInt();
+
+                    if(empty == 1)
+                        emptyAllBins(); //Empty all bins
+
+                    else if(empty == 2){
+                        System.out.println("Enter Bin Number: ");
+                        binNumber = scanner.nextInt();
+                        emptyOneBin(binNumber); //Empty selected bin
+                    }
+                    break;
+                case 4:
+                    System.out.println("Enter new name: ");
+                    String name = scanner.nextLine();
+                    setName(name); //Set new name
+                    break;
+                case 5:
+                    System.out.println("Enter new location: ");
+                    String location = scanner.nextLine();
+                    setLocation(location); //Set new location
+                    break;
+                case 6:
+                    drinkManager.setIngredientPrices(); //Set ingredient prices
+                    break;
+                case 7:
+                    System.out.println("Exiting Menu...");
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again");
+                    break;
+            }
+        } while(option != 7);
     }
 
     /**
