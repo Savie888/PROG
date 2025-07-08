@@ -233,4 +233,67 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         } while(option != 7);
     }
 
+    @Override
+    protected void prepareDrink(){
+
+        String coffeeType, coffeeSize, brewType, addOn;
+        double espressoOz, milkOz, waterOz, espressoGrams, price;
+        double[] ingredients;
+
+        System.out.println("\n--- Prepare Coffee Drink ---");
+        coffeeType = drinkManager.selectDrinkType();
+        coffeeSize = drinkManager.selectDrinkSize();
+        brewType = drinkManager.selectBrewType();
+        addOn = drinkManager.selectAddOn();
+
+        if(coffeeType == null || coffeeSize == null)
+            System.out.println("Invalid input! Drink preparation cancelled");
+
+        else{
+            Drink drink = drinkManager.getDrink(coffeeType, coffeeSize);
+
+            System.out.printf("Preparing %s %s (%s)...\n", brewType, coffeeType, coffeeSize);
+            drinkManager.showIngredients(coffeeType, coffeeSize);
+
+            ingredients = drinkManager.getIngredients(coffeeType, coffeeSize); //Get the ingredients needed for the drink
+
+            StorageBin beanBin = findBin("Coffee Beans"); //Find bin with coffee beans
+            StorageBin milkBin = findBin("Milk"); //Find bin with milk
+            StorageBin waterBin = findBin("Water"); //Find bin with water
+            StorageBin cupBin = findBin(coffeeSize + " Cup"); //Find bin with specified cup size
+
+            //Check if storage bins have sufficient ingredients
+            if(drinkManager.hasSufficientIngredients(beanBin, milkBin, waterBin, cupBin, ingredients)){
+
+                espressoOz = ingredients[0];
+                milkOz = ingredients[1];
+                waterOz = ingredients[2];
+                espressoGrams = (espressoOz * 28.34952) / 18.0;
+                price = drink.getPrice();
+
+                //Deduct ingredients from storage bins
+                drinkManager.useIngredients(beanBin, espressoGrams, milkBin, milkOz, waterBin, waterOz, cupBin);
+
+                System.out.printf("\n>>> Preparing %s Cup...\n", coffeeSize);
+                System.out.printf(">>> Brewing %s espresso - %.2f grams of coffee...\n", brewType, espressoGrams);
+
+                if(milkOz > 0)
+                    System.out.println(">>> Adding Milk...");
+
+                if(coffeeType.equalsIgnoreCase("Americano"))
+                    System.out.println(">>> Adding Water...");
+
+                System.out.printf(">>> %s Done!\n", coffeeType);
+
+                System.out.printf("Total Price: $%.2f\n", price);
+
+                addToTotalSales(price); //Update total sales
+                recordSale(coffeeType, coffeeSize, espressoGrams, milkOz, waterOz, price); //Update sales log
+            }
+
+            else
+                System.out.println("Not enough ingredients or cups. Drink preparation cancelled.");
+        }
+    }
+
 }

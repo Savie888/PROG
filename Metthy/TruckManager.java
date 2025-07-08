@@ -298,7 +298,7 @@ public class TruckManager {
             switch(option){
 
                 case 1:
-                    drinkManager.coffeeMenu(selectedTruck); //Display Coffee Menu
+                    selectedTruck.coffeeMenu(); //Display Coffee Menu
                     break;
                 case 2:
                     selectedTruck.displayInfo(); //Display truck information

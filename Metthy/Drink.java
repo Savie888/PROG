@@ -14,6 +14,10 @@ public class Drink {
      */
     private final String size;
     /**
+     * The brew type of the drink (e.g., Strong, Light, Standard, Custom).
+     */
+    private String brewType = "Standard";
+    /**
      * The calculated price of the drink based on its ingredients.
      */
     private double price;
@@ -63,12 +67,32 @@ public class Drink {
     }
 
     /**
+     * Returns the brew type of the drink.
+     *
+     * @return The drink price.
+     */
+    public String getBrewType(){
+
+        return brewType;
+    }
+
+    /**
      * Sets the price of the drink.
      *
-     * @param price The new price to set.
+     * @param price The new price to be set.
      */
     public void setPrice(double price){
 
         this.price = price;
+    }
+
+    /**
+     * Sets the brew type of the drink.
+     *
+     * @param brewType The new brew type to be set.
+     */
+    public void setBrewType(String brewType){
+
+        this.brewType = brewType;
     }
 }

@@ -1,5 +1,10 @@
 package Metthy;
 
+//Special Drink Preparation
+//Finish Syrup Add Ons
+//Water ounces
+//Reconsider calculate cost design
+
 /**
  * This is a simulation of a Coffee Truck Business.
  * <p>
@@ -17,7 +22,6 @@ package Metthy;
  * @author Adrian Matthew Dee and Queenie Salao
  * @version 1.0
  */
-
 public class Driver {
 
     public static void main(String[] args){

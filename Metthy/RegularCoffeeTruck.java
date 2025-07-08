@@ -598,6 +598,16 @@ public class RegularCoffeeTruck {
     }
 
     /**
+     * Adds a specified amount to the truck's total sales.
+     *
+     * @param amount the amount to add to total sales
+     */
+    protected void addToTotalSales(double amount){
+
+        totalSales += amount;
+    }
+
+    /**
      * Records a drink sale to a truck's sales log.
      *
      * @param coffeeType the type of coffee sold
@@ -607,10 +617,111 @@ public class RegularCoffeeTruck {
      * @param water the ounces of water used
      * @param price the price of the drink
      */
-    public void recordSale(String coffeeType, String size, double grams, double milk, double water, double price){
+    protected void recordSale(String coffeeType, String size, double grams, double milk, double water, double price){
 
         salesLog.add(String.format("Drink: %s (%s) | %.2f g beans, %.2f oz milk, %.2f oz water | $%.2f",
                 coffeeType, size, grams, milk, water, price));
+    }
+
+    /**
+     * Handles the process of preparing a drink.
+     *
+     */
+    protected void prepareDrink(){
+
+        String coffeeType, coffeeSize, brewType;
+        double espressoOz, milkOz, waterOz, espressoGrams, price;
+        double[] ingredients;
+
+        System.out.println("\n--- Prepare Coffee Drink ---");
+        coffeeType = drinkManager.selectDrinkType();
+        coffeeSize = drinkManager.selectDrinkSize();
+        brewType = "Standard";
+
+        if(coffeeType == null || coffeeSize == null)
+            System.out.println("Invalid input! Drink preparation cancelled");
+
+        else{
+            Drink drink = drinkManager.getDrink(coffeeType, coffeeSize);
+            drink.setBrewType(brewType); //All drinks in regular truck are standard brew by default
+
+            System.out.printf("Preparing %s (%s)...\n", coffeeType, coffeeSize);
+            drinkManager.showIngredients(coffeeType, coffeeSize);
+
+            ingredients = drinkManager.getIngredients(coffeeType, coffeeSize); //Get the ingredients needed for the drink
+
+            StorageBin beanBin = findBin("Coffee Beans"); //Find bin with coffee beans
+            StorageBin milkBin = findBin("Milk"); //Find bin with milk
+            StorageBin waterBin = findBin("Water"); //Find bin with water
+            StorageBin cupBin = findBin(coffeeSize + " Cup"); //Find bin with specified cup size
+
+            //Check if storage bins have sufficient ingredients
+            if(drinkManager.hasSufficientIngredients(beanBin, milkBin, waterBin, cupBin, ingredients)){
+
+                espressoOz = ingredients[0];
+                milkOz = ingredients[1];
+                waterOz = ingredients[2];
+                espressoGrams = (espressoOz * 28.34952) / 18.0;
+                price = drink.getPrice();
+
+                //Deduct ingredients from storage bins
+                drinkManager.useIngredients(beanBin, espressoGrams, milkBin, milkOz, waterBin, waterOz, cupBin);
+
+                System.out.printf("\n>>> Preparing %s Cup...\n", coffeeSize);
+                System.out.printf(">>> Brewing Standard espresso - %.2f grams of coffee...\n", espressoGrams);
+
+                if(milkOz > 0)
+                    System.out.println(">>> Adding Milk...");
+
+                if(coffeeType.equalsIgnoreCase("Americano"))
+                    System.out.println(">>> Adding Water...");
+
+                System.out.printf(">>> %s Done!\n", coffeeType);
+
+                System.out.printf("Total Price: $%.2f\n", price);
+
+                addToTotalSales(price); //Update total sales
+                recordSale(coffeeType, coffeeSize, espressoGrams, milkOz, waterOz, price); //Update sales log
+            }
+
+            else
+                System.out.println("Not enough ingredients or cups. Drink preparation cancelled.");
+        }
+    }
+
+    /**
+     * Displays the main coffee menu for the truck, allowing the user to view
+     * available drinks or prepare a new drink.
+     *
+     */
+    public void coffeeMenu(){
+
+        int option;
+
+        do{
+            System.out.println("\n=== Coffee Menu ===");
+            System.out.println("1 - View Drink Menu");
+            System.out.println("2 - Prepare Drink");
+            System.out.println("3 - Exit Menu");
+            System.out.println("Enter option: ");
+            option = scanner.nextInt();
+
+            switch(option){
+
+                case 1:
+                    drinkManager.displayDrinksMenu();
+                    break;
+                case 2:
+                    prepareDrink();
+                    break;
+                case 3:
+                    System.out.println("Exiting Menu");
+                    break;
+                default:
+                    System.out.println("Invalid option");
+                    break;
+            }
+        } while(option != 3);
     }
 
     /**
@@ -621,16 +732,6 @@ public class RegularCoffeeTruck {
     public ArrayList<String> getSalesLog(){
 
         return salesLog;
-    }
-
-    /**
-     * Adds a specified amount to the truck's total sales.
-     *
-     * @param amount the amount to add to total sales
-     */
-    public void addToTotalSales(double amount){
-
-        totalSales += amount;
     }
 
     /**
