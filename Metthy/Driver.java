@@ -3,6 +3,7 @@ package Metthy;
 //Special Drink Preparation
 //Finish Syrup Add Ons
 //Water ounces
+//Add method to get ratio
 //Reconsider calculate cost design
 
 /**

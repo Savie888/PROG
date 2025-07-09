@@ -236,20 +236,27 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
     @Override
     protected void prepareDrink(){
 
-        String coffeeType, coffeeSize, brewType, addOn;
+        String coffeeType, coffeeSize, brewType, add;
         double espressoOz, milkOz, waterOz, espressoGrams, price;
         double[] ingredients;
+        ArrayList<String> addOns = new ArrayList<>();
 
         System.out.println("\n--- Prepare Coffee Drink ---");
         coffeeType = drinkManager.selectDrinkType();
         coffeeSize = drinkManager.selectDrinkSize();
         brewType = drinkManager.selectBrewType();
-        addOn = drinkManager.selectAddOn();
 
         if(coffeeType == null || coffeeSize == null)
             System.out.println("Invalid input! Drink preparation cancelled");
 
         else{
+
+            System.out.println("Add syrup add-ons? (yes/no)");
+            add = scanner.nextLine();
+
+            if(add.equalsIgnoreCase("yes"))
+                addOns = drinkManager.selectAddOns();
+
             Drink drink = drinkManager.getDrink(coffeeType, coffeeSize);
 
             System.out.printf("Preparing %s %s (%s)...\n", brewType, coffeeType, coffeeSize);
@@ -282,6 +289,11 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
 
                 if(coffeeType.equalsIgnoreCase("Americano"))
                     System.out.println(">>> Adding Water...");
+
+                if(!addOns.isEmpty()){
+                    for(String syrup : addOns)
+                        System.out.println(">>> Adding " + syrup + " Syrup");
+                }
 
                 System.out.printf(">>> %s Done!\n", coffeeType);
 

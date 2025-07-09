@@ -367,20 +367,13 @@ public class DrinkManager {
         return brewType;
     }
 
-    //WIP
-    public String selectAddOn(){
+    public ArrayList<String> selectAddOns(){
 
-        String decision, addOn;
         int option;
+        String repeat;
+        ArrayList<String> addOns = new ArrayList<>();
 
-        System.out.println("Add syrup add ons? (yes/no)");
-        decision = scanner.nextLine();
-
-        if(decision.equalsIgnoreCase("no"))
-            addOn = "Nothing";
-
-        else{
-
+        do{
             System.out.println("Choose a syrup add-on: ");
             System.out.println("1. Hazelnut");
             System.out.println("2. Chocolate");
@@ -389,10 +382,32 @@ public class DrinkManager {
             System.out.println("Select an option: ");
             option = scanner.nextInt();
             scanner.nextLine(); //Clear excess line
-        }
+
+            switch(option){
+
+                case 1:
+                    addOns.add("Hazelnut");
+                    break;
+                case 2:
+                    addOns.add("Chocolate");
+                    break;
+                case 3:
+                    addOns.add("Almond");
+                    break;
+                case 4:
+                    addOns.add("Sucrose");
+                    break;
+                default:
+                    System.out.println("Invalid option selected");
+                    break;
+            }
+            System.out.println("Continue adding? (yes/no): ");
+            repeat = scanner.nextLine();
+
+        } while(repeat.equalsIgnoreCase("yes")) ;
 
 
-
+        return addOns;
     }
 
     /**
