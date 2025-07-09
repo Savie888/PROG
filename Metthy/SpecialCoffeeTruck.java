@@ -237,7 +237,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
     protected void prepareDrink(){
 
         String coffeeType, coffeeSize, brewType, add;
-        double espressoOz, milkOz, waterOz, espressoGrams, price;
+        double espressoOz, milkOz, waterOz, espressoGrams, price, ratio;
         double[] ingredients;
         ArrayList<String> addOns = new ArrayList<>();
 
@@ -245,6 +245,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         coffeeType = drinkManager.selectDrinkType();
         coffeeSize = drinkManager.selectDrinkSize();
         brewType = drinkManager.selectBrewType();
+        ratio = drinkManager.getBrewRatio(brewType);
 
         if(coffeeType == null || coffeeSize == null)
             System.out.println("Invalid input! Drink preparation cancelled");
@@ -259,10 +260,10 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
 
             Drink drink = drinkManager.getDrink(coffeeType, coffeeSize);
 
-            System.out.printf("Preparing %s %s (%s)...\n", brewType, coffeeType, coffeeSize);
-            drinkManager.showIngredients(coffeeType, coffeeSize);
+            System.out.printf("Preparing %s %s (%s)...\n", coffeeSize, coffeeType, brewType);
+            drinkManager.showIngredients(coffeeType, coffeeSize, ratio);
 
-            ingredients = drinkManager.getIngredients(coffeeType, coffeeSize); //Get the ingredients needed for the drink
+            ingredients = drinkManager.getIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
 
             StorageBin beanBin = findBin("Coffee Beans"); //Find bin with coffee beans
             StorageBin milkBin = findBin("Milk"); //Find bin with milk

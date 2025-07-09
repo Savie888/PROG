@@ -630,13 +630,14 @@ public class RegularCoffeeTruck {
     protected void prepareDrink(){
 
         String coffeeType, coffeeSize, brewType;
-        double espressoOz, milkOz, waterOz, espressoGrams, price;
+        double espressoOz, milkOz, waterOz, espressoGrams, price, ratio;
         double[] ingredients;
 
         System.out.println("\n--- Prepare Coffee Drink ---");
         coffeeType = drinkManager.selectDrinkType();
         coffeeSize = drinkManager.selectDrinkSize();
         brewType = "Standard";
+        ratio = drinkManager.getBrewRatio(brewType);
 
         if(coffeeType == null || coffeeSize == null)
             System.out.println("Invalid input! Drink preparation cancelled");
@@ -646,9 +647,9 @@ public class RegularCoffeeTruck {
             drink.setBrewType(brewType); //All drinks in regular truck are standard brew by default
 
             System.out.printf("Preparing %s (%s)...\n", coffeeType, coffeeSize);
-            drinkManager.showIngredients(coffeeType, coffeeSize);
+            drinkManager.showIngredients(coffeeType, coffeeSize, ratio);
 
-            ingredients = drinkManager.getIngredients(coffeeType, coffeeSize); //Get the ingredients needed for the drink
+            ingredients = drinkManager.getIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
 
             StorageBin beanBin = findBin("Coffee Beans"); //Find bin with coffee beans
             StorageBin milkBin = findBin("Milk"); //Find bin with milk
