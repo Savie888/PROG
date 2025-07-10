@@ -250,6 +250,10 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                 coffeeType, size, grams, milk, water, price));
     }
 
+    /**
+     * Handles the process of preparing a drink.
+     *
+     */
     @Override
     protected void prepareDrink(){
 
@@ -289,7 +293,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
 
             //Check if storage bins have sufficient ingredients
-            if(drinkManager.hasSufficientIngredients(beanBin, milkBin, waterBin, cupBin, ingredients)){
+            if(drinkManager.hasSufficientIngredients(bins, ingredients)){
 
                 espressoGrams = ingredients[0];
                 milkOz = ingredients[1];

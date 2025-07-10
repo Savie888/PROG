@@ -655,9 +655,10 @@ public class RegularCoffeeTruck {
             StorageBin milkBin = findBin("Milk"); //Find bin with milk
             StorageBin waterBin = findBin("Water"); //Find bin with water
             StorageBin cupBin = findBin(coffeeSize + " Cup"); //Find bin with specified cup size
+            StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
 
             //Check if storage bins have sufficient ingredients
-            if(drinkManager.hasSufficientIngredients(beanBin, milkBin, waterBin, cupBin, ingredients)){
+            if(drinkManager.hasSufficientIngredients(bins, ingredients)){
 
                 espressoGrams = ingredients[0];
                 milkOz = ingredients[1];
