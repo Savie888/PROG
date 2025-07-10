@@ -233,11 +233,28 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         } while(option != 7);
     }
 
+    /**
+     * Records a drink sale to a truck's sales log.
+     *
+     * @param coffeeType the type of coffee sold
+     * @param size the size of the drink
+     * @param grams the grams of coffee beans used
+     * @param milk the ounces of milk used
+     * @param water the ounces of water used
+     * @param price the price of the drink
+     */
+    @Override //WIP, add syrup and extra shots
+    protected void recordSale(String coffeeType, String size, double grams, double milk, double water, double price){
+
+        salesLog.add(String.format("Drink: %s (%s) | %.2f g beans, %.2f oz milk, %.2f oz water | $%.2f",
+                coffeeType, size, grams, milk, water, price));
+    }
+
     @Override
     protected void prepareDrink(){
 
         String coffeeType, coffeeSize, brewType, add;
-        double espressoOz, milkOz, waterOz, espressoGrams, price, ratio;
+        double espressoGrams, milkOz, waterOz, price, ratio;
         double[] ingredients;
         ArrayList<String> addOns = new ArrayList<>();
 
@@ -260,30 +277,30 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
 
             Drink drink = drinkManager.getDrink(coffeeType, coffeeSize);
 
+            ingredients = drinkManager.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
+
             System.out.printf("Preparing %s %s (%s)...\n", coffeeSize, coffeeType, brewType);
             drinkManager.showIngredients(coffeeType, coffeeSize, ratio);
-
-            ingredients = drinkManager.getIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
 
             StorageBin beanBin = findBin("Coffee Beans"); //Find bin with coffee beans
             StorageBin milkBin = findBin("Milk"); //Find bin with milk
             StorageBin waterBin = findBin("Water"); //Find bin with water
             StorageBin cupBin = findBin(coffeeSize + " Cup"); //Find bin with specified cup size
+            StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
 
             //Check if storage bins have sufficient ingredients
             if(drinkManager.hasSufficientIngredients(beanBin, milkBin, waterBin, cupBin, ingredients)){
 
-                espressoOz = ingredients[0];
+                espressoGrams = ingredients[0];
                 milkOz = ingredients[1];
                 waterOz = ingredients[2];
-                espressoGrams = (espressoOz * 28.34952) / 18.0;
                 price = drink.getPrice();
 
                 //Deduct ingredients from storage bins
                 drinkManager.useIngredients(beanBin, espressoGrams, milkBin, milkOz, waterBin, waterOz, cupBin);
 
                 System.out.printf("\n>>> Preparing %s Cup...\n", coffeeSize);
-                System.out.printf(">>> Brewing %s espresso - %.2f grams of coffee...\n", brewType, espressoGrams);
+                System.out.printf(">>> Brewing %s Espresso - %.2f grams of coffee...\n", brewType, espressoGrams);
 
                 if(milkOz > 0)
                     System.out.println(">>> Adding Milk...");
@@ -292,8 +309,10 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                     System.out.println(">>> Adding Water...");
 
                 if(!addOns.isEmpty()){
-                    for(String syrup : addOns)
+                    for(String syrup : addOns){
                         System.out.println(">>> Adding " + syrup + " Syrup");
+                        price += drinkManager.getSyrupPrice();
+                    }
                 }
 
                 System.out.printf(">>> %s Done!\n", coffeeType);

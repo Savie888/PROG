@@ -4,6 +4,8 @@ package Metthy;
 //Finish Syrup Add Ons
 //Verify get ingredients
 //Check methods involving ratios
+//Add extra shots feature
+//Implement MVC
 
 /**
  * This is a simulation of a Coffee Truck Business.
