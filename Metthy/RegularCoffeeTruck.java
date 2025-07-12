@@ -701,9 +701,8 @@ public class RegularCoffeeTruck {
 
         do{
             System.out.println("\n=== Coffee Menu ===");
-            System.out.println("1 - View Drink Menu");
-            System.out.println("2 - Prepare Drink");
-            System.out.println("3 - Exit Menu");
+            System.out.println("1 - Prepare Drink");
+            System.out.println("2 - Exit Menu");
             System.out.println("Enter option: ");
             option = scanner.nextInt();
 
@@ -711,18 +710,16 @@ public class RegularCoffeeTruck {
 
                 case 1:
                     drinkManager.displayDrinksMenu();
-                    break;
-                case 2:
                     prepareDrink();
                     break;
-                case 3:
+                case 2:
                     System.out.println("Exiting Menu");
                     break;
                 default:
                     System.out.println("Invalid option");
                     break;
             }
-        } while(option != 3);
+        } while(option != 2);
     }
 
     /**

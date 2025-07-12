@@ -235,22 +235,6 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         } while(option != 7);
     }
 
-    public double selectAddOnAmount(){
-
-        double amount;
-
-        do{
-            System.out.println("Enter amount: ");
-            amount = scanner.nextDouble();
-
-            if(amount < 0 || amount > 640)
-                System.out.println("Invalid quantity!");
-
-        } while(amount < 0 || amount > 640);
-
-        return amount;
-    }
-
     public String selectAddOnType(){
 
         String type;
@@ -286,14 +270,32 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                     break;
             }
 
-        }while(!type.equalsIgnoreCase(""));
+        }while(type.equalsIgnoreCase(""));
 
         return type;
+    }
+
+    public double selectAddOnAmount(){
+
+        double amount;
+
+        do{
+            System.out.println("Enter amount: ");
+            amount = scanner.nextDouble();
+            scanner.nextLine(); //Clear excess line
+
+            if(amount < 0 || amount > 640)
+                System.out.println("Invalid quantity!");
+
+        } while(amount < 0 || amount > 640);
+
+        return amount;
     }
 
     public ArrayList<AddOn> selectAddOns(){
 
         String type, repeat;
+        ArrayList<AddOn> addOns = new ArrayList<>();
         double amount;
 
         do{
@@ -327,8 +329,12 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
 
         StringBuilder addOnDetails = new StringBuilder();
 
+        String drinkInfo = String.format("Drink: %s %s (%s)", coffeeType, size, brewType);
+        String ingredients = String.format("%.2f g beans, %.2f oz milk, %.2f oz water", coffeeGrams, milk, water);
+        String addOnText;
+
         if (addOns != null && !addOns.isEmpty()) {
-            addOnDetails.append(" | Add-Ons: ");
+            addOnDetails.append("Add-Ons: ");
             for (int i = 0; i < addOns.size(); i++) {
                 AddOn a = addOns.get(i);
                 addOnDetails.append(String.format("%.1f oz %s", a.getAmount(), a.getType()));
@@ -337,8 +343,12 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                 }
             }
         }
-        salesLog.add(String.format("Drink: %s (%s) | %.2f g beans, %.2f oz milk, %.2f oz water | %.2f%s | $%.2f",
-                coffeeType, size, coffeeGrams, milk, water, addOnDetails.toString(), price));
+
+        if(addOnDetails.isEmpty())
+            addOnText = "None";
+        else
+            addOnText = "" + addOnDetails;
+        salesLog.add(String.format("%-30s | %-40s | %s | $%.2f", drinkInfo, ingredients, addOnText, price));
     }
 
     /**
@@ -382,7 +392,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             StorageBin milkBin = findBin("Milk"); //Find bin with milk
             StorageBin waterBin = findBin("Water"); //Find bin with water
             StorageBin cupBin = findBin(coffeeSize + " Cup"); //Find bin with specified cup size
-            StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
+            StorageBin[] bins = {beanBin, milkBin, waterBin, cupBin};
 
             //Check if storage bins have sufficient ingredients
             if(drinkManager.hasSufficientIngredients(bins, ingredients)){
@@ -404,6 +414,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                 if(coffeeType.equalsIgnoreCase("Americano"))
                     System.out.println(">>> Adding Water...");
 
+                System.out.println(price);
                 if(!addOns.isEmpty()){
                     for(i = 0; i < addOns.size(); i++){
                         AddOn addOn = addOns.get(i);
@@ -416,8 +427,8 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
 
                 System.out.printf("Total Price: $%.2f\n", price);
 
-                addToTotalSales(price); //Update total sales
-                recordSale(coffeeType, coffeeSize, espressoGrams, milkOz, waterOz, price); //Update sales log
+                addToTotalSales(price); //Update truck's total sales
+                recordSale(coffeeType, coffeeSize, brewType, espressoGrams, milkOz, waterOz, addOns, price); //Update sales log
             }
 
             else

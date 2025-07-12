@@ -1,9 +1,10 @@
 package Metthy;
 
 //Special Drink Preparation
+//Regular Truck sales log format
 //Finish Syrup Add Ons
-//Verify get ingredients
-//Check methods involving ratios
+    //check syrup bins before accepting
+    //deduct from syrup bins
 //Add extra shots feature
 //Implement MVC
 
