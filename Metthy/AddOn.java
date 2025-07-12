@@ -2,8 +2,8 @@ package Metthy;
 
 public class AddOn {
 
-    public String type;
-    public double amount;
+    private final String type;
+    private final double amount;
 
     public AddOn(String name, double amount){
 

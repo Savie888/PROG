@@ -518,6 +518,11 @@ public class DrinkManager {
         return syrupPrice;
     }
 
+    public double getCoffeeGramPrice(){
+
+        return coffeeGramPrice;
+    }
+
     /**
      * Calculates the total cost of making a coffee drink
      *

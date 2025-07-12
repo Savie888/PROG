@@ -13,8 +13,6 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
      */
     private final Scanner scanner = new Scanner(System.in);
 
-    private final ArrayList<AddOn> addOns = new ArrayList<>();
-
     public SpecialCoffeeTruck(String name, String location, DrinkManager drinkManager){
 
         super(name, location, drinkManager);
@@ -235,7 +233,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         } while(option != 7);
     }
 
-    public String selectAddOnType(){
+    private String selectAddOnType(){
 
         String type;
         int option;
@@ -275,7 +273,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         return type;
     }
 
-    public double selectAddOnAmount(){
+    private double selectAddOnAmount(){
 
         double amount;
 
@@ -292,7 +290,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         return amount;
     }
 
-    public ArrayList<AddOn> selectAddOns(){
+    private ArrayList<AddOn> selectAddOns(){
 
         String type, repeat;
         ArrayList<AddOn> addOns = new ArrayList<>();
@@ -313,6 +311,26 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         return addOns;
     }
 
+    private int selectExtraShots(double coffeeGrams, double remainingCoffeeGrams){
+
+        int shots, maxShots;
+
+        maxShots = (int) (remainingCoffeeGrams / coffeeGrams);
+
+        do{
+            System.out.printf("Enter number of extra espresso shots (0 - %d): ", maxShots);
+            shots = scanner.nextInt();
+            scanner.nextLine(); //Clear excess line
+
+            if(shots < 0 || shots > maxShots)
+                System.out.println("Invalid number entered");
+
+        } while(shots < 0 || shots > maxShots);
+
+        return shots;
+    }
+
+
     /**
      * Records a drink sale to a truck's sales log.
      *
@@ -323,22 +341,28 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
      * @param water        the ounces of water used
      * @param price        the price of the drink
      */
-    //WIP, add syrup and extra shots
-    protected void recordSale(String coffeeType, String size, String brewType, double coffeeGrams,
-                              double milk, double water, ArrayList<AddOn> addOns, double price){
+    //WIP, add extra shots
+    private void recordSale(String coffeeType, String size, String brewType, double coffeeGrams,
+                              double milk, double water, ArrayList<AddOn> addOns, int extraShots, double price){
 
+        int i;
         StringBuilder addOnDetails = new StringBuilder();
 
+        //Formatting
         String drinkInfo = String.format("Drink: %s %s (%s)", coffeeType, size, brewType);
         String ingredients = String.format("%.2f g beans, %.2f oz milk, %.2f oz water", coffeeGrams, milk, water);
         String addOnText;
 
-        if (addOns != null && !addOns.isEmpty()) {
+        if(!addOns.isEmpty()){
+
             addOnDetails.append("Add-Ons: ");
-            for (int i = 0; i < addOns.size(); i++) {
+
+            for(i = 0; i < addOns.size(); i++){
+
                 AddOn a = addOns.get(i);
                 addOnDetails.append(String.format("%.1f oz %s", a.getAmount(), a.getType()));
-                if (i < addOns.size() - 1) {
+
+                if(i < addOns.size() - 1){
                     addOnDetails.append(", ");
                 }
             }
@@ -348,6 +372,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             addOnText = "None";
         else
             addOnText = "" + addOnDetails;
+
         salesLog.add(String.format("%-30s | %-40s | %s | $%.2f", drinkInfo, ingredients, addOnText, price));
     }
 
@@ -358,17 +383,18 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
     @Override
     protected void prepareDrink(){
 
-        int i;
-        String coffeeType, coffeeSize, brewType, add;
-        double espressoGrams, milkOz, waterOz, price, ratio;
+        int i, extraShots = 0;
+        String add, extra;
+        double coffeeGrams, milkOz, waterOz, remainingCoffeeGrams, price;
+        double extraCoffeeGrams = 0, extraShotCost = 0;
         double[] ingredients;
         ArrayList<AddOn> addOns = new ArrayList<>();
 
         System.out.println("\n--- Prepare Coffee Drink ---");
-        coffeeType = drinkManager.selectDrinkType();
-        coffeeSize = drinkManager.selectDrinkSize();
-        brewType = drinkManager.selectBrewType();
-        ratio = drinkManager.getBrewRatio(brewType);
+        String coffeeType = drinkManager.selectDrinkType();
+        String coffeeSize = drinkManager.selectDrinkSize();
+        String brewType = drinkManager.selectBrewType();
+        double ratio = drinkManager.getBrewRatio(brewType);
 
         if(coffeeType == null || coffeeSize == null)
             System.out.println("Invalid input! Drink preparation cancelled");
@@ -397,16 +423,27 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             //Check if storage bins have sufficient ingredients
             if(drinkManager.hasSufficientIngredients(bins, ingredients)){
 
-                espressoGrams = ingredients[0];
+                coffeeGrams = ingredients[0];
                 milkOz = ingredients[1];
                 waterOz = ingredients[2];
                 price = drink.getPrice();
 
-                //Deduct ingredients from storage bins
-                drinkManager.useIngredients(bins, ingredients);
+                drinkManager.useIngredients(bins, ingredients); //Deduct ingredients from storage bins
+
+                remainingCoffeeGrams = beanBin.getItemQuantity(); //Get remaining coffee bean quantity
+
+                System.out.println("Add extra espresso shots? (yes/no): ");
+                extra = scanner.nextLine();
+
+                if(extra.equalsIgnoreCase("yes")){
+                    extraShots = selectExtraShots(coffeeGrams, remainingCoffeeGrams);
+                    extraCoffeeGrams = coffeeGrams * extraShots;
+                    beanBin.useQuantity(coffeeGrams * extraShots);
+                    extraShotCost = extraShots * coffeeGrams * drinkManager.getCoffeeGramPrice();
+                }
 
                 System.out.printf("\n>>> Preparing %s Cup...\n", coffeeSize);
-                System.out.printf(">>> Brewing %s Espresso - %.2f grams of coffee...\n", brewType, espressoGrams);
+                System.out.printf(">>> Brewing %s Espresso - %.2f grams of coffee...\n", brewType, coffeeGrams);
 
                 if(milkOz > 0)
                     System.out.println(">>> Adding Milk...");
@@ -422,13 +459,19 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                         price += addOn.getAmount() * drinkManager.getSyrupPrice();
                     }
                 }
+                System.out.println(price);
+
+                if(extraShots != 0){
+                    System.out.printf(">>> Added %d extra shot%s (%.2f g beans)\n", extraShots, extraShots == 1 ? "" : "s", extraCoffeeGrams);
+                    price += extraShotCost;
+                }
 
                 System.out.printf(">>> %s Done!\n", coffeeType);
 
                 System.out.printf("Total Price: $%.2f\n", price);
 
                 addToTotalSales(price); //Update truck's total sales
-                recordSale(coffeeType, coffeeSize, brewType, espressoGrams, milkOz, waterOz, addOns, price); //Update sales log
+                recordSale(coffeeType, coffeeSize, brewType, coffeeGrams, milkOz, waterOz, addOns, extraShots, price); //Update sales log
             }
 
             else

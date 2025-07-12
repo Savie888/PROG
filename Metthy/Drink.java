@@ -91,6 +91,7 @@ public class Drink {
      *
      * @param brewType The new brew type to be set.
      */
+    //Not needed?
     public void setBrewType(String brewType){
 
         this.brewType = brewType;
