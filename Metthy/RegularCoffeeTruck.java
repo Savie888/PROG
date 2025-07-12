@@ -643,13 +643,13 @@ public class RegularCoffeeTruck {
             System.out.println("Invalid input! Drink preparation cancelled");
 
         else{
+
             Drink drink = drinkManager.getDrink(coffeeType, coffeeSize);
             drink.setBrewType(brewType); //All drinks in regular truck are standard brew by default
 
-            System.out.printf("Preparing %s (%s)...\n", coffeeType, coffeeSize);
-            drinkManager.showIngredients(coffeeType, coffeeSize, ratio);
-
             ingredients = drinkManager.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
+
+            drinkManager.showIngredients(coffeeType, coffeeSize, brewType, ingredients); //Show required ingredients
 
             StorageBin beanBin = findBin("Coffee Beans"); //Find bin with coffee beans
             StorageBin milkBin = findBin("Milk"); //Find bin with milk
@@ -666,7 +666,7 @@ public class RegularCoffeeTruck {
                 price = drink.getPrice();
 
                 //Deduct ingredients from storage bins
-                drinkManager.useIngredients(beanBin, espressoGrams, milkBin, milkOz, waterBin, waterOz, cupBin);
+                drinkManager.useIngredients(bins, ingredients);
 
                 System.out.printf("\n>>> Preparing %s Cup...\n", coffeeSize);
                 System.out.printf(">>> Brewing %s Espresso - %.2f grams of coffee...\n", brewType, espressoGrams);

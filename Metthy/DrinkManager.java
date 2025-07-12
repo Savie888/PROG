@@ -223,49 +223,6 @@ public class DrinkManager {
         return brewType;
     }
 
-    public ArrayList<String> selectAddOns(){
-
-        int option;
-        String repeat;
-        ArrayList<String> addOns = new ArrayList<>();
-
-        do{
-            System.out.println("Choose a syrup add-on: ");
-            System.out.println("1. Hazelnut");
-            System.out.println("2. Chocolate");
-            System.out.println("3. Almond");
-            System.out.println("4. Sucrose (Sweetener)");
-            System.out.println("Select an option: ");
-            option = scanner.nextInt();
-            scanner.nextLine(); //Clear excess line
-
-            switch(option){
-
-                case 1:
-                    addOns.add("Hazelnut");
-                    break;
-                case 2:
-                    addOns.add("Chocolate");
-                    break;
-                case 3:
-                    addOns.add("Almond");
-                    break;
-                case 4:
-                    addOns.add("Sucrose");
-                    break;
-                default:
-                    System.out.println("Invalid option selected");
-                    break;
-            }
-
-            System.out.println("Continue adding? (yes/no): ");
-            repeat = scanner.nextLine();
-
-        } while(repeat.equalsIgnoreCase("yes")) ;
-
-        return addOns;
-    }
-
     /**
      * Calculates the total fluid ounces corresponding to the size of a drink.
      *
@@ -322,15 +279,15 @@ public class DrinkManager {
      * Calculates the amount of each ingredient required to prepare a drink using the default brewing ratios.
      *
      * @param coffeeType the type of coffee
-     * @param coffeeSize the size of the drink
+     * @param size       the size of the drink
      * @return a double array containing:
      *         [0] coffeeGrams – amount of ground coffee needed (in grams)
      *         [1] milkOz      – amount of milk (in fluid ounces)
      *         [2] totalWaterOz– total water required including brew water (in fluid ounces)
      */
-    private double[] getBaseIngredients(String coffeeType, String coffeeSize){
+    private double[] getBaseIngredients(String coffeeType, String size){
 
-        double cupSize = getCupSize(coffeeSize);
+        double cupSize = getCupSize(size);
         double espressoVolumeOz = 0, milkOz = 0, waterOz = 0;
         double[] ingredients ={0, 0, 0};
 
@@ -366,14 +323,12 @@ public class DrinkManager {
     /**
      * Returns the amount of coffee beans (in grams) required for the given drink.
      *
-     * @param coffeeType the type of coffee (e.g., "Latte", "Cappuccino", "Americano")
-     * @param size       the drink size (e.g., "Small", "Medium", "Large")
-     * @param ratio      the ratio of coffee to water used for espresso brewing
-     * @return the amount of coffee beans required, in grams
+     * @param ingredients the ingredients needed to brew the coffee drink.
+     * @param ratio       the ratio of coffee to water used for espresso brewing.
+     * @return the amount of coffee beans required, in grams.
      */
-    public double getCoffeeBeanGrams(String coffeeType, String size, double ratio){
+    public double getCoffeeBeanGrams(double[] ingredients, double ratio){
 
-        double[] ingredients = getBaseIngredients(coffeeType, size);
         double espressoVolumeOz = ingredients[0];
 
         //Convert espresso volume to brewed water mass in grams
@@ -386,26 +341,24 @@ public class DrinkManager {
     /**
      * Returns the amount of milk (in fluid ounces) required for the given drink.
      *
-     * @param coffeeType the type of coffee (e.g., "Latte", "Cappuccino", "Americano")
-     * @param size       the drink size (e.g., "Small", "Medium", "Large")
-     * @return the amount of milk required, in fluid ounces
+     * @param ingredients the ingredients needed to brew the coffee drink.
+     * @return the amount of milk required, in fluid ounces.
      */
-    public double getMilkOz(String coffeeType, String size){
+    public double getMilkOz(double[] ingredients){
 
-        return getBaseIngredients(coffeeType, size)[1];
+        return ingredients[1];
     }
 
     /**
      * Returns the total amount of water (in fluid ounces) required for the given drink.
      *
-     * @param coffeeType the type of coffee (e.g., "Latte", "Cappuccino", "Americano")
-     * @param size       the drink size (e.g., "Small", "Medium", "Large")
-     * @param ratio      the ratio of coffee to water used for espresso brewing
-     * @return the total amount of water required, in fluid ounces
+     * @param coffeeType   the type of coffee.
+     * @param ingredients  the ingredients needed to brew the coffee drink.
+     * @param ratio        the ratio of coffee to water used for espresso brewing.
+     * @return the total amount of water required, in fluid ounces.
      */
-    public double getWaterOz(String coffeeType, String size, double ratio){
+    public double getWaterOz(String coffeeType, double[] ingredients, double ratio){
 
-        double[] ingredients = getBaseIngredients(coffeeType, size);
         double espressoVolumeOz = ingredients[0];
         double waterOz = ingredients[2];
 
@@ -427,31 +380,32 @@ public class DrinkManager {
 
     public double[] getAdjustedIngredients(String coffeeType, String size, double ratio){
 
-        double[] newIngredients = {0, 0, 0};
+        double[] ingredients = getBaseIngredients(coffeeType, size); //Get base ingredients
+        double[] adjustedIngredients = {0, 0, 0};
 
-        newIngredients[0] = getCoffeeBeanGrams(coffeeType, size, ratio);
-        newIngredients[1] = getMilkOz(coffeeType, size);
-        newIngredients[2] = getWaterOz(coffeeType, size, ratio);
+        adjustedIngredients[0] = getCoffeeBeanGrams(ingredients, ratio);
+        adjustedIngredients[1] = getMilkOz(ingredients);
+        adjustedIngredients[2] = getWaterOz(coffeeType, ingredients, ratio);
 
-        return newIngredients;
+        return adjustedIngredients;
     }
 
     /**
-     * Displays the required ingredient amounts for a given coffee type and size.
+     * Displays the required ingredient amounts for a coffee drink
      *
-     * @param coffeeType the type of coffee (e.g., "Latte", "Cappuccino", "Americano")
-     * @param coffeeSize the size of the drink (e.g., "Small", "Medium", "Large")
+     * @param coffeeType   the type of coffee.
+     * @param size         the drink size.
+     * @param brewType     the type of coffee brew.
+     * @param ingredients  the ingredients needed to brew the coffee drink.
      */
-    public void showIngredients(String coffeeType, String coffeeSize, double ratio){
+    public void showIngredients(String coffeeType, String size, String brewType, double[] ingredients){
 
-        double[] ingredients = getBaseIngredients(coffeeType, coffeeSize);
-        double espressoOz = ingredients[0];
-        double milkOz = getMilkOz(coffeeType, coffeeSize);
-        double waterOz = getWaterOz(coffeeType, coffeeSize, ratio);
-        double espressoGrams = getCoffeeBeanGrams(coffeeType, coffeeSize, ratio);
+        double espressoGrams = ingredients[0];
+        double milkOz = ingredients[1];
+        double waterOz = ingredients[2];
 
-        System.out.printf("Required Ingredients for %s %s:\n", coffeeSize, coffeeType);
-        System.out.printf("- Espresso: %.2f oz (%.2f g)\n", espressoOz, espressoGrams);
+        System.out.printf("Required Ingredients for %s %s (%s):\n", size, coffeeType, brewType);
+        System.out.printf("- Coffee Beans: %.2f g\n", espressoGrams);
         System.out.printf("- Milk: %.2f oz\n", milkOz);
         System.out.printf("- Water: %.2f oz\n", waterOz);
     }
@@ -459,9 +413,9 @@ public class DrinkManager {
     /**
      * Checks whether the truck has enough ingredients to prepare the desired drink.
      *
-     * @param bins        An array containing the storage bin to be checked
-     * @param ingredients An array containing required amounts: [beans (g), milk (oz), water (oz)].
-     * @return true if all ingredients and one cup are available, false otherwise.
+     * @param bins        the storage bins of a truck
+     * @param ingredients the ingredients needed to brew the coffee drink.
+     * @return true if all ingredients are available, false otherwise.
      */
     public boolean hasSufficientIngredients(StorageBin[] bins, double[] ingredients){
 
@@ -483,23 +437,24 @@ public class DrinkManager {
     }
 
     /**
-     * Deducts the required quantities of ingredients from the corresponding storage bins
-     * during drink preparation.
+     * Deducts the required ingredients from the corresponding storage bins.
      *
-     * @param beanBin   the storage bin holding coffee beans
-     * @param espressoGrams the amount of coffee beans used in grams
-     * @param milkBin   the storage bin holding milk
-     * @param milkOz    the amount of milk used in fluid ounces
-     * @param waterBin  the storage bin holding water
-     * @param waterOz   the amount of water used in fluid ounces
-     * @param cupBin    the storage bin holding cups for the selected drink size
+     * @param bins        the storage bins of a truck
+     * @param ingredients the ingredients needed to brew the coffee drink.
      */
-    public void useIngredients(StorageBin beanBin, double espressoGrams, StorageBin milkBin, double milkOz,
-                                StorageBin waterBin, double waterOz, StorageBin cupBin){
+    public void useIngredients(StorageBin[] bins, double[] ingredients){
 
-        beanBin.useQuantity(espressoGrams);
-        milkBin.useQuantity(milkOz);
-        waterBin.useQuantity(waterOz);
+        int i;
+
+        for(i = 0; i < bins.length; i++){
+
+            StorageBin bin = bins[i];
+            bin.useQuantity(ingredients[i]);
+        }
+
+        //Check cupBin separately
+        StorageBin cupBin = bins[bins.length - 1];
+
         cupBin.useQuantity(1);
     }
 
@@ -511,6 +466,7 @@ public class DrinkManager {
 
         int i, j, k;
         double price;
+        double[] ingredients;
 
         String[] types = {"Americano", "Latte", "Cappuccino"};
         String[] sizes = {"Small", "Medium", "Large"};
@@ -532,7 +488,8 @@ public class DrinkManager {
                     Drink drink = drinks.get(k);
 
                     if(drink.getCoffeeType().equalsIgnoreCase(type) && drink.getSize().equalsIgnoreCase(size)){
-                        price = calculateBaseCoffeeCost(type, size, 18.0); //Calculate total coffee cost
+                        ingredients = getBaseIngredients(type, size);
+                        price = calculateBaseCoffeeCost(type, ingredients, 18.0); //Calculate total coffee cost
                         drink.setPrice(price); //Set it as the coffee's price
                         System.out.printf("  %s - $%.2f\n", size, price);
                     }
@@ -544,9 +501,9 @@ public class DrinkManager {
     /**
      * Searches the drink menu for a drink that matches the specified type and size.
      *
-     * @param type the type of coffee drink (e.g., "Latte", "Cappuccino")
-     * @param size the size of the drink (e.g., "Small", "Medium", "Large")
-     * @return the matching Drink object, or null if not found
+     * @param type the type of coffee drink.
+     * @param size the size of the drink.
+     * @return the matching Drink object, or null if not found.
      */
     public Drink getDrink(String type, String size){
 
@@ -574,15 +531,16 @@ public class DrinkManager {
     /**
      * Calculates the total cost of making a coffee drink
      *
-     * @param coffeeType The type of coffee (e.g., "Latte").
-     * @param coffeeSize The size of the drink (e.g., "Medium").
+     * @param coffeeType   the type of coffee.
+     * @param ingredients  the ingredients needed to brew the coffee drink.
+     * @param ratio        the ratio of coffee to water used for espresso brewing.
      * @return The total price of the drink.
      */
-    public double calculateBaseCoffeeCost(String coffeeType, String coffeeSize, double ratio){
+    public double calculateBaseCoffeeCost(String coffeeType, double[] ingredients, double ratio){
 
-        double coffeeCost = coffeeGramPrice * getCoffeeBeanGrams(coffeeType, coffeeSize, ratio);
-        double milkCost = milkOzPrice * getMilkOz(coffeeType, coffeeSize);
-        double waterCost = waterOzPrice * getWaterOz(coffeeType, coffeeSize, ratio);
+        double coffeeCost = coffeeGramPrice * getCoffeeBeanGrams(ingredients, ratio);
+        double milkCost = milkOzPrice * getMilkOz(ingredients);
+        double waterCost = waterOzPrice * getWaterOz(coffeeType, ingredients, ratio);
 
         return coffeeCost + milkCost + waterCost;
     }
