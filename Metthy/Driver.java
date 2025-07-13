@@ -1,9 +1,6 @@
 package Metthy;
 
-
-//Finish Syrup Add Ons
 //Include syrup in total inventory
-//Add extra shots feature
 //Test script
 //Implement MVC
 

@@ -461,6 +461,23 @@ public class RegularCoffeeTruck {
         this.location = location;
     }
 
+    public int selectBinNumber(){
+
+        int binNumber;
+
+        do{
+            System.out.println("Enter Bin Number: ");
+            binNumber = scanner.nextInt();
+            scanner.nextLine(); //Clear excess line
+
+            if(binNumber < 0 || binNumber > bins.size())
+                System.out.println("Invalid bin number selected");
+
+        } while(binNumber <= 0 || binNumber > bins.size());
+
+        return binNumber;
+    }
+
     /**
      * Displays the truck maintenance menu for a specific coffee truck.
      * <p>Allows the user to:</p>
@@ -488,7 +505,7 @@ public class RegularCoffeeTruck {
             System.out.println("7 - Exit Menu");
             System.out.println("Select an Option: ");
             option = scanner.nextInt();
-            scanner.nextLine(); //Absorb new line
+            scanner.nextLine(); //Clear excess line
 
             switch(option){
 
@@ -497,13 +514,13 @@ public class RegularCoffeeTruck {
                     System.out.println("2 - Restock one bin");
                     System.out.println("Select an option: ");
                     restock  = scanner.nextInt();
+                    scanner.nextLine(); //Clear excess line
 
                     if(restock == 1)
                         restockAllBins(); //Restock all bins
 
                     else if(restock == 2){
-                        System.out.println("Enter Bin Number: ");
-                        binNumber = scanner.nextInt();
+                        binNumber = selectBinNumber();
                         restockOneBin(binNumber); //Restock selected bin
                     }
                     break;
@@ -512,15 +529,15 @@ public class RegularCoffeeTruck {
                     System.out.println("2 - Modify one bin");
                     System.out.println("Select an option: ");
                     int modify = scanner.nextInt();
+                    scanner.nextLine(); //Clear excess line
 
                     if(modify == 1)
                         modifyAllBins(); //Modify all bins
 
                     else if(modify == 2){
-                        System.out.println("Enter bin number to modify: ");
-                        int binNum = scanner.nextInt();
+                        binNumber = selectBinNumber();
 
-                        modifyBin(binNum); //Modify regular bin
+                        modifyBin(binNumber); //Modify regular bin
                     }
                     break;
                 case 3:
@@ -528,13 +545,13 @@ public class RegularCoffeeTruck {
                     System.out.println("2 - Empty one bin");
                     System.out.println("Select an option: ");
                     int empty = scanner.nextInt();
+                    scanner.nextLine(); //Clear excess line
 
                     if(empty == 1)
                         emptyAllBins(); //Empty all bins
 
                     else if(empty == 2){
-                        System.out.println("Enter Bin Number: ");
-                        binNumber = scanner.nextInt();
+                        binNumber = selectBinNumber();
                         emptyOneBin(binNumber); //Empty selected bin
                     }
                     break;

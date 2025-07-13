@@ -175,13 +175,13 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                     System.out.println("2 - Restock one bin");
                     System.out.println("Select an option: ");
                     restock  = scanner.nextInt();
+                    scanner.nextLine(); //Clear excess line
 
                     if(restock == 1)
                         restockAllBins(); //Restock all bins
 
                     else if(restock == 2){
-                        System.out.println("Enter Bin Number: ");
-                        binNumber = scanner.nextInt();
+                        binNumber = selectBinNumber();
                         restockOneBin(binNumber); //Restock selected bin
                     }
                     break;
@@ -190,18 +190,18 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                     System.out.println("2 - Modify one bin");
                     System.out.println("Select an option: ");
                     int modify = scanner.nextInt();
+                    scanner.nextLine(); //Clear excess line
 
                     if(modify == 1)
                         modifyAllBins(); //Modify all bins
 
                     else if(modify == 2){
-                        System.out.println("Enter bin number to modify: ");
-                        int binNum = scanner.nextInt();
+                        binNumber = selectBinNumber();
 
-                        if(binNum == 9 || binNum == 10)
-                            modifySyrupBin(binNum); //Modify syrup bin
+                        if(binNumber == 9 || binNumber == 10)
+                            modifySyrupBin(binNumber); //Modify syrup bin
                         else
-                            modifyBin(binNum); //Modify regular bin
+                            modifyBin(binNumber); //Modify regular bin
                     }
                     break;
                 case 3:
@@ -209,13 +209,13 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                     System.out.println("2 - Empty one bin");
                     System.out.println("Select an option: ");
                     int empty = scanner.nextInt();
+                    scanner.nextLine(); //Clear excess line
 
                     if(empty == 1)
                         emptyAllBins(); //Empty all bins
 
                     else if(empty == 2){
-                        System.out.println("Enter Bin Number: ");
-                        binNumber = scanner.nextInt();
+                        binNumber = selectBinNumber();
                         emptyOneBin(binNumber); //Empty selected bin
                     }
                     break;
@@ -377,7 +377,6 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
 
         return shots;
     }
-
 
     /**
      * Records a drink sale to the truck's sales log.
