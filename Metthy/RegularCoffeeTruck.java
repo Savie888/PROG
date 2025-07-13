@@ -88,8 +88,7 @@ public class RegularCoffeeTruck {
     }
 
     /**
-     * Displays the truck's name, location, storage bin contents,
-     * transaction history, and total sales.
+     * Displays the truck's name, location, storage bin contents,transaction history, and total sales.
      */
     public void displayInfo(){
 
@@ -120,10 +119,10 @@ public class RegularCoffeeTruck {
     }
 
     /**
-     * Assigns a specific item type and quantity to a given bin number.
+     * Assigns a specific item and quantity to a given bin number.
      *
-     * @param binIndex   the index of the bin (0-based)
-     * @param itemType    the type of item to store in the bin
+     * @param binIndex     the index of the bin
+     * @param itemType     the type of item to store in the bin
      * @param itemQuantity the quantity of the item to assign
      */
     public void assignItemToBin(int binIndex, String itemType, double itemQuantity){
