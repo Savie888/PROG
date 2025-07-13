@@ -357,6 +357,7 @@ public class TruckManager {
         int i, j;
         int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
         double totalCoffeeGrams = 0, totalMilkOz = 0, totalWaterOz = 0, quantity;
+        double totalHazelnutSyrupOz = 0, totalChocolateSyrupOz = 0, totalAlmondSyrupOz = 0, totalSucroseSyrupOz = 0;
         String item;
         ArrayList<StorageBin> bins;
 
@@ -401,6 +402,22 @@ public class TruckManager {
                     case "Large Cup":
                         totalLargeCups += (int) quantity;
                         break;
+
+                    case "Hazelnut":
+                        totalHazelnutSyrupOz += quantity;
+                        break;
+
+                    case "Chocolate":
+                        totalChocolateSyrupOz += quantity;
+                        break;
+
+                    case "Almond":
+                        totalAlmondSyrupOz += quantity;
+                        break;
+
+                    case "Sucrose":
+                        totalSucroseSyrupOz += quantity;
+                        break;
                 }
             }
         }
@@ -410,9 +427,13 @@ public class TruckManager {
         System.out.printf("Coffee Beans     : %.2f g\n", totalCoffeeGrams);
         System.out.printf("Milk             : %.2f oz\n", totalMilkOz);
         System.out.printf("Water            : %.2f oz\n", totalWaterOz);
-        System.out.println("Small Cups       : " + totalSmallCups);
-        System.out.println("Medium Cups      : " + totalMediumCups);
-        System.out.println("Large Cups       : " + totalLargeCups);
+        System.out.printf("Hazelnut Syrup   : %.2f oz\n", totalHazelnutSyrupOz);
+        System.out.printf("Chocolate Syrup  : %.2f oz\n", totalChocolateSyrupOz);
+        System.out.printf("Almond Syrup     : %.2f oz\n", totalAlmondSyrupOz);
+        System.out.printf("Sucrose Syrup    : %.2f oz\n", totalSucroseSyrupOz);
+        System.out.println("Small Cups      : " + totalSmallCups);
+        System.out.println("Medium Cups     : " + totalMediumCups);
+        System.out.println("Large Cups      : " + totalLargeCups);
     }
 
     /**

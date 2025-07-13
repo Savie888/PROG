@@ -1,8 +1,8 @@
 package Metthy;
 
-//Include syrup in total inventory
-//Test script
+//Test script and testing
 //Implement MVC
+//GUI
 
 /**
  * This is a simulation of a Coffee Truck Business.
