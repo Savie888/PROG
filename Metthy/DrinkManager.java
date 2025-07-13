@@ -434,7 +434,7 @@ public class DrinkManager {
     /**
      * Deducts the required ingredients from the corresponding storage bins.
      *
-     * @param bins        the storage bins of a truck
+     * @param bins        the storage bins of a truck.
      * @param ingredients the ingredients needed to brew the coffee drink.
      */
     public void useIngredients(StorageBin[] bins, double[] ingredients){
@@ -491,11 +491,11 @@ public class DrinkManager {
     /**
      * Searches the drink menu for a drink that matches the specified type and size.
      *
-     * @param type the type of coffee drink.
-     * @param size the size of the drink.
+     * @param coffeeType  the type of coffee drink.
+     * @param size        the size of the drink.
      * @return the matching Drink object, or null if not found.
      */
-    public Drink getDrink(String type, String size){
+    public Drink getDrink(String coffeeType, String size){
 
         int i, found = 0;
         Drink drink = null;
@@ -504,7 +504,7 @@ public class DrinkManager {
 
             Drink d = drinks.get(i);
 
-            if(d.getCoffeeType().equalsIgnoreCase(type) && d.getSize().equalsIgnoreCase(size)){
+            if(d.getCoffeeType().equalsIgnoreCase(coffeeType) && d.getSize().equalsIgnoreCase(size)){
                 found = 1;
                 drink = d;
             }
@@ -526,7 +526,7 @@ public class DrinkManager {
     /**
      * Calculates the total cost of making a coffee drink
      *
-     * @param coffeeType   the type of coffee.
+     * @param coffeeType   the type of coffee drink.
      * @param ingredients  the ingredients needed to brew the coffee drink.
      * @param ratio        the ratio of coffee to water used for espresso brewing.
      * @return The total price of the drink.

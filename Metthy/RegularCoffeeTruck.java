@@ -37,11 +37,12 @@ public class RegularCoffeeTruck {
     private final Scanner scanner = new Scanner(System.in);
 
     /**
-     * Constructs a CoffeeTruck with the given name and location.
+     * Constructs a regular coffee truck with the given name and location.
      * Initializes 8 storage bins and an empty sales log.
      *
-     * @param name     the name of the coffee truck
-     * @param location the initial location of the truck
+     * @param name         the name of the coffee truck
+     * @param location     the initial location of the truck
+     * @param drinkManager the shared drink manager to be used by all trucks
      */
     public RegularCoffeeTruck(String name, String location, DrinkManager drinkManager){
 
@@ -608,19 +609,32 @@ public class RegularCoffeeTruck {
     }
 
     /**
-     * Records a drink sale to a truck's sales log.
+     * Records a drink sale to the truck's sales log.
      *
-     * @param coffeeType the type of coffee sold
-     * @param size the size of the drink
-     * @param grams the grams of coffee beans used
-     * @param milk the ounces of milk used
-     * @param water the ounces of water used
-     * @param price the price of the drink
+     * @param coffeeType  the type of coffee sold.
+     * @param size        the size of the drink.
+     * @param coffeeGrams the grams of coffee beans used.
+     * @param milk        the ounces of milk used.
+     * @param water       the ounces of water used.
+     * @param price       the price of the drink.
      */
-    protected void recordSale(String coffeeType, String size, double grams, double milk, double water, double price){
+    private void recordSale(String coffeeType, String size, double coffeeGrams, double milk, double water, double price){
 
-        salesLog.add(String.format("Drink: %s (%s) | %.2f g beans, %.2f oz milk, %.2f oz water | $%.2f",
-                coffeeType, size, grams, milk, water, price));
+        String ingredients;
+        String addOnText;
+        String drinkInfo;
+
+        //Build base ingredient info string (without extra shots or add-ons)
+        ingredients = String.format("%.2f g beans, %.2f oz milk, %.2f oz water", coffeeGrams, milk, water);
+
+        //Build formatted drink info line
+        drinkInfo = String.format("Drink: %s %s (Standard)", coffeeType, size);
+
+        //No add-ons for regular trucks
+        addOnText = "No Add-Ons";
+
+        //Format and add to the sales log
+        salesLog.add(String.format("%-30s | %-45s | %s | $%.2f", drinkInfo, ingredients, addOnText, price));
     }
 
     /**

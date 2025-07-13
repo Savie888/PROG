@@ -13,8 +13,17 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
      */
     private final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructs a special coffee truck with the given name and location.
+     * Initializes 10 storage bins and an empty sales log.
+     *
+     * @param name         the name of the coffee truck
+     * @param location     the initial location of the truck
+     * @param drinkManager the shared drink manager to be used by all trucks
+     */
     public SpecialCoffeeTruck(String name, String location, DrinkManager drinkManager){
 
+        //Call regular coffee truck constructor
         super(name, location, drinkManager);
 
         //Create the 2 extra storage bins for syrups
@@ -295,20 +304,59 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         String type, repeat;
         ArrayList<AddOn> addOns = new ArrayList<>();
         double amount;
+        boolean validAddOn;
 
         do{
             type = selectAddOnType();
-
             amount = selectAddOnAmount();
 
-            addOns.add(new AddOn(type, amount));
+            validAddOn = hasSufficientSyrup(type, amount);
 
-            System.out.println("Add more? (yes/no): ");
+            if(validAddOn)
+                addOns.add(new AddOn(type, amount));
+
+            System.out.println("Continue adding? (yes/no): ");
             repeat = scanner.nextLine();
 
         } while(repeat.equalsIgnoreCase("yes"));
 
         return addOns;
+    }
+
+    private boolean hasSufficientSyrup(String syrupType, double amount){
+
+        boolean validAddOns = true;
+
+        StorageBin syrupBin = findBin(syrupType); //Find the bin containing the specified add-on
+
+        if(syrupBin == null){
+            System.out.println("Error: Missing syrup bin for '" + syrupType + "'.");
+            validAddOns = false;
+        }
+
+        else if(syrupBin.getItemQuantity() < amount){
+            System.out.printf("Error: Not enough %s syrup in stock (needs %.2f oz).\n", syrupType, amount);
+            validAddOns = false;
+        }
+
+        return validAddOns;
+    }
+
+    private void useSyrupAddOns(ArrayList<AddOn> addOns){
+
+        int i;
+        String syrupType;
+        double amount;
+
+        for(i = 0; i < addOns.size(); i++){
+
+            AddOn addOn = addOns.get(i);
+            syrupType = addOn.getType();
+            amount  = addOn.getAmount();
+
+            StorageBin syrupBin = findBin(syrupType);
+            syrupBin.useQuantity(amount);
+        }
     }
 
     private int selectExtraShots(double coffeeGrams, double remainingCoffeeGrams){
@@ -332,33 +380,44 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
 
 
     /**
-     * Records a drink sale to a truck's sales log.
+     * Records a drink sale to the truck's sales log.
      *
-     * @param coffeeType   the type of coffee sold
-     * @param size         the size of the drink
-     * @param coffeeGrams  the grams of coffee beans used
-     * @param milk         the ounces of milk used
-     * @param water        the ounces of water used
-     * @param price        the price of the drink
+     * @param coffeeType   the type of coffee drink.
+     * @param size         the size of the drink.
+     * @param coffeeGrams  the grams of coffee beans used.
+     * @param milk         the ounces of milk used.
+     * @param water        the ounces of water used.
+     * @param addOns       list of syrup or other optional add-ons.
+     * @param extraShots   number of extra espresso shots.
+     * @param price        the price of the drink.
      */
-    //WIP, add extra shots
     private void recordSale(String coffeeType, String size, String brewType, double coffeeGrams,
                               double milk, double water, ArrayList<AddOn> addOns, int extraShots, double price){
 
         int i;
+        double extraCoffeeGrams;
+
+        String drinkInfo;
+        StringBuilder ingredients = new StringBuilder();
         StringBuilder addOnDetails = new StringBuilder();
 
-        //Formatting
-        String drinkInfo = String.format("Drink: %s %s (%s)", coffeeType, size, brewType);
-        String ingredients = String.format("%.2f g beans, %.2f oz milk, %.2f oz water", coffeeGrams, milk, water);
-        String addOnText;
+        //Build base ingredient info string (without extra shots or add-ons)
+        ingredients.append(String.format("%.2f g beans, %.2f oz milk, %.2f oz water", coffeeGrams, milk, water));
 
+        //Build formatted drink info line
+        drinkInfo = String.format("Drink: %s %s (%s)", coffeeType, size, brewType);
+
+        //Include extra shot info if any
+        if(extraShots > 0){
+            extraCoffeeGrams = coffeeGrams * extraShots;
+            ingredients.append(String.format(" + %d extra shot%s (%.2f g beans)", extraShots, (extraShots == 1 ? "" : "s"), extraCoffeeGrams));
+        }
+
+        //Build add-on details, if any
         if(!addOns.isEmpty()){
-
             addOnDetails.append("Add-Ons: ");
 
             for(i = 0; i < addOns.size(); i++){
-
                 AddOn a = addOns.get(i);
                 addOnDetails.append(String.format("%.1f oz %s", a.getAmount(), a.getType()));
 
@@ -368,12 +427,11 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             }
         }
 
-        if(addOnDetails.isEmpty())
-            addOnText = "None";
-        else
-            addOnText = "" + addOnDetails;
+        //If no add-ons, display "None"
+        String addOnText = addOnDetails.isEmpty() ? "No Add-Ons" : addOnDetails.toString();
 
-        salesLog.add(String.format("%-30s | %-40s | %s | $%.2f", drinkInfo, ingredients, addOnText, price));
+        //Format and add to the sales log
+        salesLog.add(String.format("%-30s | %-45s | %s | $%.2f", drinkInfo, ingredients, addOnText, price));
     }
 
     /**
@@ -400,18 +458,10 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             System.out.println("Invalid input! Drink preparation cancelled");
 
         else{
-
-            System.out.println("Add syrup add-ons? (yes/no)");
-            add = scanner.nextLine();
-
-            if(add.equalsIgnoreCase("yes"))
-                addOns = selectAddOns();
-
             Drink drink = drinkManager.getDrink(coffeeType, coffeeSize);
             drink.setBrewType(brewType);
 
             ingredients = drinkManager.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
-
             drinkManager.showIngredients(coffeeType, coffeeSize, brewType, ingredients); //Show required ingredients
 
             StorageBin beanBin = findBin("Coffee Beans"); //Find bin with coffee beans
@@ -420,7 +470,13 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             StorageBin cupBin = findBin(coffeeSize + " Cup"); //Find bin with specified cup size
             StorageBin[] bins = {beanBin, milkBin, waterBin, cupBin};
 
-            //Check if storage bins have sufficient ingredients
+            System.out.println("Add syrup add-ons? (yes/no)");
+            add = scanner.nextLine();
+
+            if(add.equalsIgnoreCase("yes"))
+                addOns = selectAddOns();
+
+            //Check if storage bins have sufficient ingredients and syrup quantities
             if(drinkManager.hasSufficientIngredients(bins, ingredients)){
 
                 coffeeGrams = ingredients[0];
@@ -431,6 +487,8 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                 drinkManager.useIngredients(bins, ingredients); //Deduct ingredients from storage bins
 
                 remainingCoffeeGrams = beanBin.getItemQuantity(); //Get remaining coffee bean quantity
+
+                useSyrupAddOns(addOns); //Deduct ingredients from syrup bins
 
                 System.out.println("Add extra espresso shots? (yes/no): ");
                 extra = scanner.nextLine();
@@ -475,8 +533,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             }
 
             else
-                System.out.println("Not enough ingredients or cups. Drink preparation cancelled.");
+                System.out.println("Not enough ingredients. Drink preparation cancelled.");
         }
     }
-
 }

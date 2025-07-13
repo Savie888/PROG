@@ -1,11 +1,9 @@
 package Metthy;
 
-//Special Drink Preparation
+
 //Finish Syrup Add Ons
-    //check syrup bins before accepting
-    //deduct from syrup bins
 //Add extra shots feature
-    //Check price and formatting
+//Test script
 //Implement MVC
 
 /**
