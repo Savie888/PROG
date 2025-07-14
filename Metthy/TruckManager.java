@@ -91,7 +91,7 @@ public class TruckManager {
      *
      * @return the unique name entered
      */
-    private String getUniqueName(){
+    private String enterUniqueName(){
 
         int flag;
         String name;
@@ -117,7 +117,7 @@ public class TruckManager {
      *
      * @return the unique location entered
      */
-    private String getUniqueLocation(){
+    private String enterUniqueLocation(){
 
         int flag;
         String location;
@@ -155,8 +155,8 @@ public class TruckManager {
         System.out.println("Creating a Coffee Truck...");
 
         do{
-            name = getUniqueName();
-            location = getUniqueLocation();
+            name = enterUniqueName();
+            location = enterUniqueLocation();
 
             do{
                 System.out.println("Choose Truck Type:");

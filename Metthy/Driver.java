@@ -1,8 +1,14 @@
 package Metthy;
 
-//Test script and testing
 //Implement MVC
+    //Work on main menu
+
 //GUI
+
+import Metthy.Controller.Controller;
+import Metthy.Model.Model;
+import Metthy.View.Menu;
+import Metthy.View.View;
 
 /**
  * This is a simulation of a Coffee Truck Business.
@@ -24,6 +30,10 @@ package Metthy;
 public class Driver {
 
     public static void main(String[] args){
+
+        Model model = new Model();
+        View view = new View();
+        Controller controller = new Controller(model, view);
 
         Menu menu = new Menu();
 

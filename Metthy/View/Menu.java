@@ -1,4 +1,6 @@
-package Metthy;
+package Metthy.View;
+
+import Metthy.TruckManager;
 
 import java.util.Scanner;
 
