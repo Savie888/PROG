@@ -1,5 +1,8 @@
 package Metthy;
 
+import Metthy.Model.RegularCoffeeTruck;
+import Metthy.Model.SpecialCoffeeTruck;
+
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -254,7 +257,6 @@ public class TruckManager {
 
     /**
      * Removes a coffee truck selected by the user.
-     *
      */
     public void removeTruck(){
 

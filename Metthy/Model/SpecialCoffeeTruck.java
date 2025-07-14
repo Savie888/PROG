@@ -1,4 +1,9 @@
-package Metthy;
+package Metthy.Model;
+
+import Metthy.AddOn;
+import Metthy.Drink;
+import Metthy.DrinkManager;
+import Metthy.StorageBin;
 
 import java.util.ArrayList;
 import java.util.Scanner;

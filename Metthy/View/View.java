@@ -1,5 +1,8 @@
 package Metthy.View;
 
+import Metthy.Model.RegularCoffeeTruck;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class View {
@@ -116,5 +119,70 @@ public class View {
 
         return repeat;
     }
+
+    public int selectTruck(ArrayList<RegularCoffeeTruck> trucks) {
+
+        int i, truckIndex = -1;
+
+        if (trucks.isEmpty())
+            System.out.println("No trucks available");
+
+        else {
+            System.out.println("--- List of Trucks ---");
+
+            for (i = 0; i < trucks.size(); i++) {
+                //Display list of available trucks
+                RegularCoffeeTruck truck = trucks.get(i);
+                System.out.printf("Truck %d: Name - %s  Location - %s\n", i + 1, truck.getName(), truck.getLocation());
+            }
+
+            System.out.println("Select truck number: ");
+            truckIndex = scanner.nextInt();
+            scanner.nextLine(); //Consume leftover newline
+        }
+
+        return truckIndex;
+    }
+
+    public int getSimulationMenuInput(){
+
+        int option;
+
+        option = scanner.nextInt();
+        scanner.nextLine(); //Absorb new line
+
+        return option;
+    }
+
+    public void displaySimulationMenu(){
+
+        System.out.println("\n=== Simulation Menu ===");
+        System.out.println("1 - Prepare Coffee Drinks");
+        System.out.println("2 - View Truck Information");
+        System.out.println("3 - Truck Maintenance");
+        System.out.println("4 - Exit to Main Menu");
+        System.out.println("Select an Option: ");
+    }
+
+    public int getCoffeeMenuInput(){
+
+        int option;
+
+        option = scanner.nextInt();
+        scanner.nextLine(); //Absorb new line
+
+        return option;
+    }
+
+    public void displayCoffeeMenu(){
+
+        System.out.println("\n=== Coffee Menu ===");
+        System.out.println("1 - Prepare Drink");
+        System.out.println("2 - Exit Menu");
+        System.out.println("Select an Option: ");
+    }
+
+
+
 }
 

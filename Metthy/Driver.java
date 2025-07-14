@@ -1,7 +1,7 @@
 package Metthy;
 
 //Implement MVC
-    //Work on main menu
+    //Work on truck manager methods
 
 //GUI
 
@@ -35,8 +35,9 @@ public class Driver {
         View view = new View();
         Controller controller = new Controller(model, view);
 
-        Menu menu = new Menu();
+        controller.start();
+        //Menu menu = new Menu();
 
-        menu.displayMenu(); //Display the menu
+        //menu.displayMenu(); //Display the menu
     }
 }

@@ -1,8 +1,6 @@
 package Metthy.Model;
 
 import Metthy.DrinkManager;
-import Metthy.RegularCoffeeTruck;
-import Metthy.SpecialCoffeeTruck;
 
 import java.util.ArrayList;
 
@@ -10,6 +8,11 @@ public class Model {
 
     public ArrayList<RegularCoffeeTruck> trucks;
     public DrinkManager drinkManager;
+
+    public Model(){
+
+        this.trucks = new ArrayList<>();
+    }
 
     /**
      * Checks if the given truck name is already taken.
@@ -61,26 +64,23 @@ public class Model {
 
     public boolean checkTruckType(int choice){
 
-        boolean valid = false;
+        boolean valid = true;
 
-        if((choice != 1 && choice != 2))
+        if((choice != 1 && choice != 2)){
+
             System.out.println("Invalid choice. Please try again");
-
-        else
-            valid = true;
+            valid = false;
+        }
 
         return valid;
     }
 
     public boolean checkYesOrNo(String choice){
 
-        boolean flag;
+        boolean flag = false;
 
         if(choice.equalsIgnoreCase("yes") || choice.equalsIgnoreCase("no"))
             flag = true;
-
-        else
-            flag = false;
 
         return flag;
     }
@@ -115,7 +115,28 @@ public class Model {
         setLoadout(set, truck);
     }
 
+    /**
+     * Displays a list of available trucks and allows the user to select one.
+     *
+     * @return The index of the selected truck in the list; -1 if no trucks are available.
+     */
+    public boolean checkTruckIndex(int truckIndex, ArrayList<RegularCoffeeTruck> trucks){
 
+        boolean valid = false;
 
+        if(truckIndex < 0 || truckIndex > trucks.size())
+            valid = true;
 
+        return valid;
+    }
+
+    public void removeTruck(int truckIndex){
+
+        trucks.remove(truckIndex);
+    }
+
+    public ArrayList<RegularCoffeeTruck> getTrucks(){
+
+        return trucks;
+    }
 }
