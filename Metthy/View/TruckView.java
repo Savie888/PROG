@@ -1,0 +1,183 @@
+package Metthy.View;
+
+import Metthy.Model.RegularCoffeeTruck;
+import Metthy.Model.SpecialCoffeeTruck;
+import Metthy.StorageBin;
+
+import java.util.ArrayList;
+
+public class TruckView extends View{
+
+    public ArrayList<RegularCoffeeTruck> trucks;
+    private final ArrayList<StorageBin> bins;
+
+    public TruckView(ArrayList<RegularCoffeeTruck> trucks, ArrayList<StorageBin> bins){
+
+        super();
+
+        this.trucks = trucks;
+        this.bins = bins;
+    }
+
+    /**
+     * Displays the current contents of all storage bins in the truck.
+     * Empty bins are marked as [Empty].
+     */
+    public void displayBins(){
+
+        int i, capacity, binNumber;
+        double quantity;
+        String item;
+
+        System.out.println("--- Storage Bins ---");
+
+        for(i = 0; i < bins.size(); i++){
+
+            StorageBin bin = bins.get(i);
+            item = bin.getItemType();
+            quantity = bin.getItemQuantity();
+            capacity = bin.getCapacity();
+            binNumber = i + 1;
+
+            //Bin is empty if no item assigned
+            if(item == null)
+                System.out.println("Bin #" + binNumber + ": [Empty]");
+
+            else
+                System.out.printf("Bin #%d: %s - %.2f / %d\n", binNumber, item, quantity, capacity);
+        }
+    }
+
+    /**
+     * Displays the truck's name, location, storage bin contents,transaction history, and total sales.
+     */
+    public void displayInfo(RegularCoffeeTruck selectedTruck){
+
+        int i;
+        String truckType;
+
+        if(selectedTruck instanceof SpecialCoffeeTruck)
+            truckType = "Special Truck";
+        else
+            truckType = "Regular Truck";
+
+        System.out.println("\n[" + truckType + "]");
+        System.out.println("Name - " + selectedTruck.getName() + " | " + "Location: " + selectedTruck.getLocation());
+        displayBins();
+        System.out.println("--- Transactions ---");
+
+        if(selectedTruck.getSalesLog().isEmpty())
+            System.out.println("No transactions recorded.");
+
+        else{
+            for(i = 0; i < selectedTruck.getSalesLog().size(); i++){
+
+                String sale = selectedTruck.getSalesLog().get(i);
+                System.out.println(sale);
+            }
+        }
+        System.out.printf("\nTotal Sales: $%.2f\n", selectedTruck.getTotalSales());
+    }
+
+    /**
+     * Prompts user to enter a unique truck name
+     *
+     * @return the unique name entered
+     */
+    public String enterUniqueName(){
+
+        String name;
+
+        System.out.print("Enter truck name: ");
+        name = scanner.nextLine();
+
+        return name;
+    }
+
+    /**
+     * Prompts user to enter a unique truck location
+     *
+     * @return the unique location entered
+     */
+    public String enterUniqueLocation(){
+
+        String location;
+
+        System.out.print("Enter truck location: ");
+        location = scanner.nextLine();
+
+        return location;
+    }
+
+    public int enterTruckType(){
+
+        int option;
+
+        System.out.println("Choose Truck Type:");
+        System.out.println("1. Regular Coffee Truck");
+        System.out.println("2. Special Coffee Truck");
+        option = scanner.nextInt();
+        scanner.nextLine(); //Clear excess line
+
+        return option;
+    }
+
+    public String yesOrNo(){
+
+        String choice;
+
+        choice = scanner.nextLine();
+
+        return choice;
+    }
+
+    public String setLoadoutPrompt(){
+
+        String set;
+
+        //Option to set up storage bins
+        System.out.println("Set up storage bins?: (yes/no)");
+        set = yesOrNo();
+
+        return set;
+    }
+
+    public String repeatPrompt(){
+
+        String repeat;
+
+        System.out.println("Coffee Truck Created\n");
+
+        System.out.print("Create another truck? (yes/no): ");
+        repeat = scanner.nextLine();
+
+        return repeat;
+    }
+
+    public int selectTruck(ArrayList<RegularCoffeeTruck> trucks) {
+
+        int i, truckIndex = -1;
+
+        if (trucks.isEmpty())
+            System.out.println("No trucks available");
+
+        else {
+            System.out.println("--- List of Trucks ---");
+
+            for (i = 0; i < trucks.size(); i++) {
+                //Display list of available trucks
+                RegularCoffeeTruck truck = trucks.get(i);
+                System.out.printf("Truck %d: Name - %s  Location - %s\n", i + 1, truck.getName(), truck.getLocation());
+            }
+
+            System.out.println("Select truck number: ");
+            truckIndex = scanner.nextInt();
+            scanner.nextLine(); //Consume leftover newline
+        }
+
+        return truckIndex;
+    }
+
+
+
+}

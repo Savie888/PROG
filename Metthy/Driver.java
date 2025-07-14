@@ -1,14 +1,13 @@
 package Metthy;
 
 //Implement MVC
-    //Work on truck manager methods
+    //Continue on method repurposing
 
 //GUI
 
-import Metthy.Controller.Controller;
-import Metthy.Model.Model;
-import Metthy.View.Menu;
-import Metthy.View.View;
+
+import Metthy.Controller.MenuController;
+
 
 /**
  * This is a simulation of a Coffee Truck Business.
@@ -31,13 +30,7 @@ public class Driver {
 
     public static void main(String[] args){
 
-        Model model = new Model();
-        View view = new View();
-        Controller controller = new Controller(model, view);
-
-        controller.start();
-        //Menu menu = new Menu();
-
-        //menu.displayMenu(); //Display the menu
+        MenuController menuController = new MenuController();
+        menuController.start();
     }
 }
