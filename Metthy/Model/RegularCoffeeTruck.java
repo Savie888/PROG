@@ -1,6 +1,5 @@
 package Metthy.Model;
 
-import Metthy.Drink;
 import Metthy.DrinkManager;
 import Metthy.StorageBin;
 
@@ -60,66 +59,6 @@ public class RegularCoffeeTruck {
             bins.add(new StorageBin(i));
 
         salesLog = new ArrayList<>();
-    }
-
-    /**
-     * Displays the current contents of all storage bins in the truck.
-     * Empty bins are marked as [Empty].
-     */
-    public void displayBins(){
-
-        int i, capacity, binNumber;
-        double quantity;
-        String item;
-
-        System.out.println("--- Storage Bins ---");
-
-        for(i = 0; i < bins.size(); i++){
-
-            StorageBin bin = bins.get(i);
-            item = bin.getItemType();
-            quantity = bin.getItemQuantity();
-            capacity = bin.getCapacity();
-            binNumber = i + 1;
-
-            //Bin is empty if no item assigned
-            if(item == null)
-                System.out.println("Bin #" + binNumber + ": [Empty]");
-
-            else
-                System.out.printf("Bin #%d: %s - %.2f / %d\n", binNumber, item, quantity, capacity);
-        }
-    }
-
-    /**
-     * Displays the truck's name, location, storage bin contents,transaction history, and total sales.
-     */
-    public void displayInfo(){
-
-        int i;
-        String truckType;
-
-        if(this instanceof SpecialCoffeeTruck)
-            truckType = "Special Truck";
-        else
-            truckType = "Regular Truck";
-
-        System.out.println("\n[" + truckType + "]");
-        System.out.println("Name - " + this.name + " | " + "Location: " + this.location);
-        displayBins();
-        System.out.println("--- Transactions ---");
-
-        if(getSalesLog().isEmpty())
-            System.out.println("No transactions recorded.");
-
-        else{
-            for(i = 0; i < getSalesLog().size(); i++){
-
-                String sale = getSalesLog().get(i);
-                System.out.println(sale);
-            }
-        }
-        System.out.printf("\nTotal Sales: $%.2f\n", getTotalSales());
     }
 
     /**
@@ -293,7 +232,7 @@ public class RegularCoffeeTruck {
      *
      * @param binNumber the bin number to restock
      */
-    public void restockOneBin(int binNumber){
+    public void restockBin(int binNumber){
 
         double quantity;
 
@@ -362,7 +301,7 @@ public class RegularCoffeeTruck {
 
                     StorageBin bin = bins.get(i);
 
-                    restockOneBin(bin.getBinNumber()); //Restock bin
+                    restockBin(bin.getBinNumber()); //Restock bin
                 }
             }
         }
@@ -395,7 +334,7 @@ public class RegularCoffeeTruck {
      *
      * @param binNumber the bin number to empty (1-based index)
      */
-    public void emptyOneBin(int binNumber){
+    public void emptyBin(int binNumber){
 
         if(binNumber >= 1 && binNumber <= bins.size()){
 
@@ -525,7 +464,7 @@ public class RegularCoffeeTruck {
 
                     else if(restock == 2){
                         binNumber = selectBinNumber();
-                        restockOneBin(binNumber); //Restock selected bin
+                        restockBin(binNumber); //Restock selected bin
                     }
                     break;
                 case 2:
@@ -556,7 +495,7 @@ public class RegularCoffeeTruck {
 
                     else if(empty == 2){
                         binNumber = selectBinNumber();
-                        emptyOneBin(binNumber); //Empty selected bin
+                        emptyBin(binNumber); //Empty selected bin
                     }
                     break;
                 case 4:

@@ -1,4 +1,4 @@
-package Metthy;
+package Metthy.Model;
 
 /**
  * This class represents a coffee drink with a coffee type, size, and price.

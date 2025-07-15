@@ -17,7 +17,7 @@ public class MenuController extends Controller{
 
         menuView = new MenuView();
         truckModel = new TruckModel();
-        this.truckController = new TruckController();
+        this.truckController = new TruckController(menuView);
     }
 
     public void mainMenu(int option){
@@ -59,7 +59,7 @@ public class MenuController extends Controller{
      */
     public void simulateMenu(){
 
-        int truckNumber, option;
+        int truckNumber, option, choice;
         ArrayList<RegularCoffeeTruck> trucks = truckModel.getTrucks();
 
         running = true;
@@ -84,7 +84,9 @@ public class MenuController extends Controller{
                     truckController.displayTruckInfo(selectedTruck); //Display truck information
                     break;
                 case 3:
-                    //selectedTruck.truckMaintenanceMenu(); //Display truck maintenance menu
+                    menuView.dispayTruckMaintenanceMenu();
+                    choice = menuView.getTruckMaintenanceMenuInput();
+                    truckController.truckMaintenanceMenu(selectedTruck, choice); //Display truck maintenance menu
                     break;
                 case 4:
                     running = false;

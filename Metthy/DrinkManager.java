@@ -1,5 +1,7 @@
 package Metthy;
 
+import Metthy.Model.Drink;
+
 import java.util.Scanner;
 import java.util.ArrayList;
 

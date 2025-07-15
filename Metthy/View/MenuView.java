@@ -80,4 +80,101 @@ public class MenuView extends View{
         System.out.println("2 - Exit Menu");
         System.out.println("Select an Option: ");
     }
+
+    public int getTruckMaintenanceMenuInput(){
+
+        int option;
+
+        option = scanner.nextInt();
+        scanner.nextLine(); //Absorb new line
+
+        return option;
+    }
+
+    /**
+     * Displays the truck maintenance menu for a specific coffee truck.
+     * <p>Allows the user to:</p>
+     * <ul>
+     *   <li>Restock bins (either all or individually)</li>
+     *   <li>Modify storage bin contents (either all or individually)</li>
+     *   <li>Empty bins (either all or individually)</li>
+     *   <li>Edit the truck's name or location</li>
+     *   <li>Edit global drink ingredient prices</li>
+     * </ul>
+     *
+     */
+    public void dispayTruckMaintenanceMenu(){
+
+        System.out.println("\n=== Truck Maintenance ===");
+        System.out.println("1 - Restock Bins (only works on bins with an assigned item)");
+        System.out.println("2 - Modify Storage Bin Contents");
+        System.out.println("3 - Empty Storage Bins");
+        System.out.println("4 - Edit Truck Name");
+        System.out.println("5 - Edit Truck Location");
+        System.out.println("6 - Edit Pricing (will affect pricing for all trucks)");
+        System.out.println("7 - Exit Menu");
+        System.out.println("Select an Option: ");
+    }
+
+    public int restockMenu(){
+
+        int option;
+
+        System.out.println("1 - Restock all bins");
+        System.out.println("2 - Restock one bin");
+        System.out.print("Select an option: ");
+        option = scanner.nextInt();
+        scanner.nextLine(); //Absorb new line
+
+        return option;
+    }
+
+    public int modifyMenu(){
+
+        int option;
+
+        System.out.println("1 - Modify all bins");
+        System.out.println("2 - Modify one bin");
+        System.out.print("Select an option: ");
+        option = scanner.nextInt();
+        scanner.nextLine(); //Absorb new line
+
+        return option;
+    }
+
+    public int emptyMenu(){
+
+        int option;
+
+        System.out.println("1 - Empty all bins");
+        System.out.println("2 - Empty one bin");
+        System.out.print("Select an option: ");
+        option = scanner.nextInt();
+        scanner.nextLine(); //Absorb new line
+
+        return option;
+    }
+
+    public String getNewName(){
+
+        String name;
+
+        System.out.print("Enter new name: ");
+        name = scanner.nextLine();
+        scanner.nextLine(); //Absorb new line
+
+        return name;
+    }
+
+    public String getNewLocation(){
+
+        String location;
+
+        System.out.print("Enter new location: ");
+        location = scanner.nextLine();
+        scanner.nextLine(); //Absorb new line
+
+        return location;
+    }
+
 }

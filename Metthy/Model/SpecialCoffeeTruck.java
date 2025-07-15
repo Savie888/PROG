@@ -1,7 +1,5 @@
 package Metthy.Model;
 
-import Metthy.AddOn;
-import Metthy.Drink;
 import Metthy.DrinkManager;
 import Metthy.StorageBin;
 
@@ -187,7 +185,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
 
                     else if(restock == 2){
                         binNumber = selectBinNumber();
-                        restockOneBin(binNumber); //Restock selected bin
+                        restockBin(binNumber); //Restock selected bin
                     }
                     break;
                 case 2:
@@ -221,7 +219,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
 
                     else if(empty == 2){
                         binNumber = selectBinNumber();
-                        emptyOneBin(binNumber); //Empty selected bin
+                        emptyBin(binNumber); //Empty selected bin
                     }
                     break;
                 case 4:

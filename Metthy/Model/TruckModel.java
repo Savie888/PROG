@@ -129,4 +129,5 @@ public class TruckModel extends Model{
 
         return trucks;
     }
+
 }

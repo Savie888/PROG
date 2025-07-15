@@ -31,5 +31,26 @@ public class View {
         System.out.println("-------------------------");
     }
 
+    public void printExitMessage() {
+        System.out.println("Exiting Menu...");
+    }
+
+    public void printInvalidOption() {
+        System.out.println("Invalid option. Please try again");
+    }
+
+    public String yesOrNo(){
+
+        String choice;
+
+        choice = scanner.nextLine();
+
+        return choice;
+    }
+
+    public void showQuantityPrompt(){
+
+        System.out.print("Enter quantity: ");
+    }
 }
 

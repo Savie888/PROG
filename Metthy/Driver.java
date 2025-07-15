@@ -2,6 +2,7 @@ package Metthy;
 
 //Implement MVC
     //Continue on method repurposing
+    //Continue on Modify Bin and Truck Maintenance
 
 //GUI
 

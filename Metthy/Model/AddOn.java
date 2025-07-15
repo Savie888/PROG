@@ -1,4 +1,4 @@
-package Metthy;
+package Metthy.Model;
 
 public class AddOn {
 

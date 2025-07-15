@@ -19,6 +19,62 @@ public class TruckView extends View{
         this.bins = bins;
     }
 
+    public String showLoadoutPrompt(){
+
+        String set;
+
+        //Option to set up storage bins
+        System.out.println("Set up storage bins?: (yes/no)");
+        set = yesOrNo();
+
+        return set;
+    }
+
+    public void showBinPrompt(int binNumber){
+
+        System.out.println("\nSetting up Bin #" + binNumber);
+    }
+
+    public void showBinSkipPrompt(int binNumber){
+
+        System.out.println("Skipping Bin #" + binNumber);
+    }
+
+    public String showDefaultLoadoutPrompt(String truckName){
+
+        String choice;
+
+        System.out.println("\n--- Setting Loadout for " + truckName + " ---");
+        System.out.print("Set Storage Bins to default loadout? (yes/no): ");
+        choice = yesOrNo();
+
+        return choice;
+    }
+
+    public int selectIngredientToStore(int binNumber){
+
+        int choice;
+
+        System.out.println("Choose item to store in Bin #" + binNumber + ":");
+        System.out.println("1. Small Cup");
+        System.out.println("2. Medium Cup");
+        System.out.println("3. Large Cup");
+        System.out.println("4. Coffee Beans");
+        System.out.println("5. Milk");
+        System.out.println("6. Water");
+        System.out.print("Select item number (0 to skip this bin): ");
+
+        choice = scanner.nextInt();
+        scanner.nextLine(); //Consume newline
+
+        return choice;
+    }
+
+    public void showLoadoutComplete(String truckName){
+
+        System.out.println("\nLoadout for " + truckName + " complete!\n");
+    }
+
     /**
      * Displays the current contents of all storage bins in the truck.
      * Empty bins are marked as [Empty].
@@ -122,26 +178,6 @@ public class TruckView extends View{
         return option;
     }
 
-    public String yesOrNo(){
-
-        String choice;
-
-        choice = scanner.nextLine();
-
-        return choice;
-    }
-
-    public String setLoadoutPrompt(){
-
-        String set;
-
-        //Option to set up storage bins
-        System.out.println("Set up storage bins?: (yes/no)");
-        set = yesOrNo();
-
-        return set;
-    }
-
     public String repeatPrompt(){
 
         String repeat;
@@ -178,6 +214,27 @@ public class TruckView extends View{
         return truckIndex;
     }
 
+    public boolean checkBinNumber(int binNumber){
 
+        boolean valid = false;
+
+        if(binNumber < 0 || binNumber > bins.size()){
+            System.out.println("Invalid bin number selected");
+            valid = true;
+        }
+
+        return valid;
+    }
+
+    public int selectBin(){
+
+        int binNumber;
+
+        System.out.println("Enter Bin Number: ");
+        binNumber = scanner.nextInt();
+        scanner.nextLine(); //Clear excess line
+
+        return binNumber;
+    }
 
 }
