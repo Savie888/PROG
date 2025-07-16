@@ -48,6 +48,11 @@ public class View {
         return choice;
     }
 
+    public void noTrucksAvailablePrompt(){
+
+        System.out.println("No trucks available");
+    }
+
     public void showQuantityPrompt(){
 
         System.out.print("Enter quantity: ");

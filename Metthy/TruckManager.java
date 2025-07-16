@@ -149,68 +149,6 @@ public class TruckManager {
      *  <li>Initialize the drink ingredient prices after a successful truck creation.</li>
      * </ul>
      */
-    public void createTruck(){
-
-        int choice;
-        String name, location;
-        String repeat;
-
-        System.out.println("Creating a Coffee Truck...");
-
-        do{
-            name = enterUniqueName();
-            location = enterUniqueLocation();
-
-            do{
-                System.out.println("Choose Truck Type:");
-                System.out.println("1. Regular Coffee Truck");
-                System.out.println("2. Special Coffee Truck");
-                choice = scanner.nextInt();
-                scanner.nextLine(); //Clear excess line
-
-                if((choice != 1 && choice != 2))
-                    System.out.println("Invalid choice. Please try again");
-
-            } while(choice != 1 && choice != 2);
-
-            RegularCoffeeTruck truck;
-
-            //Create a Regular Coffee Truck
-            if(choice == 1)
-                truck = new RegularCoffeeTruck(name, location, drinkManager);
-
-            //Create a Special Coffee Truck
-            else
-                truck = new SpecialCoffeeTruck(name, location, drinkManager);
-
-            //Option to set up storage bins
-            System.out.println("Set up storage bins?: (yes/no)");
-            String loadout = scanner.nextLine();
-
-            if(loadout.equalsIgnoreCase("yes")){
-
-                if(truck instanceof SpecialCoffeeTruck)
-                    ((SpecialCoffeeTruck) truck).setSpecialLoadout(); //Set up special truck storage bins
-
-                else
-                    truck.setLoadout(); //Set up regular truck storage bins
-            }
-
-            //Add new truck to arraylist of trucks
-            trucks.add(truck);
-
-            System.out.println("Coffee Truck Created\n");
-            System.out.print("Create another truck? (yes/no): ");
-            repeat = scanner.nextLine();
-
-        } while(repeat.equalsIgnoreCase("yes"));
-
-        //After all trucks are created, set up DrinkManager and prices
-        if(!trucks.isEmpty() && !pricesInitialized){
-            drinkManager.setIngredientPrices();
-            pricesInitialized = true; //Set flag to true to avoid repeating price initialization
-        }
-    }
 
     /**
      * Displays a list of available trucks and allows the user to select one.
@@ -279,44 +217,6 @@ public class TruckManager {
      *   <li>Exit to the main menu</li>
      * </ul>
      */
-    public void simulateMenu(){
-
-        int index, option;
-        RegularCoffeeTruck selectedTruck;
-
-        index = selectTruck(); //Let user select a truck
-        selectedTruck = trucks.get(index);
-
-        do{
-            System.out.println("\n=== Simulation Menu ===");
-            System.out.println("1 - Prepare Coffee Drinks");
-            System.out.println("2 - View Truck Information");
-            System.out.println("3 - Truck Maintenance");
-            System.out.println("4 - Exit to Main Menu");
-            System.out.println("Select an Option: ");
-            option = scanner.nextInt();
-            scanner.nextLine(); //Absorb new line
-
-            switch(option){
-
-                case 1:
-                    selectedTruck.coffeeMenu(); //Display Coffee Menu
-                    break;
-                case 2:
-                    selectedTruck.displayInfo(); //Display truck information
-                    break;
-                case 3:
-                    selectedTruck.truckMaintenanceMenu(); //Display truck maintenance menu
-                    break;
-                case 4:
-                    System.out.println("Returning to main menu...");
-                    break;
-                default:
-                    System.out.println("Invalid option. Please try again");
-                    break;
-            }
-        } while(option != 4);
-    }
 
     /**
      * Displays the total number of deployed trucks and their respective types (Regular or Special).

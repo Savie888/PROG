@@ -19,4 +19,14 @@ public class Model {
 
         return flag;
     }
+
+    public boolean isYes(String choice){
+
+        boolean flag = false;
+
+        if(choice.equalsIgnoreCase("yes"))
+            flag = true;
+
+        return flag;
+    }
 }

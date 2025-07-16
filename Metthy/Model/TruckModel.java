@@ -75,19 +75,15 @@ public class TruckModel extends Model{
         return valid;
     }
 
-    public void setLoadout(String set, RegularCoffeeTruck truck){
+    // move above to truck view??
 
-        if(set.equalsIgnoreCase("yes")){
 
-            if(truck instanceof SpecialCoffeeTruck)
-                ((SpecialCoffeeTruck) truck).setSpecialLoadout(); //Set up special truck storage bins
+    public void addTruck(RegularCoffeeTruck truck){
 
-            else
-                truck.setLoadout(); //Set up regular truck storage bins
-        }
+        trucks.add(truck);
     }
 
-    public void createTruck(String name, String location, int truckType, String set){
+    public RegularCoffeeTruck createTruck(String name, String location, int truckType){
 
         RegularCoffeeTruck truck;
 
@@ -95,14 +91,11 @@ public class TruckModel extends Model{
         if(truckType == 1)
             truck = new RegularCoffeeTruck(name, location, drinkManager);
 
-            //Create a Special Coffee Truck
+        //Create a Special Coffee Truck
         else
             truck = new SpecialCoffeeTruck(name, location, drinkManager);
 
-        //Add new truck to arraylist of trucks
-        trucks.add(truck);
-
-        setLoadout(set, truck);
+        return truck;
     }
 
     /**
@@ -112,12 +105,12 @@ public class TruckModel extends Model{
      */
     public boolean checkTruckIndex(int truckIndex, ArrayList<RegularCoffeeTruck> trucks){
 
-        boolean valid = false;
+        boolean flag = false;
 
-        if(truckIndex < 0 || truckIndex > trucks.size())
-            valid = true;
+        if(truckIndex < -1 || truckIndex > trucks.size())
+            flag = true;
 
-        return valid;
+        return flag;
     }
 
     public void removeTruck(int truckIndex){

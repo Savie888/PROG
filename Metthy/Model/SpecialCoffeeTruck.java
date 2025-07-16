@@ -107,6 +107,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         } while(bin.getItemType() == null || invalidQuantity);
     }
 
+    /*
     public void setSpecialLoadout(){
 
         int i, binNumber;
@@ -140,6 +141,8 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             System.out.println("\nLoadout for " + name + " complete!\n");
         }
     }
+*/
+
 
     /**
      * Displays the truck maintenance menu for a specific coffee truck.
@@ -153,7 +156,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
      * </ul>
      *
      */
-    @Override
+   /* @Override
     public void truckMaintenanceMenu(){
 
         int option, restock, binNumber;
@@ -244,7 +247,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             }
         } while(option != 7);
     }
-
+*/
     private String selectAddOnType(){
 
         String type;

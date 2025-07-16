@@ -55,8 +55,8 @@ public class RegularCoffeeTruck {
         this.drinkManager = drinkManager;
 
         //Create the 8 storage bins
-        for(i = 1; i <= 8; i++)
-            bins.add(new StorageBin(i));
+        for(i = 0; i <= 7; i++)
+            bins.add(new StorageBin(i + 1));
 
         salesLog = new ArrayList<>();
     }
@@ -73,100 +73,42 @@ public class RegularCoffeeTruck {
         bins.get(binIndex).assignItem(itemType, itemQuantity);
     }
 
+
     /**
      * Modifies the contents of a specified bin.
      *
-     * @param binNumber the 1-based bin number (for display and user selection)
+     * @param binIndex the 1-based bin number (for display and user selection)
      */
-    public void modifyBin(int binNumber){
+    public void modifyBin(int binIndex, int option, double quantity){
 
-        int choice, maxCapacity;
-        int binIndex = binNumber - 1;
-        double quantity;
-        boolean invalidQuantity;
         String itemType;
-
-        System.out.println("\nSetting up Bin #" + binNumber);
 
         StorageBin bin = bins.get(binIndex);
 
-        do{
-            invalidQuantity = false;
+        switch(option){
 
-            System.out.println("Choose item to store in Bin #" + binNumber + ":");
-            System.out.println("1. Small Cup");
-            System.out.println("2. Medium Cup");
-            System.out.println("3. Large Cup");
-            System.out.println("4. Coffee Beans");
-            System.out.println("5. Milk");
-            System.out.println("6. Water");
-            System.out.print("Select item number (0 to skip this bin): ");
-
-            choice = scanner.nextInt();
-            scanner.nextLine(); //Consume newline
-
-            if(choice == 0){
-                System.out.println("Skipping Bin #" + binNumber);
+            case 1:
+                bin.setItemType("Small Cup");
                 break;
-            }
+            case 2:
+                bin.setItemType("Medium Cup");
+                break;
+            case 3:
+                bin.setItemType("Large Cup");
+                break;
+            case 4:
+                bin.setItemType("Coffee Beans");
+                break;
+            case 5:
+                bin.setItemType("Milk");
+                break;
+            case 6:
+                bin.setItemType("Water");
+                break;
+        }
 
-            else{
-                switch(choice){
-
-                    case 1:
-                        bin.setItemType("Small Cup");
-                        break;
-                    case 2:
-                        bin.setItemType("Medium Cup");
-                        break;
-                    case 3:
-                        bin.setItemType("Large Cup");
-                        break;
-                    case 4:
-                        bin.setItemType("Coffee Beans");
-                        break;
-                    case 5:
-                        bin.setItemType("Milk");
-                        break;
-                    case 6:
-                        bin.setItemType("Water");
-                        break;
-                    default:
-                        bin.setItemType(null);
-                        break;
-                }
-
-                if(bin.getItemType() == null)
-                    System.out.println("Invalid selection. Please try again.");
-
-                else{
-                    maxCapacity = bin.getCapacityForItem(bin.getItemType());
-                    System.out.print("Enter quantity (max " + maxCapacity + "): ");
-                    quantity = scanner.nextDouble();
-                    scanner.nextLine(); //Consume newline
-
-                    if(quantity < 0 || quantity > maxCapacity){
-
-                        System.out.println("Invalid quantity. Must be between 0 and " + maxCapacity + ".");
-                        invalidQuantity = true;
-                    }
-
-                    else{
-                        itemType = bin.getItemType();
-                        assignItemToBin(binIndex, itemType, quantity);
-
-                        if(itemType.equalsIgnoreCase("Water") || (itemType.equalsIgnoreCase("Milk")))
-                            System.out.println("Bin #" + binNumber + " loaded with " + quantity + " ounces of " + itemType);
-
-                        else if(itemType.equalsIgnoreCase("Coffee Beans"))
-                            System.out.println("Bin #" + binNumber + " loaded with " + quantity + " grams of " + itemType);
-
-                        else
-                            System.out.println("Bin #" + binNumber + " loaded with " + (int)quantity + " cups ");
-                    }
-                }
-            }
-        } while(bin.getItemType() == null || invalidQuantity);
+        itemType = bin.getItemType();
+        assignItemToBin(binIndex, itemType, quantity);
     }
 
     /**
@@ -201,29 +143,15 @@ public class RegularCoffeeTruck {
     /**
      * Allows user to set up the loadout of a truck.
      */
-    public void setLoadout(){
+    public void setLoadout(int option, double quantity){
 
         int i, binNumber;
-        String max;
-        ArrayList<StorageBin> bins = getBins();
 
-        System.out.println("\n--- Setting Loadout for " + name + " ---");
+        for(i = 0; i < bins.size(); i++) {
+            StorageBin bin = bins.get(i);
+            binNumber = bin.getBinNumber();
 
-        System.out.println("Set Storage Bins to default loadout? (yes/no): ");
-        max = scanner.nextLine();
-
-        if(max.equalsIgnoreCase("yes"))
-            setDefaultLoadout();
-
-        else{
-            for(i = 0; i < bins.size(); i++){
-                StorageBin bin = bins.get(i);
-                binNumber = bin.getBinNumber();
-
-                modifyBin(binNumber);
-            }
-
-            System.out.println("\nLoadout for " + name + " complete!\n");
+            modifyBin(binNumber, option, quantity);
         }
     }
 
@@ -311,7 +239,7 @@ public class RegularCoffeeTruck {
      * Allows the user to modify all storage bins.
      * User can choose to set bins to maximum capacity or manually adjust each bin.
      */
-    public void modifyAllBins(){
+ /*   public void modifyAllBins(){
 
         int i;
         String max;
@@ -328,7 +256,7 @@ public class RegularCoffeeTruck {
             }
         }
     }
-
+*/
     /**
      * Empties a specific storage bin.
      *
@@ -433,7 +361,8 @@ public class RegularCoffeeTruck {
      * </ul>
      *
      */
-    public void truckMaintenanceMenu(){
+
+    /*public void truckMaintenanceMenu(){
 
         int option, restock, binNumber;
 
@@ -520,7 +449,7 @@ public class RegularCoffeeTruck {
             }
         } while(option != 7);
     }
-
+*/
     /**
      * Returns the list of storage bins associated with a truck.
      *

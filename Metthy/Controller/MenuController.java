@@ -9,14 +9,12 @@ import java.util.ArrayList;
 public class MenuController extends Controller{
 
     private final MenuView menuView;
-    private final TruckModel truckModel;
     private final TruckController truckController;
     private boolean running;
 
     public MenuController(){
 
         menuView = new MenuView();
-        truckModel = new TruckModel();
         this.truckController = new TruckController(menuView);
     }
 
@@ -31,7 +29,7 @@ public class MenuController extends Controller{
                 truckController.truckRemoval();
                 break;
             case 3:
-                simulateMenu();
+                truckController.simulateMenu();
                 break;
             case 4:
                 truckController.displayDashboard();
@@ -47,54 +45,6 @@ public class MenuController extends Controller{
         System.out.println();
     }
 
-    /**
-     * Displays the truck simulation menu for performing actions on a selected coffee truck.
-     * <p>Allows user to:</p>
-     * <ul>
-     *   <li>Prepare coffee drinks using the truck's inventory</li>
-     *   <li>View the selected truck's information</li>
-     *   <li>Enter the truck maintenance submenu</li>
-     *   <li>Exit to the main menu</li>
-     * </ul>
-     */
-    public void simulateMenu(){
-
-        int truckNumber, option, choice;
-        ArrayList<RegularCoffeeTruck> trucks = truckModel.getTrucks();
-
-        running = true;
-
-        do{
-            truckNumber = truckController.selectTruck();
-        } while(truckModel.checkTruckIndex(truckNumber - 1, trucks));
-
-        RegularCoffeeTruck selectedTruck = trucks.get(truckNumber - 1);
-
-        menuView.displaySimulationMenu();
-        option = menuView.getSimulationMenuInput();
-
-        while (running){
-
-            switch (option){
-
-                case 1:
-                    coffeeMenu(); //Display Coffee Menu
-                    break;
-                case 2:
-                    truckController.displayTruckInfo(selectedTruck); //Display truck information
-                    break;
-                case 3:
-                    menuView.dispayTruckMaintenanceMenu();
-                    choice = menuView.getTruckMaintenanceMenuInput();
-                    truckController.truckMaintenanceMenu(selectedTruck, choice); //Display truck maintenance menu
-                    break;
-                case 4:
-                    running = false;
-                    System.out.println("Returning to main menu...");
-                    break;
-            }
-        }
-    }
 
     public void coffeeMenu(){
 
@@ -129,7 +79,7 @@ public class MenuController extends Controller{
 
         running = true;
 
-        while (running) {
+        while(running){
 
             menuView.displayMainMenu();
             option = menuView.getMenuSelection();
