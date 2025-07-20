@@ -1,5 +1,6 @@
 package Metthy;
 
+import Metthy.Model.CoffeeTruck;
 import Metthy.Model.RegularCoffeeTruck;
 import Metthy.Model.SpecialCoffeeTruck;
 
@@ -232,7 +233,7 @@ public class TruckManager {
 
         for(i = 0; i < trucks.size(); i++){
 
-            RegularCoffeeTruck truck = trucks.get(i);
+            CoffeeTruck truck = trucks.get(i);
 
             if(truck instanceof SpecialCoffeeTruck)
                 specialCount++;

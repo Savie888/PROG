@@ -6,11 +6,15 @@ package Metthy;
     //Refactor truck info asap
     //Test revamped Simulate Menu
 
+//Ingredient objects
+    //Combine Cup and Ingredient abstract classes
+
 //Menu Looping
 //GUI
 
 
 import Metthy.Controller.MenuController;
+import Metthy.View.MenuView;
 
 
 /**
@@ -34,7 +38,8 @@ public class Driver {
 
     public static void main(String[] args){
 
-        MenuController menuController = new MenuController();
+        MenuView menuView = new MenuView();
+        MenuController menuController = new MenuController(menuView);
         menuController.start();
     }
 }

@@ -7,6 +7,11 @@ public class MenuView extends View{
         super();
     }
 
+    public void displayWelcomeMessage(){
+
+        System.out.println("Welcome to Java Jeeps Coffee Truck Simulator");
+    }
+
     /**
      * Displays the main menu and handles user interaction.
      * <p>
@@ -21,8 +26,6 @@ public class MenuView extends View{
      * The method runs in a loop until the user chooses to exit.
      */
     public void displayMainMenu() {
-
-        System.out.println("Welcome to Java Jeeps Coffee Truck Simulator");
 
         System.out.print("\n=== Main Menu ===\n");
         System.out.println("1 - Create a Coffee Truck");
@@ -103,7 +106,7 @@ public class MenuView extends View{
      * </ul>
      *
      */
-    public void dispayTruckMaintenanceMenu(){
+    public void displayTruckMaintenanceMenu(){
 
         System.out.println("\n=== Truck Maintenance ===");
         System.out.println("1 - Restock Bins (only works on bins with an assigned item)");
@@ -155,7 +158,7 @@ public class MenuView extends View{
         return option;
     }
 
-    public String getNewName(){
+    public String enterNewName(){
 
         String name;
 
@@ -166,7 +169,7 @@ public class MenuView extends View{
         return name;
     }
 
-    public String getNewLocation(){
+    public String enterNewLocation(){
 
         String location;
 

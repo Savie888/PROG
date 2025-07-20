@@ -1,7 +1,8 @@
 package Metthy.Controller;
 
-import Metthy.Model.RegularCoffeeTruck;
-import Metthy.Model.TruckModel;
+import Metthy.Model.BinContent;
+import Metthy.Model.CoffeeTruck;
+import Metthy.Model.TruckManager;
 import Metthy.StorageBin;
 import Metthy.View.MenuView;
 import Metthy.View.TruckView;
@@ -10,54 +11,73 @@ import java.util.ArrayList;
 
 public class TruckController{
 
-    public ArrayList<RegularCoffeeTruck> trucks;
+    public ArrayList<CoffeeTruck> trucks;
     public ArrayList<StorageBin> bins;
     private final TruckView truckView;
     private final MenuView menuView;
-    private final TruckModel truckModel;
+    private final TruckManager truckManager;
     private boolean running;
 
     public TruckController(MenuView menuView){
 
         this.trucks = new ArrayList<>();
         this.bins = new ArrayList<>();
-        this.truckView = new TruckView(bins);
         this.menuView = menuView;
-        this.truckModel = new TruckModel();
+        this.truckView = new TruckView(bins);
+        this.truckManager = new TruckManager();
     }
 
-    public void truckLoadout(RegularCoffeeTruck truck){
+    public void modifyBin(CoffeeTruck truck, StorageBin bin){
 
-        int i, option, max;
+        int binNumber, option, max;
         double quantity;
+        BinContent content;
+
+        binNumber = bin.getBinNumber();
+
+        truckView.showBinPrompt(binNumber);
+
+        //Select ingredient to store in bin
+        do{
+            option = truckView.selectIngredientToStore(binNumber); //Select ingredient to store in bin
+        } while(truckView.checkIngredientChoice(option));
+
+        if(option == 0)
+            truckView.showBinSkipPrompt(binNumber);
+
+        else{
+            content = truckManager.getIngredientFromOption(option);
+            max = content.getCapacity();
+
+            do{
+                quantity = truckView.selectIngredientQuantity(max);
+            } while(truckView.checkIngredientQuantity(quantity, max));
+
+            truck.assignItemToBin(bin, content, quantity);
+            truckView.showBinLoadedMessage(binNumber, content, quantity);
+        }
+    }
+
+    /**
+     * Sets up the loadout of a truck.
+     */
+    public void truckLoadout(CoffeeTruck truck){
+
+        int i;
         String setDefault;
         StorageBin bin;
 
         setDefault = truckView.showDefaultLoadoutPrompt(truck);
 
-        if(truckModel.isYes(setDefault))
+        if(truckManager.isYes(setDefault))
             truck.setDefaultLoadout(); //Set to default loadout
 
         else{
             for(i = 0; i < bins.size(); i++){
 
-                truckView.showBinPrompt(i+1);
                 bin = bins.get(i);
-
-                do{
-                    option = truckView.selectIngredientToStore(i+1); //Select ingredient to store in bin
-                    max = bin.getCapacityForItem(bin.getItemType()); //Get max capacity of bin according to item assigned
-                } while(truckView.checkIngredientChoice(option));
-
-                do{
-                    quantity = truckView.selectIngredientQuantity(max);
-                } while(truckView.checkIngredientQuantity(quantity, max));
-
-                if(option == 0)
-                    truckView.showBinSkipPrompt(i+1);
-
-                truck.setLoadout(option, quantity);
-                truckView.showBinLoadedMessage(bin.getBinNumber(), bin.getItemType(), quantity);
+                truckView.showBinPrompt(bin.getBinNumber());
+                modifyBin(truck, bin);
             }
 
             truckView.showLoadoutComplete(truck);
@@ -68,33 +88,33 @@ public class TruckController{
 
         int truckType;
         String name, location, setLoadout, repeat;
-        RegularCoffeeTruck truck;
+        CoffeeTruck truck;
 
         do{
             do{
                 name = truckView.enterUniqueName();
-            } while(truckModel.checkName(name));
+            } while(truckManager.checkName(name));
 
             do{
                 location = truckView.enterUniqueLocation();
-            } while(truckModel.checkLocation(location));
+            } while(truckManager.checkLocation(location));
 
             do{
                 truckType = truckView.enterTruckType();
-            } while(!truckModel.checkTruckType(truckType));
+            } while(!truckManager.checkTruckType(truckType));
 
-            truck = truckModel.createTruck(name, location, truckType);
+            truck = truckManager.createTruck(name, location, truckType);
 
             do{
                 setLoadout = truckView.showLoadoutPrompt();
-            } while(!truckModel.checkYesOrNo(setLoadout));
+            } while(!truckManager.checkYesOrNo(setLoadout));
 
 
-            if(truckModel.isYes(setLoadout))
+            if(truckManager.isYes(setLoadout))
                 truckLoadout(truck);
 
             //Add new truck to arraylist of trucks
-            truckModel.addTruck(truck);
+            truckManager.addTruck(truck);
 
             repeat = truckView.repeatTruckCreationPrompt();
 
@@ -107,13 +127,42 @@ public class TruckController{
     public void truckRemoval(){
 
         int truckNumber;
-        ArrayList<RegularCoffeeTruck> trucks = truckModel.getTrucks();
+        ArrayList<CoffeeTruck> trucks = truckManager.getTrucks();
 
         do{
             truckNumber = truckView.selectTruck(trucks);
-        } while(truckModel.checkTruckIndex(truckNumber - 1, trucks));
+        } while(truckManager.checkTruckIndex(truckNumber - 1, trucks));
 
-        truckModel.removeTruck(truckNumber - 1);
+        truckManager.removeTruck(truckNumber - 1);
+    }
+
+    /**
+     * Displays the main coffee menu for the truck, allowing the user to view
+     * available drinks or prepare a new drink.
+     *
+     */
+    public void coffeeMenu(){
+
+        int option;
+
+        running = true;
+
+        while(running){
+
+            menuView.displayCoffeeMenu();
+            option = menuView.getCoffeeMenuInput();
+
+            switch (option){
+
+                case 1:
+                    //Prepare Drink
+                    break;
+                case 2:
+                    running = false;
+                    System.out.println("Returning to main menu...");
+                    break;
+            }
+        }
     }
 
     /**
@@ -129,8 +178,8 @@ public class TruckController{
     public void simulateMenu(){
 
         int truckNumber, option, choice;
-        RegularCoffeeTruck selectedTruck;
-        ArrayList<RegularCoffeeTruck> trucks = truckModel.getTrucks();
+        CoffeeTruck selectedTruck;
+        ArrayList<CoffeeTruck> trucks = truckManager.getTrucks();
 
         running = true;
 
@@ -146,20 +195,20 @@ public class TruckController{
 
             do{
                 truckNumber = selectTruck();
-            } while(truckModel.checkTruckIndex(truckNumber - 1, trucks));
+            } while(truckManager.checkTruckIndex(truckNumber - 1, trucks));
 
             selectedTruck = trucks.get(truckNumber - 1);
 
             switch (option){
 
                 case 1:
-                    //coffeeMenu(); //Display Coffee Menu
+                    coffeeMenu(); //Display Coffee Menu
                     break;
                 case 2:
                     displayTruckInfo(selectedTruck); //Display truck information
                     break;
                 case 3:
-                    menuView.dispayTruckMaintenanceMenu();
+                    menuView.displayTruckMaintenanceMenu();
                     choice = menuView.getTruckMaintenanceMenuInput();
                     truckMaintenanceMenu(selectedTruck, choice); //Display truck maintenance menu
                     break;
@@ -173,49 +222,163 @@ public class TruckController{
 
     public void displayDashboard(){
 
+        int regularCount, specialCount, totalCount;
+
+        regularCount = truckManager.getRegularTruckCount();
+        specialCount = truckManager.getSpecialTruckCount();
+        totalCount = truckManager.getTrucks().size();
+
+        truckView.displayTruckDeployment(regularCount, specialCount, totalCount);
+    }
+
+    /**
+     * Aggregates and displays the total inventory across all deployed trucks.
+     * Includes coffee beans (grams), milk (oz), water (oz), and cup counts by size.
+     *
+     * @param trucks the list of all deployed coffee trucks
+     */
+    private void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
+
+        int i, j;
+        int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
+        double totalCoffeeGrams = 0, totalMilkOz = 0, totalWaterOz = 0, quantity;
+        double totalHazelnutSyrupOz = 0, totalChocolateSyrupOz = 0, totalAlmondSyrupOz = 0, totalSucroseSyrupOz = 0;
+        String item;
+        ArrayList<StorageBin> bins;
+
+        for(i = 0; i < trucks.size(); i++){
+
+            CoffeeTruck truck = trucks.get(i);
+            bins = truck.getBins();
+
+            for(j = 0; j < bins.size(); j++){
+
+                StorageBin bin = bins.get(j);
+
+                if(bin == null || bin.getItemType() == null)
+                    continue; //Skip if bin is empty
+
+                item = bin.getItemType();
+                quantity = bin.getItemQuantity();
+
+                //Calculate total inventory
+                switch(item){
+
+                    case "Coffee Beans":
+                        totalCoffeeGrams += quantity;
+                        break;
+
+                    case "Milk":
+                        totalMilkOz += quantity;
+                        break;
+
+                    case "Water":
+                        totalWaterOz += quantity;
+                        break;
+
+                    case "Small Cup":
+                        totalSmallCups += (int) quantity;
+                        break;
+
+                    case "Medium Cup":
+                        totalMediumCups += (int) quantity;
+                        break;
+
+                    case "Large Cup":
+                        totalLargeCups += (int) quantity;
+                        break;
+
+                    case "Hazelnut":
+                        totalHazelnutSyrupOz += quantity;
+                        break;
+
+                    case "Chocolate":
+                        totalChocolateSyrupOz += quantity;
+                        break;
+
+                    case "Almond":
+                        totalAlmondSyrupOz += quantity;
+                        break;
+
+                    case "Sucrose":
+                        totalSucroseSyrupOz += quantity;
+                        break;
+                }
+            }
+        }
+
+        //Display inventory
+        System.out.println("\n--- Aggregate Inventory ---");
+        System.out.printf("Coffee Beans     : %.2f g\n", totalCoffeeGrams);
+        System.out.printf("Milk             : %.2f oz\n", totalMilkOz);
+        System.out.printf("Water            : %.2f oz\n", totalWaterOz);
+        System.out.printf("Hazelnut Syrup   : %.2f oz\n", totalHazelnutSyrupOz);
+        System.out.printf("Chocolate Syrup  : %.2f oz\n", totalChocolateSyrupOz);
+        System.out.printf("Almond Syrup     : %.2f oz\n", totalAlmondSyrupOz);
+        System.out.printf("Sucrose Syrup    : %.2f oz\n", totalSucroseSyrupOz);
+        System.out.println("Small Cups      : " + totalSmallCups);
+        System.out.println("Medium Cups     : " + totalMediumCups);
+        System.out.println("Large Cups      : " + totalLargeCups);
+    }
+
+    /**
+     * Displays the sales log and total revenue across all deployed trucks.
+     * Also displays the individual sales log and revenue of each truck.
+     *
+     * @param trucks the list of all deployed coffee trucks
+     */
+    private void displayTotalSales(ArrayList<CoffeeTruck> trucks){
+
+        int i, j;
+        double combinedSales = 0;
+
+        System.out.println("\n--- Sales Summary ---");
+
+        for(i = 0; i < trucks.size(); i++){
+
+            CoffeeTruck truck = trucks.get(i);
+            combinedSales += truck.getTotalSales(); //Compute combined sales across all trucks
+            ArrayList<String> log = truck.getSalesLog();
+
+            for(j = 0; j < log.size(); j++)
+                System.out.println("[" + truck.getName() + "] " + log.get(j));
+
+            //Display total sales of a truck
+            System.out.printf("Total for [%s]   : $%.2f\n\n", truck.getName(), truck.getTotalSales());
+        }
+
+        //Display combined total sales of all truck
+        System.out.printf("\nTotal Sales    : $%.2f\n", combinedSales);
     }
 
     public int selectTruck(){
 
         int truckNumber;
-        trucks = truckModel.getTrucks();
+        trucks = truckManager.getTrucks();
 
         truckNumber = truckView.selectTruck(trucks);
 
         return truckNumber;
     }
 
-    public void displayTruckInfo(RegularCoffeeTruck selectedTruck){
+    public void displayTruckInfo(CoffeeTruck selectedTruck){
 
         truckView.displayInfo(selectedTruck);
     }
 
-    public void modifyBin(RegularCoffeeTruck truck){
-
-        int binNumber, option, max;
-        double quantity;
-        StorageBin bin;
-
-        do{
-            binNumber = truckView.selectBin();
-        } while(truckView.checkBinNumber(binNumber));
-
-        truckView.showBinPrompt(binNumber);
-        bin = bins.get(binNumber - 1);
-
-        do{
-            option = truckView.selectIngredientToStore(binNumber); //Select ingredient to store in bin
-            max = bin.getCapacityForItem(bin.getItemType()); //Get max capacity of bin according to item assigned
-        } while(truckView.checkIngredientChoice(option));
-
-        do{
-            quantity = truckView.selectIngredientQuantity(max);
-        } while(truckView.checkIngredientQuantity(quantity, max));
-
-        truck.modifyBin(binNumber - 1, option, quantity);
-    }
-
-    public void truckMaintenanceMenu(RegularCoffeeTruck truck, int option){
+    /**
+     * Displays the truck maintenance menu for a specific coffee truck.
+     * <p>Allows the user to:</p>
+     * <ul>
+     *   <li>Restock bins (either all or individually)</li>
+     *   <li>Modify storage bin contents (either all or individually)</li>
+     *   <li>Empty bins (either all or individually)</li>
+     *   <li>Edit the truck's name or location</li>
+     *   <li>Edit global drink ingredient prices</li>
+     * </ul>
+     *
+     */
+    public void truckMaintenanceMenu(CoffeeTruck truck, int option){
 
         int choice, binNumber;
         String name, location;
@@ -240,10 +403,14 @@ public class TruckController{
                 choice = menuView.modifyMenu();
 
                 if(choice == 1)
-                    //truck.modifyAllBins(); //Modify all bins
+                    truckLoadout(truck); //Modify all bins
 
-                /*else*/ if(choice == 2){
-                    modifyBin(truck);
+                else if(choice == 2){
+                    do{
+                        binNumber = truckView.selectBin();
+                    } while(truckView.checkBinNumber(binNumber));
+
+                    modifyBin(truck, bins.get(binNumber-1));
                 }
                 break;
             case 3:
@@ -261,11 +428,11 @@ public class TruckController{
                 }
                 break;
             case 4:
-                name = menuView.getNewName();
+                name = menuView.enterNewName();
                 truck.setName(name); //Set new name
                 break;
             case 5:
-                location = menuView.getNewLocation();
+                location = menuView.enterNewLocation();
                 truck.setLocation(location); //Set new location
                 break;
             case 6:

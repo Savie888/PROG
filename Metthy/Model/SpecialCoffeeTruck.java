@@ -9,12 +9,7 @@ import java.util.Scanner;
 /**
  * This class represents a special coffee truck
  */
-public class SpecialCoffeeTruck extends RegularCoffeeTruck {
-
-    /**
-     * Scanner object for reading user input from the console.
-     */
-    private final Scanner scanner = new Scanner(System.in);
+public class SpecialCoffeeTruck extends CoffeeTruck {
 
     /**
      * Constructs a special coffee truck with the given name and location.
@@ -22,18 +17,24 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
      *
      * @param name         the name of the coffee truck
      * @param location     the initial location of the truck
-     * @param drinkManager the shared drink manager to be used by all trucks
      */
-    public SpecialCoffeeTruck(String name, String location, DrinkManager drinkManager){
+    public SpecialCoffeeTruck(String name, String location){
 
         //Call regular coffee truck constructor
-        super(name, location, drinkManager);
+        super(name, location);
+
+        int i;
+
+        //Create the 8 storage bins
+        for(i = 0; i <= 7; i++)
+            bins.add(new StorageBin(i + 1));
 
         //Create the 2 extra storage bins for syrups
         getBins().add(new StorageBin(9));
         getBins().add(new StorageBin(10));
     }
 
+    /*
     public void modifySyrupBin(int binNumber){
 
         int choice, maxCapacity = 640;
@@ -106,7 +107,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
             }
         } while(bin.getItemType() == null || invalidQuantity);
     }
-
+*/
     /*
     public void setSpecialLoadout(){
 
@@ -248,6 +249,7 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
         } while(option != 7);
     }
 */
+
     private String selectAddOnType(){
 
         String type;
@@ -443,7 +445,8 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
      * Handles the process of preparing a drink.
      *
      */
-    @Override
+
+    /*@Override
     protected void prepareDrink(){
 
         int i, extraShots = 0;
@@ -541,4 +544,6 @@ public class SpecialCoffeeTruck extends RegularCoffeeTruck {
                 System.out.println("Not enough ingredients. Drink preparation cancelled.");
         }
     }
+
+     */
 }

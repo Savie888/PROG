@@ -1,23 +1,31 @@
 package Metthy;
 
+import Metthy.Model.BinContent;
+
 /**
  * This class represents a storage bin in a coffee truck .
  * Each bin tracks the type of item, its capacity, and the current quantity of the item.
  */
 public class StorageBin {
 
-    /**
-     * The type of item stored in this bin.
-     */
-    private String itemType;
+
     /**
      * The bin's identification number.
      */
     private final int binNumber;
+
+    /**
+     * The type of item stored in this bin.
+     */
+    private String itemType;
+
     /**
      * The maximum capacity of this bin, based on the item type.
      */
     private int itemCapacity;
+
+    private BinContent content;
+
     /**
      * The current quantity of the item stored in this bin.
      */
@@ -34,6 +42,12 @@ public class StorageBin {
         this.itemType = null;
         this.itemCapacity = 0; //Initialize to 0
         this.itemQuantity = 0; //Initialize to 0
+    }
+
+    public void setContent(BinContent content, double quantity){
+
+        this.content = content;
+        this.itemQuantity = quantity;
     }
 
     /**

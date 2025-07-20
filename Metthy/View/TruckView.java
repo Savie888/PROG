@@ -1,5 +1,7 @@
 package Metthy.View;
 
+import Metthy.Model.BinContent;
+import Metthy.Model.CoffeeTruck;
 import Metthy.Model.RegularCoffeeTruck;
 import Metthy.Model.SpecialCoffeeTruck;
 import Metthy.StorageBin;
@@ -17,170 +19,7 @@ public class TruckView extends View{
         this.bins = bins;
     }
 
-    public String showLoadoutPrompt(){
-
-        String set;
-
-        //Option to set up storage bins
-        System.out.println("Set up storage bins?: (yes/no)");
-        set = yesOrNo();
-
-        return set;
-    }
-
-    public void showBinPrompt(int binNumber){
-
-        System.out.println("\nSetting up Bin #" + binNumber);
-    }
-
-    public void showBinSkipPrompt(int binNumber){
-
-        System.out.println("Skipping Bin #" + binNumber);
-    }
-
-    public String showDefaultLoadoutPrompt(RegularCoffeeTruck truck){
-
-        String choice;
-
-        System.out.println("\n--- Setting Loadout for " + truck.getName() + " ---");
-        System.out.print("Set Storage Bins to default loadout? (yes/no): ");
-        choice = yesOrNo();
-
-        return choice;
-    }
-
-    public int selectIngredientToStore(int binNumber){
-
-        int choice;
-
-        System.out.println("Choose item to store in Bin #" + binNumber + ":");
-        System.out.println("1. Small Cup");
-        System.out.println("2. Medium Cup");
-        System.out.println("3. Large Cup");
-        System.out.println("4. Coffee Beans");
-        System.out.println("5. Milk");
-        System.out.println("6. Water");
-        System.out.print("Select item number (0 to skip this bin): ");
-
-        choice = scanner.nextInt();
-        scanner.nextLine(); //Consume newline
-
-        return choice;
-    }
-
-    public boolean checkIngredientChoice(int option){
-
-        boolean flag = false;
-
-        if(option < 0 || option > 6){
-            printInvalidOption();
-            flag = true;
-        }
-
-        return flag;
-    }
-
-    public double selectIngredientQuantity(double maxCapacity){
-
-        double quantity;
-
-        System.out.print("Enter quantity (max " + maxCapacity + "): ");
-        quantity = scanner.nextDouble();
-        scanner.nextLine(); //Consume newline
-
-        return quantity;
-    }
-
-    public boolean checkIngredientQuantity(double quantity, int maxCapacity){
-
-        boolean flag = false;
-
-        if(quantity < 0 || quantity > maxCapacity){
-            printInvalidOption();
-            flag = true;
-        }
-
-        return flag;
-    }
-
-    public void showBinLoadedMessage(int binNumber, String itemType, double quantity){
-
-        if(itemType.equalsIgnoreCase("Water") || (itemType.equalsIgnoreCase("Milk")))
-            System.out.println("Bin #" + binNumber + " loaded with " + quantity + " ounces of " + itemType);
-
-        else if(itemType.equalsIgnoreCase("Coffee Beans"))
-            System.out.println("Bin #" + binNumber + " loaded with " + quantity + " grams of " + itemType);
-
-        else
-            System.out.println("Bin #" + binNumber + " loaded with " + (int)quantity + " cups ");
-
-    }
-
-    public void showLoadoutComplete(RegularCoffeeTruck truck){
-
-        System.out.println("\nLoadout for " + truck.getName() + " complete!\n");
-    }
-
-    /**
-     * Displays the current contents of all storage bins in the truck.
-     * Empty bins are marked as [Empty].
-     */
-    public void displayBins(){
-
-        int i, capacity, binNumber;
-        double quantity;
-        String item;
-
-        System.out.println("--- Storage Bins ---");
-
-        for(i = 0; i < bins.size(); i++){
-
-            StorageBin bin = bins.get(i);
-            item = bin.getItemType();
-            quantity = bin.getItemQuantity();
-            capacity = bin.getCapacity();
-            binNumber = i + 1;
-
-            //Bin is empty if no item assigned
-            if(item == null)
-                System.out.println("Bin #" + binNumber + ": [Empty]");
-
-            else
-                System.out.printf("Bin #%d: %s - %.2f / %d\n", binNumber, item, quantity, capacity);
-        }
-    }
-
-    /**
-     * Displays the truck's name, location, storage bin contents,transaction history, and total sales.
-     */
-    public void displayInfo(RegularCoffeeTruck selectedTruck){
-
-        int i;
-        String truckType;
-
-        if(selectedTruck instanceof SpecialCoffeeTruck)
-            truckType = "Special Truck";
-        else
-            truckType = "Regular Truck";
-
-        System.out.println("\n[" + truckType + "]");
-        System.out.println("Name - " + selectedTruck.getName() + " | " + "Location: " + selectedTruck.getLocation());
-        displayBins();
-        System.out.println("--- Transactions ---");
-
-        if(selectedTruck.getSalesLog().isEmpty())
-            System.out.println("No transactions recorded.");
-
-        else{
-            for(i = 0; i < selectedTruck.getSalesLog().size(); i++){
-
-                String sale = selectedTruck.getSalesLog().get(i);
-                System.out.println(sale);
-            }
-        }
-        System.out.printf("\nTotal Sales: $%.2f\n", selectedTruck.getTotalSales());
-    }
-
+    //PROMPTS AND DISPLAYS
     /**
      * Prompts user to enter a unique truck name
      *
@@ -224,6 +63,70 @@ public class TruckView extends View{
         return option;
     }
 
+    public String showLoadoutPrompt(){
+
+        String set;
+
+        //Option to set up storage bins
+        System.out.println("Set up storage bins?: (yes/no)");
+        set = yesOrNo();
+
+        return set;
+    }
+
+    public void showBinPrompt(int binNumber){
+
+        System.out.println("\nSetting up Bin #" + binNumber);
+    }
+
+    public void showBinSkipPrompt(int binNumber){
+
+        System.out.println("Skipping Bin #" + binNumber);
+    }
+
+    public void showBinLoadedMessage(int binNumber, BinContent content, double quantity){
+
+        String itemType = content.getName();
+        String unit;
+        String formattedQuantity;
+
+        switch (itemType.toLowerCase()) {
+            case "water":
+            case "milk":
+                unit = "ounces of " + itemType;
+                formattedQuantity = String.format("%.1f", quantity);
+                break;
+
+            case "coffee beans":
+                unit = "grams of " + itemType;
+                formattedQuantity = String.format("%.1f", quantity);
+                break;
+
+            default:
+                unit = "cups";
+                formattedQuantity = String.format("%d", (int) quantity);
+                break;
+        }
+
+        System.out.printf("Bin #%d loaded with %s %s%n", binNumber, formattedQuantity, unit);
+    }
+
+    public String showDefaultLoadoutPrompt(CoffeeTruck truck){
+
+        String choice;
+
+        System.out.println("\n--- Setting Loadout for " + truck.getName() + " ---");
+        System.out.print("Set Storage Bins to default loadout? (yes/no): ");
+        choice = yesOrNo();
+
+        return choice;
+    }
+
+    public void showLoadoutComplete(CoffeeTruck truck){
+
+        System.out.println("\nLoadout for " + truck.getName() + " complete!\n");
+    }
+
     public String repeatTruckCreationPrompt(){
 
         String repeat;
@@ -236,9 +139,109 @@ public class TruckView extends View{
         return repeat;
     }
 
+    /**
+     * Displays the current contents of all storage bins in the truck.
+     * Empty bins are marked as [Empty].
+     */
+    public void displayBins(){
 
+        int i, capacity, binNumber;
+        double quantity;
+        String item;
 
-    public int selectTruck(ArrayList<RegularCoffeeTruck> trucks) {
+        System.out.println("--- Storage Bins ---");
+
+        for(i = 0; i < bins.size(); i++){
+
+            StorageBin bin = bins.get(i);
+            item = bin.getItemType();
+            quantity = bin.getItemQuantity();
+            capacity = bin.getCapacity();
+            binNumber = i + 1;
+
+            //Bin is empty if no item assigned
+            if(item == null)
+                System.out.println("Bin #" + binNumber + ": [Empty]");
+
+            else
+                System.out.printf("Bin #%d: %s - %.2f / %d\n", binNumber, item, quantity, capacity);
+        }
+    }
+
+    /**
+     * Displays the truck's name, location, storage bin contents,transaction history, and total sales.
+     */
+    public void displayInfo(CoffeeTruck selectedTruck){
+
+        int i;
+        String truckType;
+
+        if(selectedTruck instanceof SpecialCoffeeTruck)
+            truckType = "Special Truck";
+        else
+            truckType = "Regular Truck";
+
+        System.out.println("\n[" + truckType + "]");
+        System.out.println("Name - " + selectedTruck.getName() + " | " + "Location: " + selectedTruck.getLocation());
+        displayBins();
+        System.out.println("--- Transactions ---");
+
+        if(selectedTruck.getSalesLog().isEmpty())
+            System.out.println("No transactions recorded.");
+
+        else{
+            for(i = 0; i < selectedTruck.getSalesLog().size(); i++){
+
+                String sale = selectedTruck.getSalesLog().get(i);
+                System.out.println(sale);
+            }
+        }
+        System.out.printf("\nTotal Sales: $%.2f\n", selectedTruck.getTotalSales());
+    }
+
+    public void displayTruckDeployment(int regularCount, int specialCount, int total){
+
+        System.out.println("\n--- Truck Deployment ---");
+        System.out.println("Regular Trucks   : " + regularCount); //Display total number of regular trucks
+        System.out.println("Special Trucks   : " + specialCount); //Display total number of regular trucks
+        System.out.println("------------------------");
+        System.out.println("Total Trucks     : " + total); //Display total number of trucks
+
+    }
+
+    //SELECTS
+
+    public int selectIngredientToStore(int binNumber){
+
+        int choice;
+
+        System.out.println("Choose item to store in Bin #" + binNumber + ":");
+        System.out.println("1. Small Cup");
+        System.out.println("2. Medium Cup");
+        System.out.println("3. Large Cup");
+        System.out.println("4. Coffee Beans");
+        System.out.println("5. Milk");
+        System.out.println("6. Water");
+        System.out.print("Select item number (0 to skip this bin): ");
+
+        choice = scanner.nextInt();
+        scanner.nextLine(); //Consume newline
+
+        return choice;
+    }
+
+    public double selectIngredientQuantity(double maxCapacity){
+
+        double quantity;
+
+        System.out.print("Enter quantity (max " + maxCapacity + "): ");
+        quantity = scanner.nextDouble();
+        scanner.nextLine(); //Consume newline
+
+        return quantity;
+    }
+
+    public int selectTruck(ArrayList<CoffeeTruck> trucks) {
 
         int i, truckIndex;
 
@@ -246,7 +249,7 @@ public class TruckView extends View{
 
         for (i = 0; i < trucks.size(); i++) {
             //Display list of available trucks
-            RegularCoffeeTruck truck = trucks.get(i);
+            CoffeeTruck truck = trucks.get(i);
             System.out.printf("Truck %d: Name - %s  Location - %s\n", i + 1, truck.getName(), truck.getLocation());
         }
 
@@ -255,6 +258,43 @@ public class TruckView extends View{
         scanner.nextLine(); //Consume leftover newline
 
         return truckIndex;
+    }
+
+    public int selectBin(){
+
+        int binNumber;
+
+        System.out.println("Enter Bin Number: ");
+        binNumber = scanner.nextInt();
+        scanner.nextLine(); //Clear excess line
+
+        return binNumber;
+    }
+
+    //CHECKS
+
+    public boolean checkIngredientChoice(int option){
+
+        boolean flag = false;
+
+        if(option < 0 || option > 6){
+            printInvalidOption();
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    public boolean checkIngredientQuantity(double quantity, int maxCapacity){
+
+        boolean flag = false;
+
+        if(quantity < 0 || quantity > maxCapacity){
+            printInvalidOption();
+            flag = true;
+        }
+
+        return flag;
     }
 
     public boolean checkBinNumber(int binNumber){
@@ -267,17 +307,6 @@ public class TruckView extends View{
         }
 
         return valid;
-    }
-
-    public int selectBin(){
-
-        int binNumber;
-
-        System.out.println("Enter Bin Number: ");
-        binNumber = scanner.nextInt();
-        scanner.nextLine(); //Clear excess line
-
-        return binNumber;
     }
 
 }

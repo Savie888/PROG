@@ -1,17 +1,27 @@
 package Metthy.Model;
 
-import Metthy.DrinkManager;
-
 import java.util.ArrayList;
 
-public class TruckModel extends Model{
+public class TruckManager extends Model{
 
-    public ArrayList<RegularCoffeeTruck> trucks;
-    public DrinkManager drinkManager;
+    public ArrayList<CoffeeTruck> trucks;
+    private final ArrayList<BinContent> ingredientList;
 
-    public TruckModel(){
+    public TruckManager(){
 
         this.trucks = new ArrayList<>();
+        ingredientList = new ArrayList<>();
+        setIngredients();
+    }
+
+    private void setIngredients() {
+
+        ingredientList.add(new SmallCup());
+        ingredientList.add(new MediumCup());
+        ingredientList.add(new LargeCup());
+        ingredientList.add(new CoffeeBean());
+        ingredientList.add(new Milk());
+        ingredientList.add(new Water());
     }
 
     /**
@@ -29,7 +39,7 @@ public class TruckModel extends Model{
 
         for(i = 0; i < trucks.size() && !flag; i++){
 
-            RegularCoffeeTruck truck = trucks.get(i);
+            CoffeeTruck truck = trucks.get(i);
 
             if(name.equalsIgnoreCase(truck.getName()))
                 flag = true; //Set flag to true if the name is already taken
@@ -53,7 +63,7 @@ public class TruckModel extends Model{
 
         for(i = 0; i < trucks.size() && !flag; i++){
 
-            RegularCoffeeTruck truck = trucks.get(i);
+            CoffeeTruck truck = trucks.get(i);
 
             if (location.equalsIgnoreCase(truck.getLocation()))
                 flag = true; //Set flag to true if the location is already taken
@@ -77,23 +87,44 @@ public class TruckModel extends Model{
 
     // move above to truck view??
 
+    public BinContent getIngredientFromOption(int option) {
 
-    public void addTruck(RegularCoffeeTruck truck){
+        return ingredientList.get(option - 1);
+    }
+
+    public BinContent getIngredientFromName(String name){
+
+        int i;
+        BinContent content;
+
+        for(i = 0; i < ingredientList.size(); i++){
+
+            content = ingredientList.get(i);
+
+            if(content.getName().equalsIgnoreCase(name)){
+                return content;
+            }
+        }
+
+        return null; // Not found
+    }
+
+    public void addTruck(CoffeeTruck truck){
 
         trucks.add(truck);
     }
 
-    public RegularCoffeeTruck createTruck(String name, String location, int truckType){
+    public CoffeeTruck createTruck(String name, String location, int truckType){
 
-        RegularCoffeeTruck truck;
+        CoffeeTruck truck;
 
         //Create a Regular Coffee Truck
         if(truckType == 1)
-            truck = new RegularCoffeeTruck(name, location, drinkManager);
+            truck = new RegularCoffeeTruck(name, location);
 
         //Create a Special Coffee Truck
         else
-            truck = new SpecialCoffeeTruck(name, location, drinkManager);
+            truck = new SpecialCoffeeTruck(name, location);
 
         return truck;
     }
@@ -103,7 +134,7 @@ public class TruckModel extends Model{
      *
      * @return The index of the selected truck in the list; -1 if no trucks are available.
      */
-    public boolean checkTruckIndex(int truckIndex, ArrayList<RegularCoffeeTruck> trucks){
+    public boolean checkTruckIndex(int truckIndex, ArrayList<CoffeeTruck> trucks){
 
         boolean flag = false;
 
@@ -118,7 +149,37 @@ public class TruckModel extends Model{
         trucks.remove(truckIndex);
     }
 
-    public ArrayList<RegularCoffeeTruck> getTrucks(){
+    public int getRegularTruckCount(){
+
+        int i, count = 0;
+
+        for(i = 0; i < trucks.size(); i++){
+
+            CoffeeTruck truck = trucks.get(i);
+
+            if(truck instanceof RegularCoffeeTruck)
+                count++;
+        }
+
+        return count;
+    }
+
+    public int getSpecialTruckCount(){
+
+        int i, count = 0;
+
+        for(i = 0; i < trucks.size(); i++){
+
+            CoffeeTruck truck = trucks.get(i);
+
+            if(truck instanceof SpecialCoffeeTruck)
+                count++;
+        }
+
+        return count;
+    }
+
+    public ArrayList<CoffeeTruck> getTrucks(){
 
         return trucks;
     }

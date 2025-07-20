@@ -1,20 +1,16 @@
 package Metthy.Controller;
 
-import Metthy.Model.RegularCoffeeTruck;
-import Metthy.Model.TruckModel;
 import Metthy.View.MenuView;
 
-import java.util.ArrayList;
-
-public class MenuController extends Controller{
+public class MenuController{
 
     private final MenuView menuView;
     private final TruckController truckController;
     private boolean running;
 
-    public MenuController(){
+    public MenuController(MenuView menuView){
 
-        menuView = new MenuView();
+        this.menuView = menuView;
         this.truckController = new TruckController(menuView);
     }
 
@@ -45,37 +41,11 @@ public class MenuController extends Controller{
         System.out.println();
     }
 
-
-    public void coffeeMenu(){
-
-        int option;
-
-        running = true;
-
-        while(running){
-
-            menuView.displayCoffeeMenu();
-            option = menuView.getCoffeeMenuInput();
-
-            switch (option){
-
-                case 1:
-                    //Prepare Drink
-                    break;
-                case 2:
-                    running = false;
-                    System.out.println("Returning to main menu...");
-                    break;
-            }
-        }
-
-
-    }
-
-    @Override
     public void start() {
 
         int option;
+
+        menuView.displayWelcomeMessage();
 
         running = true;
 
