@@ -3,11 +3,14 @@ package Metthy;
 //Implement MVC
     //Continue on method refactoring
     //Continue on Truck Maintenance
-    //Refactor truck info asap
+    //Error messages for duplicate name and location
+    //Enter 0 to exit simulate menu (check looping issue)
     //Test revamped Simulate Menu
 
+
+
 //Ingredient objects
-    //Combine Cup and Ingredient abstract classes
+    //Combine Cup and Ingredient abstract classes??
 
 //Menu Looping
 //GUI

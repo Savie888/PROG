@@ -120,11 +120,11 @@ public class TruckManager extends Model{
 
         //Create a Regular Coffee Truck
         if(truckType == 1)
-            truck = new RegularCoffeeTruck(name, location);
+            truck = new RegularCoffeeTruck(name, location, this);
 
         //Create a Special Coffee Truck
         else
-            truck = new SpecialCoffeeTruck(name, location);
+            truck = new SpecialCoffeeTruck(name, location, this);
 
         return truck;
     }

@@ -18,10 +18,10 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
      * @param name         the name of the coffee truck
      * @param location     the initial location of the truck
      */
-    public SpecialCoffeeTruck(String name, String location){
+    public SpecialCoffeeTruck(String name, String location, TruckManager truckManager){
 
         //Call regular coffee truck constructor
-        super(name, location);
+        super(name, location, truckManager);
 
         int i;
 
