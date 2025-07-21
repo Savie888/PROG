@@ -4,9 +4,9 @@ package Metthy;
     //Continue on method refactoring
     //Continue on Truck Maintenance
     //Error messages for duplicate name and location
-    //Enter 0 to exit simulate menu (check looping issue)
     //Test revamped Simulate Menu
-
+    //Assign quantity for ingredients and cups
+    //Work on bins
 
 
 //Ingredient objects

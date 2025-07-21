@@ -8,5 +8,9 @@ public interface BinContent {
 
     String getName();
 
+    void setQuantity(double quantity);
+
+    double getQuantity();
+
     int getCapacity();
 }

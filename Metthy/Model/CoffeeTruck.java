@@ -61,7 +61,7 @@ public abstract class CoffeeTruck {
 
         int i;
         double quantity;
-        String[] ingredients = {"Small Cup", "Medium Cup", "Large Cup", "Coffee Beans", "Milk", "Water"};
+        String[] ingredients = {"Small Cup", "Medium Cup", "Large Cup", "Coffee Bean", "Milk", "Water"};
         BinContent content;
 
         for(i = 0; i < bins.size(); i++){

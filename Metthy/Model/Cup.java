@@ -3,6 +3,7 @@ package Metthy.Model;
 public abstract class Cup implements BinContent{
 
     protected String size;
+    protected double quantity;
     protected int capacity;
     protected double cost;
 
@@ -33,6 +34,21 @@ public abstract class Cup implements BinContent{
     public int getCapacity() {
 
         return capacity;
+    }
+
+    public void setQuantity(double quantity) {
+
+        this.quantity = quantity;
+    }
+
+    /**
+     * Returns the current quantity of the item.
+     *
+     * @return the quantity of the item.
+     */
+    public double getQuantity() {
+
+        return quantity;
     }
 
     public double getCost() {

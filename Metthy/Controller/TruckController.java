@@ -23,18 +23,18 @@ public class TruckController{
         this.trucks = new ArrayList<>();
         this.bins = new ArrayList<>();
         this.menuView = menuView;
-        this.truckView = new TruckView(bins);
+        this.truckView = new TruckView();
         this.truckManager = new TruckManager();
     }
 
-    public void modifyBin(CoffeeTruck truck, StorageBin bin){
+    public void modifyBin(CoffeeTruck truck, int binNumber){
 
-        int binNumber, option, max;
+        int option, max;
         double quantity;
+        StorageBin bin;
         BinContent content;
 
-        binNumber = bin.getBinNumber();
-
+        bin = truck.getBins().get(binNumber-1);
         truckView.showBinPrompt(binNumber);
 
         //Select ingredient to store in bin
@@ -77,7 +77,7 @@ public class TruckController{
 
                 bin = bins.get(i);
                 truckView.showBinPrompt(bin.getBinNumber());
-                modifyBin(truck, bin);
+                modifyBin(truck, bin.getBinNumber());
             }
 
             truckView.showLoadoutComplete(truck);
@@ -188,14 +188,14 @@ public class TruckController{
             running = false;
         }
 
+        do{
+            truckNumber = selectTruck();
+        } while(truckManager.checkTruckIndex(truckNumber - 1, trucks));
+
         while(running){
 
             menuView.displaySimulationMenu();
             option = menuView.getSimulationMenuInput();
-
-            do{
-                truckNumber = selectTruck();
-            } while(truckManager.checkTruckIndex(truckNumber - 1, trucks));
 
             selectedTruck = trucks.get(truckNumber - 1);
 
@@ -394,7 +394,7 @@ public class TruckController{
                 else if(choice == 2){
                     do{
                         binNumber = truckView.selectBin();
-                    } while(truckView.checkBinNumber(binNumber));
+                    } while(truckView.checkBinNumber(binNumber, truck.getBins()));
 
                     truck.restockBin(binNumber); //Restock selected bin
                 }
@@ -408,9 +408,9 @@ public class TruckController{
                 else if(choice == 2){
                     do{
                         binNumber = truckView.selectBin();
-                    } while(truckView.checkBinNumber(binNumber));
+                    } while(truckView.checkBinNumber(binNumber, truck.getBins()));
 
-                    modifyBin(truck, bins.get(binNumber-1));
+                    modifyBin(truck, binNumber);
                 }
                 break;
             case 3:
@@ -422,7 +422,7 @@ public class TruckController{
                 else if(choice == 2){
                     do{
                         binNumber = truckView.selectBin();
-                    } while(truckView.checkBinNumber(binNumber));
+                    } while(truckView.checkBinNumber(binNumber, truck.getBins()));
 
                     truck.emptyBin(binNumber); //Empty selected bin
                 }

@@ -10,13 +10,9 @@ import java.util.ArrayList;
 
 public class TruckView extends View{
 
-    private final ArrayList<StorageBin> bins;
-
-    public TruckView(ArrayList<StorageBin> bins){
+    public TruckView(){
 
         super();
-
-        this.bins = bins;
     }
 
     //PROMPTS AND DISPLAYS
@@ -143,7 +139,7 @@ public class TruckView extends View{
      * Displays the current contents of all storage bins in the truck.
      * Empty bins are marked as [Empty].
      */
-    public void displayBins(){
+    public void displayBins(ArrayList<StorageBin> bins){
 
         int i, capacity, binNumber;
         double quantity;
@@ -154,17 +150,19 @@ public class TruckView extends View{
         for(i = 0; i < bins.size(); i++){
 
             StorageBin bin = bins.get(i);
-            item = bin.getItemType();
-            quantity = bin.getItemQuantity();
-            capacity = bin.getCapacity();
-            binNumber = i + 1;
+            BinContent content = bin.getContent();
+            binNumber = bin.getBinNumber();
 
             //Bin is empty if no item assigned
-            if(item == null)
+            if(content == null)
                 System.out.println("Bin #" + binNumber + ": [Empty]");
 
-            else
+            else{
+                item = content.getName();
+                quantity = content.getQuantity();
+                capacity = content.getCapacity();
                 System.out.printf("Bin #%d: %s - %.2f / %d\n", binNumber, item, quantity, capacity);
+            }
         }
     }
 
@@ -175,6 +173,7 @@ public class TruckView extends View{
 
         int i;
         String truckType;
+        ArrayList<StorageBin> bins;
 
         if(selectedTruck instanceof SpecialCoffeeTruck)
             truckType = "Special Truck";
@@ -183,7 +182,10 @@ public class TruckView extends View{
 
         System.out.println("\n[" + truckType + "]");
         System.out.println("Name - " + selectedTruck.getName() + " | " + "Location: " + selectedTruck.getLocation());
-        displayBins();
+
+        bins = selectedTruck.getBins();
+        displayBins(bins);
+
         System.out.println("--- Transactions ---");
 
         if(selectedTruck.getSalesLog().isEmpty())
@@ -297,7 +299,7 @@ public class TruckView extends View{
         return flag;
     }
 
-    public boolean checkBinNumber(int binNumber){
+    public boolean checkBinNumber(int binNumber, ArrayList<StorageBin> bins){
 
         boolean valid = false;
 

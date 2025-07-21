@@ -44,24 +44,17 @@ public class StorageBin {
         this.itemQuantity = 0; //Initialize to 0
     }
 
-    public void setContent(BinContent content, double quantity){
-
-        this.content = content;
-        this.itemQuantity = quantity;
-    }
-
     /**
      * Assigns an item type and quantity to the bin.
      * Also sets the capacity based on the item type.
      *
-     * @param itemType the name of the item to store
-     * @param itemQuantity the starting quantity of the item
+     * @param content the name of the item to store
+     * @param quantity the starting quantity of the item
      */
-    public void assignItem(String itemType, double itemQuantity){
+    public void setContent(BinContent content, double quantity){
 
-        this.itemType = itemType;
-        this.itemQuantity = itemQuantity;
-        this.itemCapacity = getCapacityForItem(itemType);
+        this.content = content;
+        this.itemQuantity = quantity;
     }
 
     /**
@@ -157,70 +150,8 @@ public class StorageBin {
             System.out.println("Added quantity would go over capacity. Restock failed");
     }
 
-    /**
-     * Returns the type of item stored in this bin.
-     *
-     * @return the item type, or null if unassigned
-     */
-    public String getItemType(){
+    public BinContent getContent() {
 
-        return itemType;
-    }
-
-    /**
-     * Sets the item type for this bin.
-     *
-     * @param itemType the type of item to assign
-     */
-    public void setItemType(String itemType){
-
-        this.itemType = itemType;
-    }
-
-    /**
-     * Returns the current quantity of the item in the bin.
-     *
-     * @return the quantity of the item in the bin
-     */
-    public double getItemQuantity(){
-
-        return itemQuantity;
-    }
-
-    /**
-     * Returns the maximum capacity of the bin.
-     *
-     * @return the item capacity of the bin
-     */
-    public int getCapacity(){
-
-        return itemCapacity;
-    }
-
-    /**
-     * Returns the maximum capacity for a specific item type.
-     *
-     * @param itemType the type of item to look up capacity for
-     * @return the maximum capacity for the given item type,
-     *         or 0 if the item type is unrecognized
-     */
-    public int getCapacityForItem(String itemType){
-
-        int capacity = switch(itemType){
-
-            case "Small Cup"      -> 80;
-            case "Medium Cup"     -> 64;
-            case "Large Cup"      -> 40;
-            case "Coffee Beans"   -> 1008;
-            case "Milk",
-                 "Water",
-                 "Hazelnut",
-                 "Chocolate",
-                 "Almond",
-                 "Sucrose"        -> 640;
-            default               -> 0;
-        };
-
-        return capacity;
+        return content;
     }
 }
