@@ -3,37 +3,31 @@ package Metthy.Model;
 /**
  * This class represents a coffee drink with a coffee type, size, and price.
  */
-public class Drink {
+public abstract class Drink {
 
     /**
      * The type of coffee.
      */
-    private final String coffeeType;
+    protected final String type;
     /**
      * The size of the drink (e.g., Small, Medium, Large).
      */
-    private final String size;
+    protected final String size;
     /**
-     * The brew type of the drink (e.g., Strong, Light, Standard, Custom).
+     * The price of the drink.
      */
-    private String brewType = "Standard";
-    /**
-     * The calculated price of the drink based on its ingredients.
-     */
-    private double price;
+    protected double price;
 
     /**
      * Constructs a Drink object with the specified type, size, and price.
      *
      * @param coffeeType The type of coffee (e.g., "Latte", "Americano").
      * @param size       The size of the drink (e.g., "Small", "Medium", "Large").
-     * @param price      The price of the drink.
      */
-    public Drink(String coffeeType, String size, double price){
+    public Drink(String coffeeType, String size){
 
-        this.coffeeType = coffeeType;
+        this.type = coffeeType;
         this.size = size;
-        this.price = price;
     }
 
     /**
@@ -41,9 +35,9 @@ public class Drink {
      *
      * @return The coffee type.
      */
-    public String getCoffeeType(){
+    public String getType(){
 
-        return coffeeType;
+        return type;
     }
 
     /**
@@ -67,16 +61,6 @@ public class Drink {
     }
 
     /**
-     * Returns the brew type of the drink.
-     *
-     * @return The drink price.
-     */
-    public String getBrewType(){
-
-        return brewType;
-    }
-
-    /**
      * Sets the price of the drink.
      *
      * @param price The new price to be set.
@@ -86,14 +70,5 @@ public class Drink {
         this.price = price;
     }
 
-    /**
-     * Sets the brew type of the drink.
-     *
-     * @param brewType The new brew type to be set.
-     */
-    //Not needed?
-    public void setBrewType(String brewType){
 
-        this.brewType = brewType;
-    }
 }

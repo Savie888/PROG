@@ -1,10 +1,8 @@
 package Metthy.Model;
 
-import Metthy.DrinkManager;
-import Metthy.StorageBin;
+import Metthy.Controller.DrinkController;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * This class represents a special coffee truck
@@ -18,10 +16,10 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
      * @param name         the name of the coffee truck
      * @param location     the initial location of the truck
      */
-    public SpecialCoffeeTruck(String name, String location, TruckManager truckManager){
+    public SpecialCoffeeTruck(String name, String location, TruckManager truckManager, DrinkController drinkController){
 
         //Call regular coffee truck constructor
-        super(name, location, truckManager);
+        super(name, location, truckManager, drinkController);
 
         int i;
 

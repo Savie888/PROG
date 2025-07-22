@@ -12,5 +12,9 @@ public interface BinContent {
 
     double getQuantity();
 
+    void addQuantity(double amount);
+
+    void useQuantity(double amount);
+
     int getCapacity();
 }

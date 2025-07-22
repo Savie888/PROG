@@ -2,9 +2,8 @@ package Metthy.View;
 
 import Metthy.Model.BinContent;
 import Metthy.Model.CoffeeTruck;
-import Metthy.Model.RegularCoffeeTruck;
 import Metthy.Model.SpecialCoffeeTruck;
-import Metthy.StorageBin;
+import Metthy.Model.StorageBin;
 
 import java.util.ArrayList;
 
@@ -70,7 +69,7 @@ public class TruckView extends View{
         return set;
     }
 
-    public void showBinPrompt(int binNumber){
+    public void showBinSetupPrompt(int binNumber){
 
         System.out.println("\nSetting up Bin #" + binNumber);
     }
@@ -121,6 +120,16 @@ public class TruckView extends View{
     public void showLoadoutComplete(CoffeeTruck truck){
 
         System.out.println("\nLoadout for " + truck.getName() + " complete!\n");
+    }
+
+    public void restockFailMessage(){
+
+        System.out.println("Bin isn't assigned any item, restock failed");
+    }
+
+    public void binEmptiedMessage(int binNumber){
+
+        System.out.println("Bin #" + binNumber + " emptied.");
     }
 
     public String repeatTruckCreationPrompt(){
@@ -232,13 +241,23 @@ public class TruckView extends View{
         return choice;
     }
 
-    public double selectIngredientQuantity(double maxCapacity){
+    public double selectIngredientQuantity(int maxCapacity){
 
         double quantity;
 
         System.out.print("Enter quantity (max " + maxCapacity + "): ");
         quantity = scanner.nextDouble();
         scanner.nextLine(); //Consume newline
+
+        return quantity;
+    }
+
+    public double selectIngredientRestockQuantity(){
+
+        double quantity;
+
+        System.out.println("Enter quantity to restock (0 for full restock): ");
+        quantity = scanner.nextDouble();
 
         return quantity;
     }
@@ -293,6 +312,37 @@ public class TruckView extends View{
 
         if(quantity < 0 || quantity > maxCapacity){
             printInvalidOption();
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    public boolean checkIngredientRestockQuantity(double quantity, double currentQuantity, int maxCapacity){
+
+        boolean flag = false;
+        double diff = Math.abs(quantity - currentQuantity);
+
+        if(diff > maxCapacity){
+            printInvalidOption();
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    /**
+     * Displays a list of available trucks and allows the user to select one.
+     *
+     * @return The index of the selected truck in the list; -1 if no trucks are available.
+     */
+    public boolean checkTruckNumber(int truckNumber, ArrayList<CoffeeTruck> trucks){
+
+        boolean flag = false;
+
+        if(truckNumber < 1 || truckNumber > trucks.size()){
+
+            System.out.println("Invalid truck number selected");
             flag = true;
         }
 

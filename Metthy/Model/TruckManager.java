@@ -1,5 +1,7 @@
 package Metthy.Model;
 
+import Metthy.Controller.DrinkController;
+
 import java.util.ArrayList;
 
 public class TruckManager extends Model{
@@ -114,34 +116,19 @@ public class TruckManager extends Model{
         trucks.add(truck);
     }
 
-    public CoffeeTruck createTruck(String name, String location, int truckType){
+    public CoffeeTruck createTruck(String name, String location, int truckType, DrinkController drinkController){
 
         CoffeeTruck truck;
 
         //Create a Regular Coffee Truck
         if(truckType == 1)
-            truck = new RegularCoffeeTruck(name, location, this);
+            truck = new RegularCoffeeTruck(name, location, this, drinkController);
 
         //Create a Special Coffee Truck
         else
-            truck = new SpecialCoffeeTruck(name, location, this);
+            truck = new SpecialCoffeeTruck(name, location, this, drinkController);
 
         return truck;
-    }
-
-    /**
-     * Displays a list of available trucks and allows the user to select one.
-     *
-     * @return The index of the selected truck in the list; -1 if no trucks are available.
-     */
-    public boolean checkTruckIndex(int truckIndex, ArrayList<CoffeeTruck> trucks){
-
-        boolean flag = false;
-
-        if(truckIndex < -1 || truckIndex > trucks.size())
-            flag = true;
-
-        return flag;
     }
 
     public void removeTruck(int truckIndex){

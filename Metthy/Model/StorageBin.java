@@ -1,6 +1,4 @@
-package Metthy;
-
-import Metthy.Model.BinContent;
+package Metthy.Model;
 
 /**
  * This class represents a storage bin in a coffee truck .
@@ -15,15 +13,13 @@ public class StorageBin {
     private final int binNumber;
 
     /**
-     * The type of item stored in this bin.
-     */
-    private String itemType;
-
-    /**
      * The maximum capacity of this bin, based on the item type.
      */
     private int itemCapacity;
 
+    /**
+     * The type of item stored in this bin.
+     */
     private BinContent content;
 
     /**
@@ -39,7 +35,6 @@ public class StorageBin {
     public StorageBin(int binNumber){
 
         this.binNumber = binNumber;
-        this.itemType = null;
         this.itemCapacity = 0; //Initialize to 0
         this.itemQuantity = 0; //Initialize to 0
     }
@@ -54,7 +49,7 @@ public class StorageBin {
     public void setContent(BinContent content, double quantity){
 
         this.content = content;
-        this.itemQuantity = quantity;
+        content.setQuantity(quantity);
     }
 
     /**
@@ -84,29 +79,11 @@ public class StorageBin {
     }
 
     /**
-     * Checks if the bin is full.
-     *
-     * @return true if the bin is full, false otherwise
-     */
-    public boolean isFull(){
-
-        boolean flag = false;
-
-        //Bin is considered full if item quantity is equal to capacity and an item is assigned
-        if(itemQuantity == itemCapacity)
-            flag = true;
-
-        return flag;
-    }
-
-    /**
      * Fills the bin to its maximum capacity.
      */
     public void fill(){
 
-        //Check first if there is an item assigned and if it's already full
-        if(itemType != null && !isFull())
-            itemQuantity = 1.0 * itemCapacity;
+        content.setQuantity(content.getCapacity());
     }
 
     /**
@@ -114,9 +91,7 @@ public class StorageBin {
      */
     public void empty(){
 
-        itemType = null;
-        itemQuantity = 0;
-
+        content = null;
     }
 
     /**
@@ -139,19 +114,16 @@ public class StorageBin {
      */
     public void addQuantity(double amount){
 
-        //Make sure specified amount does not exceed item capacity
-        if(itemQuantity + amount <= itemCapacity){
-
-            itemQuantity += amount;
-            System.out.println("Bin #" + binNumber + " restocked.");
-        }
-
-        else
-            System.out.println("Added quantity would go over capacity. Restock failed");
+        content.addQuantity(amount);
     }
 
     public BinContent getContent() {
 
         return content;
+    }
+
+    public double getItemQuantity(){
+
+        return content.getQuantity();
     }
 }

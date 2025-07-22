@@ -2,15 +2,17 @@ package Metthy;
 
 //Implement MVC
     //Continue on method refactoring
-    //Continue on Truck Maintenance
+    //Continue on Truck Maintenances
     //Error messages for duplicate name and location
     //Test revamped Simulate Menu
-    //Assign quantity for ingredients and cups
     //Work on bins
 
+//Work on drinks
+    //refactor for BinContent
+    //use Cup object in getCupSize
+    //Check find bin
 
-//Ingredient objects
-    //Combine Cup and Ingredient abstract classes??
+
 
 //Menu Looping
 //GUI

@@ -1,9 +1,5 @@
 package Metthy.Model;
 
-import Metthy.DrinkManager;
-
-import java.util.ArrayList;
-
 public class Model {
 
     public Model(){

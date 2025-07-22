@@ -5,6 +5,10 @@ public abstract class Ingredient implements BinContent{
 
     protected String type;
     protected double quantity;
+
+    /**
+     * The maximum capacity of this item.
+     */
     protected int capacity;
     protected double cost;
 
@@ -62,6 +66,15 @@ public abstract class Ingredient implements BinContent{
         return quantity;
     }
 
+    public void addQuantity(double amount){
+
+        quantity += amount;
+    }
+
+    public void useQuantity(double amount){
+
+        quantity -= amount;
+    }
     public double getCost() {
 
         return cost;

@@ -1,5 +1,6 @@
 package Metthy;
 
+import Metthy.Controller.DrinkController;
 import Metthy.Model.CoffeeTruck;
 import Metthy.Model.RegularCoffeeTruck;
 import Metthy.Model.SpecialCoffeeTruck;
@@ -35,7 +36,7 @@ public class TruckManager {
     /**
      * Manages drink preparation, ingredient calculations, and pricing.
      */
-    private final DrinkManager drinkManager = new DrinkManager();
+    private final DrinkController drinkManager = new DrinkController();
 
     /**
      * Flag to indicate whether drink prices have been initialized.
@@ -209,17 +210,6 @@ public class TruckManager {
     }
 
     /**
-     * Displays the truck simulation menu for performing actions on a selected coffee truck.
-     * <p>Allows user to:</p>
-     * <ul>
-     *   <li>Prepare coffee drinks using the truck's inventory</li>
-     *   <li>View the selected truck's information</li>
-     *   <li>Enter the truck maintenance submenu</li>
-     *   <li>Exit to the main menu</li>
-     * </ul>
-     */
-
-    /**
      * Displays the total number of deployed trucks and their respective types (Regular or Special).
      * Currently, only shows regular trucks; special truck count is planned for future expansion.
      *
@@ -255,7 +245,7 @@ public class TruckManager {
      *
      * @param trucks the list of all deployed coffee trucks
      */
-    private void displayTotalInventory(ArrayList<RegularCoffeeTruck> trucks){
+    /*private void displayTotalInventory(ArrayList<RegularCoffeeTruck> trucks){
 
         int i, j;
         int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
@@ -337,7 +327,7 @@ public class TruckManager {
         System.out.println("Small Cups      : " + totalSmallCups);
         System.out.println("Medium Cups     : " + totalMediumCups);
         System.out.println("Large Cups      : " + totalLargeCups);
-    }
+    }*/
 
     /**
      * Displays the sales log and total revenue across all deployed trucks.
@@ -387,10 +377,10 @@ public class TruckManager {
             displayTruckDeployment(trucks);
 
             //Display Aggregate Inventory
-            displayTotalInventory(trucks);
+            //displayTotalInventory(trucks);
 
             //Display Total Sales
-            displayTotalSales(trucks);
+            //displayTotalSales(trucks);
             System.out.println("==============================");
         }
     }

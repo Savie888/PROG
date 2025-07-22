@@ -66,24 +66,6 @@ public class MenuView extends View{
         System.out.println("Select an Option: ");
     }
 
-    public int getCoffeeMenuInput(){
-
-        int option;
-
-        option = scanner.nextInt();
-        scanner.nextLine(); //Absorb new line
-
-        return option;
-    }
-
-    public void displayCoffeeMenu(){
-
-        System.out.println("\n=== Coffee Menu ===");
-        System.out.println("1 - Prepare Drink");
-        System.out.println("2 - Exit Menu");
-        System.out.println("Select an Option: ");
-    }
-
     public int getTruckMaintenanceMenuInput(){
 
         int option;
@@ -164,7 +146,7 @@ public class MenuView extends View{
 
         System.out.print("Enter new name: ");
         name = scanner.nextLine();
-        scanner.nextLine(); //Absorb new line
+        //scanner.nextLine(); //Absorb new line
 
         return name;
     }
@@ -175,7 +157,7 @@ public class MenuView extends View{
 
         System.out.print("Enter new location: ");
         location = scanner.nextLine();
-        scanner.nextLine(); //Absorb new line
+        //scanner.nextLine(); //Absorb new line
 
         return location;
     }

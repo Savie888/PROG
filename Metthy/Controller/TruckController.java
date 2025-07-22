@@ -3,7 +3,7 @@ package Metthy.Controller;
 import Metthy.Model.BinContent;
 import Metthy.Model.CoffeeTruck;
 import Metthy.Model.TruckManager;
-import Metthy.StorageBin;
+import Metthy.Model.StorageBin;
 import Metthy.View.MenuView;
 import Metthy.View.TruckView;
 
@@ -11,20 +11,18 @@ import java.util.ArrayList;
 
 public class TruckController{
 
-    public ArrayList<CoffeeTruck> trucks;
-    public ArrayList<StorageBin> bins;
     private final TruckView truckView;
     private final MenuView menuView;
     private final TruckManager truckManager;
+    private final DrinkController drinkController;
     private boolean running;
 
     public TruckController(MenuView menuView){
 
-        this.trucks = new ArrayList<>();
-        this.bins = new ArrayList<>();
         this.menuView = menuView;
         this.truckView = new TruckView();
         this.truckManager = new TruckManager();
+        this.drinkController = new DrinkController();
     }
 
     public void modifyBin(CoffeeTruck truck, int binNumber){
@@ -35,7 +33,7 @@ public class TruckController{
         BinContent content;
 
         bin = truck.getBins().get(binNumber-1);
-        truckView.showBinPrompt(binNumber);
+        truckView.showBinSetupPrompt(binNumber);
 
         //Select ingredient to store in bin
         do{
@@ -65,7 +63,7 @@ public class TruckController{
 
         int i;
         String setDefault;
-        StorageBin bin;
+        ArrayList<StorageBin> bins = truck.getBins();
 
         setDefault = truckView.showDefaultLoadoutPrompt(truck);
 
@@ -75,8 +73,8 @@ public class TruckController{
         else{
             for(i = 0; i < bins.size(); i++){
 
-                bin = bins.get(i);
-                truckView.showBinPrompt(bin.getBinNumber());
+                StorageBin bin = bins.get(i);
+                truckView.showBinSetupPrompt(bin.getBinNumber());
                 modifyBin(truck, bin.getBinNumber());
             }
 
@@ -103,7 +101,7 @@ public class TruckController{
                 truckType = truckView.enterTruckType();
             } while(!truckManager.checkTruckType(truckType));
 
-            truck = truckManager.createTruck(name, location, truckType);
+            truck = truckManager.createTruck(name, location, truckType, drinkController);
 
             do{
                 setLoadout = truckView.showLoadoutPrompt();
@@ -119,6 +117,8 @@ public class TruckController{
             repeat = truckView.repeatTruckCreationPrompt();
 
         } while(repeat.equalsIgnoreCase("yes"));
+
+        drinkController.setIngredientPrices(); //Set initial ingredient prices
     }
 
     /**
@@ -131,38 +131,19 @@ public class TruckController{
 
         do{
             truckNumber = truckView.selectTruck(trucks);
-        } while(truckManager.checkTruckIndex(truckNumber - 1, trucks));
+        } while(truckView.checkTruckNumber(truckNumber - 1, trucks));
 
         truckManager.removeTruck(truckNumber - 1);
     }
 
-    /**
-     * Displays the main coffee menu for the truck, allowing the user to view
-     * available drinks or prepare a new drink.
-     *
-     */
-    public void coffeeMenu(){
+    public int selectTruck(){
 
-        int option;
+        int truckNumber;
+        ArrayList<CoffeeTruck> trucks = truckManager.getTrucks();
 
-        running = true;
+        truckNumber = truckView.selectTruck(trucks);
 
-        while(running){
-
-            menuView.displayCoffeeMenu();
-            option = menuView.getCoffeeMenuInput();
-
-            switch (option){
-
-                case 1:
-                    //Prepare Drink
-                    break;
-                case 2:
-                    running = false;
-                    System.out.println("Returning to main menu...");
-                    break;
-            }
-        }
+        return truckNumber;
     }
 
     /**
@@ -190,19 +171,18 @@ public class TruckController{
 
         do{
             truckNumber = selectTruck();
-        } while(truckManager.checkTruckIndex(truckNumber - 1, trucks));
+        } while(truckView.checkTruckNumber(truckNumber, trucks));
+
+        selectedTruck = trucks.get(truckNumber - 1);
 
         while(running){
 
             menuView.displaySimulationMenu();
             option = menuView.getSimulationMenuInput();
 
-            selectedTruck = trucks.get(truckNumber - 1);
-
             switch (option){
-
                 case 1:
-                    coffeeMenu(); //Display Coffee Menu
+                    drinkController.prepareCoffeeMenu(selectedTruck); //Display Coffee Menu
                     break;
                 case 2:
                     displayTruckInfo(selectedTruck); //Display truck information
@@ -237,7 +217,7 @@ public class TruckController{
      *
      * @param trucks the list of all deployed coffee trucks
      */
-    private void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
+  /*  private void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
 
         int i, j;
         int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
@@ -320,7 +300,7 @@ public class TruckController{
         System.out.println("Medium Cups     : " + totalMediumCups);
         System.out.println("Large Cups      : " + totalLargeCups);
     }
-
+*/
     /**
      * Displays the sales log and total revenue across all deployed trucks.
      * Also displays the individual sales log and revenue of each truck.
@@ -351,19 +331,50 @@ public class TruckController{
         System.out.printf("\nTotal Sales    : $%.2f\n", combinedSales);
     }
 
-    public int selectTruck(){
-
-        int truckNumber;
-        trucks = truckManager.getTrucks();
-
-        truckNumber = truckView.selectTruck(trucks);
-
-        return truckNumber;
-    }
-
     public void displayTruckInfo(CoffeeTruck selectedTruck){
 
         truckView.displayInfo(selectedTruck);
+    }
+
+    public void restockBin(CoffeeTruck truck, int binNumber){
+
+        double quantity;
+        StorageBin bin = truck.getBins().get(binNumber-1);
+
+        if(bin.getContent() == null)
+            truckView.restockFailMessage();
+
+        else{
+
+            do{
+                quantity = truckView.selectIngredientRestockQuantity();
+            } while(truckView.checkIngredientRestockQuantity(quantity, bin.getContent().getQuantity(), bin.getContent().getCapacity()));
+
+            truck.restockBin(bin, quantity);
+        }
+    }
+
+    /**
+     * Restocks all bins that have an assigned item.
+     */
+    public void restockAllBins(CoffeeTruck truck){
+
+        int i;
+
+        for(i = 0; i < truck.getBins().size(); i++){
+
+            restockBin(truck, i + 1);
+        }
+    }
+
+    public void emptyBin(CoffeeTruck truck, int binNumber){
+
+        StorageBin bin = truck.getBins().get(binNumber-1);
+
+        if(bin.isEmpty()){
+            truck.emptyBin(bin);
+            truckView.binEmptiedMessage(binNumber);
+        }
     }
 
     /**
@@ -384,19 +395,18 @@ public class TruckController{
         String name, location;
 
         switch(option){
-
             case 1:
                 choice = menuView.restockMenu();
 
                 if(choice == 1)
-                    truck.restockAllBins(); //Restock all bins
+                    restockAllBins(truck); //Restock all bins
 
                 else if(choice == 2){
                     do{
                         binNumber = truckView.selectBin();
                     } while(truckView.checkBinNumber(binNumber, truck.getBins()));
 
-                    truck.restockBin(binNumber); //Restock selected bin
+                    restockBin(truck, binNumber); //Restock selected bin
                 }
                 break;
             case 2:
@@ -424,7 +434,7 @@ public class TruckController{
                         binNumber = truckView.selectBin();
                     } while(truckView.checkBinNumber(binNumber, truck.getBins()));
 
-                    truck.emptyBin(binNumber); //Empty selected bin
+                    emptyBin(truck, binNumber); //Empty selected bin
                 }
                 break;
             case 4:
@@ -436,8 +446,7 @@ public class TruckController{
                 truck.setLocation(location); //Set new location
                 break;
             case 6:
-                //Add in drink controller
-                //drinkManager.setIngredientPrices(); //Set ingredient prices
+                drinkController.setIngredientPrices(); //Set ingredient prices
                 break;
             case 7:
                 System.out.println("Exiting Menu...");

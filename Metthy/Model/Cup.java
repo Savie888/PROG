@@ -6,12 +6,14 @@ public abstract class Cup implements BinContent{
     protected double quantity;
     protected int capacity;
     protected double cost;
+    protected double volume;
 
-    public Cup(String size, int capacity, double cost){
+    public Cup(String size, int capacity, double cost, double volume){
 
         this.size = size;
         this.capacity = capacity;
         this.cost = cost;
+        this.volume = volume;
     }
 
     @Override
@@ -51,9 +53,23 @@ public abstract class Cup implements BinContent{
         return quantity;
     }
 
+    public void addQuantity(double amount){
+
+        quantity += amount;
+    }
+
+    public void useQuantity(double amount){
+
+        quantity -= amount;
+    }
+
     public double getCost() {
 
         return cost;
     }
 
+    public double getVolume() {
+
+        return volume;
+    }
 }

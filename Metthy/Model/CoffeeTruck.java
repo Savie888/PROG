@@ -1,6 +1,7 @@
 package Metthy.Model;
 
-import Metthy.StorageBin;
+import Metthy.Controller.DrinkController;
+import Metthy.View.DrinkView;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -29,15 +30,19 @@ public abstract class CoffeeTruck {
      */
     protected final Scanner scanner = new Scanner(System.in);
 
-    protected TruckManager truckManager;
+    protected TruckManager truckManager; //Consider removing
+    protected DrinkController drinkController;
+    protected DrinkView drinkView;
 
-    public CoffeeTruck(String name, String location, TruckManager truckManager){
+    public CoffeeTruck(String name, String location, TruckManager truckManager, DrinkController drinkController){
 
         this.name = name;
         this.location = location;
-        this.truckManager = truckManager;
         this.bins = new ArrayList<>();
         this.salesLog = new ArrayList<>();
+        this.truckManager = truckManager;
+        this.drinkController = drinkController;
+        this.drinkView = drinkController.getDrinkView();
     }
 
     /**
@@ -83,101 +88,24 @@ public abstract class CoffeeTruck {
     /**
      * Restocks a specific storage bin.
      *
-     * @param binNumber the bin number to restock
+     * @param bin the bin to restock
      */
-    public void restockBin(int binNumber){
+    public void restockBin(StorageBin bin, double quantity){
 
-        double quantity;
-
-        if(binNumber >= 1 && binNumber <= bins.size()){
-
-            StorageBin bin = bins.get(binNumber - 1);
-            if(bin.getItemType() == null)
-                System.out.println("Bin isn't assigned any item, restock failed");
-
-            else{
-
-                System.out.println("Enter quantity to restock (0 for full restock): ");
-                quantity = scanner.nextDouble();
-
-                //Check if bin already full
-                if(quantity == 0 && !bins.get(binNumber - 1).isFull()){
-
-                    bins.get(binNumber - 1).fill(); //Fill bin to max capacity
-                    System.out.printf("Bin %d restocked to max capacity\n", binNumber);
-                }
-
-                else
-                    bin.addQuantity(quantity); //Add entered quantity to bin
-            }
-        }
-
+        if(quantity == 0)
+            bin.fill(); //Fill bin
         else
-            System.out.println("Invalid bin number.");
-    }
-
-    /**
-     * Restocks all bins that have an assigned item.
-     *
-     */
-    public void restockAllBins(){
-
-        int i;
-        int flag = 0;
-
-        for(i = 0; i < bins.size() && flag == 0; i++){
-
-            StorageBin bin = bins.get(i);
-
-            if(bin.getItemType() == null)
-                flag = 1;
-        }
-
-        if(flag == 1)
-            System.out.println("Error Restocking. Some bins have no items assigned");
-
-        else{
-            System.out.println("Fully restock bins? (yes/no): ");
-            String fullRestock = scanner.nextLine();
-
-            if(fullRestock.equalsIgnoreCase("yes")){
-
-                for(i = 0; i < bins.size(); i++){
-
-                    StorageBin bin = bins.get(i);
-                    bin.fill();
-                }
-            }
-
-            else{
-                for(i = 0; i < bins.size(); i++){
-
-                    StorageBin bin = bins.get(i);
-
-                    restockBin(bin.getBinNumber()); //Restock bin
-                }
-            }
-        }
+            bin.addQuantity(quantity); //Add entered quantity to bin
     }
 
     /**
      * Empties a specific storage bin.
      *
-     * @param binNumber the bin number to empty (1-based index)
+     * @param bin the bin to empty
      */
-    public void emptyBin(int binNumber){
+    public void emptyBin(StorageBin bin){
 
-        if(binNumber >= 1 && binNumber <= bins.size()){
-
-            //Check if bin is already empty
-            if(bins.get(binNumber - 1).isEmpty()){
-                bins.get(binNumber - 1).empty();
-                System.out.println("Bin #" + binNumber + " emptied.");
-            }
-        }
-
-        else
-            System.out.println("Invalid bin number.");
+        bin.empty();
     }
 
     /**
@@ -192,7 +120,6 @@ public abstract class CoffeeTruck {
             StorageBin bin = bins.get(i);
             bin.empty(); //Empty bin
         }
-        System.out.println("All bins emptied");
     }
 
     /**
@@ -212,9 +139,9 @@ public abstract class CoffeeTruck {
         for(i = 0; i < bins.size(); i++){
 
             StorageBin bin = bins.get(i);
-            item = bin.getItemType();
+            BinContent content = bin.getContent();
 
-            if(item != null && item.equalsIgnoreCase(itemName))
+            if(content != null && content.getName().equalsIgnoreCase(itemName))
                 result = bin;
         }
 
@@ -264,29 +191,26 @@ public abstract class CoffeeTruck {
      * Handles the process of preparing a drink.
      *
      */
-    /*protected void prepareDrink(){
+    public void prepareDrink(){
 
         String coffeeType, coffeeSize, brewType;
         double espressoGrams, milkOz, waterOz, price, ratio;
         double[] ingredients;
 
-        System.out.println("\n--- Prepare Coffee Drink ---");
-        coffeeType = drinkManager.selectDrinkType();
-        coffeeSize = drinkManager.selectDrinkSize();
-        brewType = "Standard";
-        ratio = drinkManager.getBrewRatio(brewType);
+        drinkView.prepareDrinkHeader();
+        coffeeType = drinkView.selectDrinkType();
+        coffeeSize = drinkView.selectDrinkSize();
+        brewType = "Standard"; //Set brew type to standard by default
+        ratio = drinkView.getBrewRatio(brewType);
 
         if(coffeeType == null || coffeeSize == null)
-            System.out.println("Invalid input! Drink preparation cancelled");
+            drinkView.invalidDrinkPrepInputMessage();
 
         else{
+            Drink drink = drinkController.getDrink(coffeeType, coffeeSize);
+            ingredients = drinkController.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
 
-            Drink drink = drinkManager.getDrink(coffeeType, coffeeSize);
-            drink.setBrewType(brewType); //All drinks in regular truck are standard brew by default
-
-            ingredients = drinkManager.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
-
-            drinkManager.showIngredients(coffeeType, coffeeSize, brewType, ingredients); //Show required ingredients
+            drinkView.showIngredients(coffeeType, coffeeSize, brewType, ingredients); //Show required ingredients
 
             StorageBin beanBin = findBin("Coffee Beans"); //Find bin with coffee beans
             StorageBin milkBin = findBin("Milk"); //Find bin with milk
@@ -294,8 +218,9 @@ public abstract class CoffeeTruck {
             StorageBin cupBin = findBin(coffeeSize + " Cup"); //Find bin with specified cup size
             StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
 
+            System.out.println("reached");
             //Check if storage bins have sufficient ingredients
-            if(drinkManager.hasSufficientIngredients(bins, ingredients)){
+            if(drinkController.hasSufficientIngredients(bins, ingredients)){
 
                 espressoGrams = ingredients[0];
                 milkOz = ingredients[1];
@@ -303,30 +228,19 @@ public abstract class CoffeeTruck {
                 price = drink.getPrice();
 
                 //Deduct ingredients from storage bins
-                drinkManager.useIngredients(bins, ingredients);
+                drinkController.useIngredients(bins, ingredients);
 
-                System.out.printf("\n>>> Preparing %s Cup...\n", coffeeSize);
-                System.out.printf(">>> Brewing %s Espresso - %.2f grams of coffee...\n", brewType, espressoGrams);
-
-                if(milkOz > 0)
-                    System.out.println(">>> Adding Milk...");
-
-                if(coffeeType.equalsIgnoreCase("Americano"))
-                    System.out.println(">>> Adding Water...");
-
-                System.out.printf(">>> %s Done!\n", coffeeType);
-
-                System.out.printf("Total Price: $%.2f\n", price);
+                drinkView.displayPreparationSteps(coffeeType, coffeeSize, "Standard", ingredients);
+                drinkView.showTotalPrice(drink.getPrice());
 
                 addToTotalSales(price); //Update total sales
                 recordSale(coffeeType, coffeeSize, espressoGrams, milkOz, waterOz, price); //Update sales log
             }
 
             else
-                System.out.println("Not enough ingredients or cups. Drink preparation cancelled.");
+                drinkView.showInsufficientIngredients();
         }
     }
-*/
 
     //GETTERS AND SETTERS
 
@@ -399,8 +313,5 @@ public abstract class CoffeeTruck {
 
         return totalSales;
     }
-
-
-
 
 }

@@ -4,7 +4,7 @@ public class SmallCup extends Cup{
 
     public SmallCup(){
 
-        super("Small Cup", 80, 0);
+        super("Small Cup", 80, 0, 8.0);
     }
 
 }
