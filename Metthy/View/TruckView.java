@@ -1,9 +1,6 @@
 package Metthy.View;
 
-import Metthy.Model.BinContent;
-import Metthy.Model.CoffeeTruck;
-import Metthy.Model.SpecialCoffeeTruck;
-import Metthy.Model.StorageBin;
+import Metthy.Model.*;
 
 import java.util.ArrayList;
 
@@ -85,22 +82,20 @@ public class TruckView extends View{
         String unit;
         String formattedQuantity;
 
-        switch (itemType.toLowerCase()) {
-            case "water":
-            case "milk":
-                unit = "ounces of " + itemType;
-                formattedQuantity = String.format("%.1f", quantity);
-                break;
+        if(itemType.equalsIgnoreCase("Water") || itemType.equalsIgnoreCase("Milk")
+                || content instanceof Syrup){
+            unit = "ounces of " + itemType;
+            formattedQuantity = String.format("%.1f", quantity);
+        }
 
-            case "coffee beans":
-                unit = "grams of " + itemType;
-                formattedQuantity = String.format("%.1f", quantity);
-                break;
+        else if(itemType.equalsIgnoreCase("Coffee Bean")){
+            unit = "grams of " + itemType;
+            formattedQuantity = String.format("%.1f", quantity);
+        }
 
-            default:
-                unit = "cups";
-                formattedQuantity = String.format("%d", (int) quantity);
-                break;
+        else{
+            unit = "cups";
+            formattedQuantity = String.format("%d", (int) quantity);
         }
 
         System.out.printf("Bin #%d loaded with %s %s%n", binNumber, formattedQuantity, unit);
@@ -281,7 +276,6 @@ public class TruckView extends View{
 
         System.out.print("Enter quantity (max " + maxCapacity + "): ");
         quantity = scanner.nextDouble();
-        scanner.nextLine(); //Consume newline
 
         return quantity;
     }

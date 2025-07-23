@@ -1,5 +1,11 @@
 package Metthy.View;
 
+import Metthy.Model.BinContent;
+import Metthy.Model.StorageBin;
+import Metthy.Model.Syrup;
+
+import java.util.ArrayList;
+
 public class DrinkView extends View{
 
 
@@ -66,7 +72,29 @@ public class DrinkView extends View{
         return price;
     }
 
+    public double enterExtraShotPrice(){
 
+        double price;
+
+        System.out.println("Enter price of an extra espresso shot: ");
+        price = scanner.nextDouble();
+
+        return price;
+    }
+
+    public BinContent enterSyrupName() {
+
+        String name;
+        BinContent content;
+
+        scanner.nextLine(); //Absorb excess line
+        System.out.println("Enter syrup name (e.g., Vanilla, Grape): ");
+        name = scanner.nextLine();
+
+        content = new Syrup(name);
+
+        return content;
+    }
     //Messages
 
     public void drinkMenuHeader(){
@@ -82,7 +110,18 @@ public class DrinkView extends View{
     }
 
     public void showInsufficientIngredients() {
+
         System.out.println("Not enough ingredients or cups. Drink preparation cancelled.");
+    }
+
+    public void missingSyrupBinMessage(String syrupType){
+
+        System.out.println("Error: Missing syrup bin for '" + syrupType + "'.");
+    }
+
+    public void notEnoughSyrupMessage(String syrupType, double amount){
+
+        System.out.printf("Error: Not enough %s syrup in stock (needs %.2f oz).\n", syrupType, amount);
     }
 
     //PREPARE DRINK
@@ -169,6 +208,51 @@ public class DrinkView extends View{
         return size;
     }
 
+    public String selectBrewType(){
+
+        int option;
+        String brewType, repeat;
+
+        do{
+            repeat = "";
+
+            System.out.println("\nSelect brew type:");
+            System.out.println("1 - Standard");
+            System.out.println("2 - Light");
+            System.out.println("3 - Strong");
+            System.out.println("4 - Custom");
+            System.out.print("Enter choice: ");
+            option = scanner.nextInt();
+            scanner.nextLine();  //Clear excess line
+
+            switch(option){
+
+                case 1:
+                    brewType = "Standard";
+                    break;
+                case 2:
+                    brewType = "Light";
+                    break;
+                case 3:
+                    brewType = "Strong";
+                    break;
+                case 4:
+                    brewType = "Custom";
+                    break;
+                default:
+                    brewType = "Standard";
+                    System.out.println("Invalid Choice. Try again? (yes/no): ");
+                    repeat = scanner.nextLine();
+                    break;
+            }
+        } while(repeat.equalsIgnoreCase("yes"));
+
+        if(repeat.equalsIgnoreCase("no"))
+            System.out.println("No valid brew type selected, using standard brew type");
+
+        return brewType;
+    }
+
     public double getBrewRatio(String brewType){
 
         double ratio;
@@ -211,6 +295,86 @@ public class DrinkView extends View{
         System.out.printf("- Coffee Beans: %.2f g\n", espressoGrams);
         System.out.printf("- Milk: %.2f oz\n", milkOz);
         System.out.printf("- Water: %.2f oz\n", waterOz);
+    }
+
+    public boolean hasAvailableSyrup(ArrayList<StorageBin> bins) {
+
+        int i;
+
+        for(i = 8; i < bins.size(); i++){
+            StorageBin bin = bins.get(i);
+            BinContent content = bin.getContent();
+            if (content instanceof Syrup && content.getQuantity() > 0)
+                return true;
+        }
+
+        return false;
+    }
+
+    public void displayAvailableSyrup(ArrayList<StorageBin> bins){
+
+        int i;
+
+        System.out.println("Available syrups: ");
+
+        for(i = 8; i < bins.size(); i++){
+
+            StorageBin bin = bins.get(i);
+            BinContent content = bin.getContent();
+
+            if(content instanceof Syrup && content.getQuantity() > 0)
+                System.out.printf("- %s: %.2f oz\n", content.getName(), content.getQuantity());
+        }
+    }
+
+    public BinContent selectAddOn(ArrayList<StorageBin> bins){
+
+        int i;
+        String type;
+        BinContent addOn = null;
+
+        do{
+            System.out.println("Choose a syrup add-on: ");
+            type = scanner.nextLine();
+
+            for(i = 8; i < bins.size(); i++){
+
+                StorageBin bin = bins.get(i);
+
+                if (bin != null && bin.getContent() != null){
+                    BinContent content = bin.getContent();
+
+                    if(type.equalsIgnoreCase(content.getName())){
+                        addOn = content;
+                        break;
+                    }
+                }
+            }
+
+            if (addOn == null) {
+                System.out.println("Invalid or unavailable syrup. Please try again.");
+            }
+
+        }while(addOn == null);
+
+        return addOn;
+    }
+
+    public double selectAddOnAmount(){
+
+        double amount;
+
+        do{
+            System.out.println("Enter amount: ");
+            amount = scanner.nextDouble();
+            scanner.nextLine(); //Clear excess line
+
+            if(amount < 0 || amount > 640)
+                System.out.println("Invalid quantity!");
+
+        } while(amount < 0 || amount > 640);
+
+        return amount;
     }
 
     public void displayPreparationSteps(String type, String size, String brewType, double[] ingredients) {

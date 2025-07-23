@@ -49,6 +49,8 @@ public class DrinkController {
      */
     private double syrupOzPrice;
 
+    private double extraShotPrice;
+
     /**
      * Constructs a new DrinkManager and sets up the drink menu
      */
@@ -81,6 +83,9 @@ public class DrinkController {
             syrupOzPrice = drinkView.enterSyrupOzPrice();
         } while(syrupOzPrice < 0);
 
+        do{
+            extraShotPrice = drinkView.enterExtraShotPrice();
+        } while(extraShotPrice < 0);
     }
 
     /**
@@ -181,51 +186,6 @@ public class DrinkController {
                     break;
             }
         }
-    }
-
-    public String selectBrewType(){
-
-        int option;
-        String brewType, repeat;
-
-        do{
-            repeat = "";
-
-            System.out.println("\nSelect brew type:");
-            System.out.println("1 - Standard");
-            System.out.println("2 - Light");
-            System.out.println("3 - Strong");
-            System.out.println("4 - Custom");
-            System.out.print("Enter choice: ");
-            option = scanner.nextInt();
-            scanner.nextLine();  //Clear excess line
-
-            switch(option){
-
-                case 1:
-                    brewType = "Standard";
-                    break;
-                case 2:
-                    brewType = "Light";
-                    break;
-                case 3:
-                    brewType = "Strong";
-                    break;
-                case 4:
-                    brewType = "Custom";
-                    break;
-                default:
-                    brewType = "Standard";
-                    System.out.println("Invalid Choice. Try again? (yes/no): ");
-                    repeat = scanner.nextLine();
-                    break;
-            }
-        } while(repeat.equalsIgnoreCase("yes"));
-
-        if(repeat.equalsIgnoreCase("no"))
-            System.out.println("No valid brew type selected, using standard brew type");
-
-        return brewType;
     }
 
     /**
@@ -446,6 +406,11 @@ public class DrinkController {
     public double getSyrupOzPrice(){
 
         return syrupOzPrice;
+    }
+
+    public double getExtraShotPrice(){
+
+        return extraShotPrice;
     }
 
     public double getCoffeeGramPrice(){

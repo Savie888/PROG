@@ -1,6 +1,7 @@
 package Metthy.Controller;
 
 import Metthy.Model.*;
+import Metthy.View.DrinkView;
 import Metthy.View.MenuView;
 import Metthy.View.TruckView;
 
@@ -12,7 +13,7 @@ public class TruckController{
     private final MenuView menuView;
     private final TruckManager truckManager;
     private final DrinkController drinkController;
-    private boolean running;
+    private static boolean pricesInitialized = true;
 
     public TruckController(MenuView menuView){
 
@@ -51,6 +52,28 @@ public class TruckController{
             truck.assignItemToBin(bin, content, quantity);
             truckView.showBinLoadedMessage(binNumber, content, quantity);
         }
+    }
+
+    public void modifySyrupBin(SpecialCoffeeTruck truck, int binNumber){
+
+        int max;
+        double quantity;
+        StorageBin bin;
+        BinContent content;
+        DrinkView drinkView = drinkController.getDrinkView();
+
+        bin = truck.getBins().get(binNumber-1);
+        truckView.showBinSetupPrompt(binNumber);
+
+        content = drinkView.enterSyrupName(); //Select ingredient to store in bin
+        max = content.getCapacity();
+
+        do{
+            quantity = truckView.selectIngredientQuantity(max);
+        } while(truckView.checkIngredientQuantity(quantity, max));
+
+        truck.assignItemToBin(bin, content, quantity);
+        truckView.showBinLoadedMessage(binNumber, content, quantity);
     }
 
     /**
@@ -98,7 +121,7 @@ public class TruckController{
                 truckView.showBinSetupPrompt(binNumber);
 
                 if(binNumber == 9 || binNumber == 10)
-                    truck.modifySyrupBin(binNumber);
+                    modifySyrupBin(truck, binNumber);
 
                 else
                     modifyBin(truck, bin.getBinNumber());
@@ -134,8 +157,13 @@ public class TruckController{
             } while(!truckManager.checkYesOrNo(setLoadout));
 
 
-            if(truckManager.isYes(setLoadout))
-                truckLoadout(truck);
+            if(truckManager.isYes(setLoadout)){
+
+                if(truck instanceof RegularCoffeeTruck)
+                    truckLoadout(truck);
+                else
+                    specialTruckLoadout((SpecialCoffeeTruck) truck);
+            }
 
             //Add new truck to arraylist of trucks
             truckManager.addTruck(truck);
@@ -144,7 +172,10 @@ public class TruckController{
 
         } while(repeat.equalsIgnoreCase("yes"));
 
-        drinkController.setIngredientPrices(); //Set initial ingredient prices
+        if(pricesInitialized){
+            drinkController.setIngredientPrices(); //Set initial ingredient prices
+            pricesInitialized = false;
+        }
     }
 
     /**
@@ -188,7 +219,7 @@ public class TruckController{
         CoffeeTruck selectedTruck;
         ArrayList<CoffeeTruck> trucks = truckManager.getTrucks();
 
-        running = true;
+        boolean running = true;
 
         if(trucks.isEmpty()){
             menuView.noTrucksAvailablePrompt();
@@ -330,8 +361,6 @@ public class TruckController{
     }
 */
 
-
-
     public void displayTruckInfo(CoffeeTruck selectedTruck){
 
         truckView.displayInfo(selectedTruck);
@@ -414,15 +443,22 @@ public class TruckController{
             case 2:
                 choice = menuView.modifyMenu();
 
-                if(choice == 1)
-                    truckLoadout(truck); //Modify all bins
+                if(choice == 1){
+                    if(truck instanceof SpecialCoffeeTruck)
+                        specialTruckLoadout((SpecialCoffeeTruck) truck); //Set special truck loadout
+                    else
+                        truckLoadout(truck); //Set regular truck loadout
+                }
 
                 else if(choice == 2){
                     do{
                         binNumber = truckView.selectBin();
                     } while(truckView.checkBinNumber(binNumber, truck.getBins()));
 
-                    modifyBin(truck, binNumber);
+                    if(binNumber == 9 || binNumber == 10)
+                        modifySyrupBin((SpecialCoffeeTruck) truck, binNumber);
+                    else
+                        modifyBin(truck, binNumber);
                 }
                 break;
             case 3:
@@ -457,5 +493,10 @@ public class TruckController{
                 System.out.println("Invalid option. Please try again");
                 break;
         }
+    }
+
+    public TruckView getTruckView() {
+
+        return truckView;
     }
 }

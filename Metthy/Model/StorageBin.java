@@ -13,19 +13,9 @@ public class StorageBin {
     private final int binNumber;
 
     /**
-     * The maximum capacity of this bin, based on the item type.
-     */
-    private int itemCapacity;
-
-    /**
      * The type of item stored in this bin.
      */
     private BinContent content;
-
-    /**
-     * The current quantity of the item stored in this bin.
-     */
-    private double itemQuantity;
 
     /**
      * Creates a new StorageBin with the given bin number.
@@ -35,8 +25,6 @@ public class StorageBin {
     public StorageBin(int binNumber){
 
         this.binNumber = binNumber;
-        this.itemCapacity = 0; //Initialize to 0
-        this.itemQuantity = 0; //Initialize to 0
     }
 
     /**
@@ -72,7 +60,7 @@ public class StorageBin {
         boolean flag = false;
 
         //Bin is considered empty if there is no item assigned or item quantity is 0
-        if(itemQuantity == 0)
+        if(content.getQuantity() == 0)
             flag = true;
 
         return flag;
@@ -103,8 +91,8 @@ public class StorageBin {
     public void useQuantity(double amount){
 
         //Only deduct if there is enough in storage
-        if(itemQuantity >= amount)
-            itemQuantity -= amount;
+        if(content.getQuantity() >= amount)
+            content.setQuantity(content.getQuantity() - amount);
     }
 
     /**

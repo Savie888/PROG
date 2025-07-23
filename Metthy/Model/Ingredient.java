@@ -3,6 +3,10 @@ package Metthy.Model;
 public abstract class Ingredient implements BinContent{
 
     protected String type;
+
+    /**
+     * The current quantity of the item.
+     */
     protected double quantity;
 
     /**

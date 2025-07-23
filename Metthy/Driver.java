@@ -11,10 +11,14 @@ package Metthy;
     //use Cup object in getCupSize
     //transaction format
     //syrup class
+    //only initialize prices once
 
 //Special Truck Features
     //Modify Syrup Bin in truck controller
+    //Use syrups as soon as entered
+    //Add on amount not show in sales log
 
+//Change currency to peso
 //Menu Looping
 //GUI
 

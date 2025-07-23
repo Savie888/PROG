@@ -204,7 +204,7 @@ public abstract class CoffeeTruck {
         ratio = drinkView.getBrewRatio(brewType);
 
         if(coffeeType == null || coffeeSize == null)
-            drinkView.invalidDrinkPrepInputMessage();
+            drinkView.invalidDrinkPrepInputMessage(); //Consider removing
 
         else{
             Drink drink = drinkController.getDrink(coffeeType, coffeeSize);
