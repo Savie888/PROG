@@ -76,4 +76,7 @@ public abstract class Ingredient implements BinContent{
 
         quantity -= amount;
     }
+
+    public abstract Ingredient clone();
+
 }

@@ -104,7 +104,7 @@ public class TruckManager extends Model{
             content = ingredientList.get(i);
 
             if(content.getName().equalsIgnoreCase(name)){
-                return content;
+                return content.clone();
             }
         }
 
@@ -135,7 +135,6 @@ public class TruckManager extends Model{
 
         trucks.remove(truckIndex);
     }
-
 
     public int getRegularTruckCount(){
 

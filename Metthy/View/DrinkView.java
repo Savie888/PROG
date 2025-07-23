@@ -119,9 +119,9 @@ public class DrinkView extends View{
         System.out.println("Error: Missing syrup bin for '" + syrupType + "'.");
     }
 
-    public void notEnoughSyrupMessage(String syrupType, double amount){
+    public void notEnoughSyrupMessage(String syrupType){
 
-        System.out.printf("Error: Not enough %s syrup in stock (needs %.2f oz).\n", syrupType, amount);
+        System.out.printf("Error: Not enough %s syrup in stock.\n", syrupType);
     }
 
     //PREPARE DRINK
@@ -358,23 +358,6 @@ public class DrinkView extends View{
         }while(addOn == null);
 
         return addOn;
-    }
-
-    public double selectAddOnAmount(){
-
-        double amount;
-
-        do{
-            System.out.println("Enter amount: ");
-            amount = scanner.nextDouble();
-            scanner.nextLine(); //Clear excess line
-
-            if(amount < 0 || amount > 640)
-                System.out.println("Invalid quantity!");
-
-        } while(amount < 0 || amount > 640);
-
-        return amount;
     }
 
     public void displayPreparationSteps(String type, String size, String brewType, double[] ingredients) {

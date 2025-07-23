@@ -72,4 +72,6 @@ public abstract class Cup implements BinContent{
 
         return volume;
     }
+
+    public abstract Cup clone();
 }

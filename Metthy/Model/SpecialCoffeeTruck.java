@@ -35,7 +35,6 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
     private ArrayList<BinContent> selectAddOns(){
 
         String repeat;
-        double amount;
         boolean validAddOn;
         BinContent addOn;
         ArrayList<BinContent> addOns = new ArrayList<>();
@@ -48,12 +47,13 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
                 drinkView.displayAvailableSyrup(bins);
 
                 addOn = drinkView.selectAddOn(bins);
-                amount = drinkView.selectAddOnAmount();
 
-                validAddOn = hasSufficientSyrup(addOn.getName(), amount);
+                validAddOn = hasSufficientSyrup(addOn.getName());
 
-                if(validAddOn)
+                if(validAddOn){
                     addOns.add(addOn);
+                    addOn.useQuantity(1); //Deduct ingredients from syrup bins
+                }
 
                 System.out.println("Continue adding? (yes/no): ");
                 repeat = drinkView.yesOrNo();
@@ -64,7 +64,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
         return addOns;
     }
 
-    private boolean hasSufficientSyrup(String syrupType, double amount){
+    private boolean hasSufficientSyrup(String syrupType){
 
         boolean validAddOns = true;
 
@@ -75,26 +75,12 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
             validAddOns = false;
         }
 
-        else if(syrupBin.getItemQuantity() < amount){
-            drinkView.notEnoughSyrupMessage(syrupType, amount);
+        else if(syrupBin.getItemQuantity() < 1){
+            drinkView.notEnoughSyrupMessage(syrupType);
             validAddOns = false;
         }
 
         return validAddOns;
-    }
-
-    private void useSyrupAddOns(ArrayList<BinContent> addOns){
-
-        int i;
-        double amount;
-
-        for(i = 0; i < addOns.size(); i++){
-
-            BinContent addOn = addOns.get(i);
-            amount  = addOn.getQuantity();
-
-            addOn.useQuantity(amount);
-        }
     }
 
     private int selectExtraShots(double coffeeGrams, double remainingCoffeeGrams){
@@ -156,7 +142,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
 
             for(i = 0; i < addOns.size(); i++){
                 BinContent addOn = addOns.get(i);
-                addOnDetails.append(String.format("%.1f oz %s", addOn.getQuantity(), addOn.getName()));
+                addOnDetails.append(String.format("%.1f oz %s", 1.0, addOn.getName()));
 
                 if(i < addOns.size() - 1){
                     addOnDetails.append(", ");
@@ -221,8 +207,6 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
             if(add.equalsIgnoreCase("yes"))
                 addOns = selectAddOns();
 
-            useSyrupAddOns(addOns); //Deduct ingredients from syrup bins
-
             System.out.println("Add extra espresso shots? (yes/no): ");
             extra = scanner.nextLine();
 
@@ -246,7 +230,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
                 for(i = 0; i < addOns.size(); i++){
                     BinContent addOn = addOns.get(i);
                     System.out.println(">>> Adding " + addOn.getName() + " Syrup");
-                    price += addOn.getQuantity() * drinkController.getSyrupOzPrice();
+                    price += drinkController.getSyrupOzPrice();
                 }
             }
 
@@ -265,7 +249,6 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
 
         else
             System.out.println("Not enough ingredients. Drink preparation cancelled.");
-
 
     }
 }

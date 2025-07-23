@@ -6,4 +6,10 @@ public class MediumCup extends Cup{
 
         super("Medium Cup", 64, 0, 12.0);
     }
+
+    @Override
+    public MediumCup clone() {
+
+        return new MediumCup();
+    }
 }

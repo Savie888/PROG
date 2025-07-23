@@ -6,4 +6,9 @@ public class Water extends Ingredient{
 
         super("Water", 640);
     }
+
+    @Override
+    public Water clone() {
+        return new Water();
+    }
 }

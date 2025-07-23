@@ -216,7 +216,105 @@ public class TruckView extends View{
         System.out.println("Special Trucks   : " + specialCount); //Display total number of regular trucks
         System.out.println("------------------------");
         System.out.println("Total Trucks     : " + total); //Display total number of trucks
+    }
 
+    /**
+     * Aggregates and displays the total inventory across all deployed trucks.
+     *
+     * @param trucks the list of all deployed coffee trucks
+     */
+    public void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
+
+        int i, j, k;
+        int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
+        double totalCoffeeGrams = 0, totalMilkOz = 0, totalWaterOz = 0, quantity;
+        BinContent content;
+        String item;
+        ArrayList<StorageBin> bins;
+
+        for(i = 0; i < trucks.size(); i++){
+
+            CoffeeTruck truck = trucks.get(i);
+            bins = truck.getBins();
+
+            for(j = 0; j < bins.size(); j++){
+
+                StorageBin bin = bins.get(j);
+
+                if(bin == null || bin.getContent() == null)
+                    continue; //Skip if bin is empty
+
+                content = bin.getContent();
+                item = content.getName();
+                quantity = bin.getItemQuantity();
+
+                //Calculate total inventory
+                switch(item){
+
+                    case "Coffee Bean":
+                        totalCoffeeGrams += quantity;
+                        break;
+
+                    case "Milk":
+                        totalMilkOz += quantity;
+                        break;
+
+                    case "Water":
+                        totalWaterOz += quantity;
+                        break;
+
+                    case "Small Cup":
+                        totalSmallCups += (int) quantity;
+                        break;
+
+                    case "Medium Cup":
+                        totalMediumCups += (int) quantity;
+                        break;
+
+                    case "Large Cup":
+                        totalLargeCups += (int) quantity;
+                        break;
+                }
+            }
+        }
+
+        //Display inventory
+        System.out.println("\n--- Aggregate Inventory ---");
+        System.out.println("Small Cups      : " + totalSmallCups);
+        System.out.println("Medium Cups     : " + totalMediumCups);
+        System.out.println("Large Cups      : " + totalLargeCups);
+        System.out.printf("Coffee Beans     : %.2f g\n", totalCoffeeGrams);
+        System.out.printf("Milk             : %.2f oz\n", totalMilkOz);
+        System.out.printf("Water            : %.2f oz\n", totalWaterOz);
+    }
+
+    public void displaySyrupInventory(ArrayList<CoffeeTruck> trucks){
+
+        int i, specialTruckCount = 0;
+
+        System.out.println("\n--- Syrup Inventory by Special Truck ---");
+
+        for(i = 0; i < trucks.size(); i++){
+
+            CoffeeTruck truck = trucks.get(i);
+
+            if(truck instanceof SpecialCoffeeTruck) {
+
+                specialTruckCount++;
+                System.out.println("\n--- Special Truck #" + specialTruckCount + " Syrups ---");
+
+                ArrayList<StorageBin> bins = truck.getBins();
+
+                for (StorageBin bin : bins) {
+                    if (bin != null && bin.getContent() instanceof Syrup) {
+                        Syrup syrup = (Syrup) bin.getContent();
+                        String name = syrup.getName();
+                        double quantity = syrup.getQuantity();
+                        System.out.printf("%-16s : %.2f oz\n", name + " Syrup", quantity);
+                    }
+                }
+            }
+        }
     }
 
     /**

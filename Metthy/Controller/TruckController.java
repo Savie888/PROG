@@ -42,7 +42,7 @@ public class TruckController{
             truckView.showBinSkipPrompt(binNumber);
 
         else{
-            content = truckManager.getIngredientFromOption(option);
+            content = truckManager.getIngredientFromOption(option).clone();
             max = content.getCapacity();
 
             do{
@@ -267,99 +267,13 @@ public class TruckController{
 
         truckView.displayTruckDeployment(regularCount, specialCount, totalCount);
 
+        truckView.displayTotalInventory(truckManager.getTrucks());
+
+        truckView.displaySyrupInventory(truckManager.getTrucks());
+
         truckView.displayTruckSalesInfo(truckManager.getTrucks());
     }
 
-    /**
-     * Aggregates and displays the total inventory across all deployed trucks.
-     * Includes coffee beans (grams), milk (oz), water (oz), and cup counts by size.
-     *
-     * //@param trucks the list of all deployed coffee trucks
-     */
-    /*private void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
-
-        int i, j;
-        int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
-        double totalCoffeeGrams = 0, totalMilkOz = 0, totalWaterOz = 0, quantity;
-        double totalHazelnutSyrupOz = 0, totalChocolateSyrupOz = 0, totalAlmondSyrupOz = 0, totalSucroseSyrupOz = 0;
-        String item;
-        ArrayList<StorageBin> bins;
-
-        for(i = 0; i < trucks.size(); i++){
-
-            CoffeeTruck truck = trucks.get(i);
-            bins = truck.getBins();
-
-            for(j = 0; j < bins.size(); j++){
-
-                StorageBin bin = bins.get(j);
-
-                if(bin == null || bin.getItemType() == null)
-                    continue; //Skip if bin is empty
-
-                item = bin.getItemType();
-                quantity = bin.getItemQuantity();
-
-                //Calculate total inventory
-                switch(item){
-
-                    case "Coffee Beans":
-                        totalCoffeeGrams += quantity;
-                        break;
-
-                    case "Milk":
-                        totalMilkOz += quantity;
-                        break;
-
-                    case "Water":
-                        totalWaterOz += quantity;
-                        break;
-
-                    case "Small Cup":
-                        totalSmallCups += (int) quantity;
-                        break;
-
-                    case "Medium Cup":
-                        totalMediumCups += (int) quantity;
-                        break;
-
-                    case "Large Cup":
-                        totalLargeCups += (int) quantity;
-                        break;
-
-                    case "Hazelnut":
-                        totalHazelnutSyrupOz += quantity;
-                        break;
-
-                    case "Chocolate":
-                        totalChocolateSyrupOz += quantity;
-                        break;
-
-                    case "Almond":
-                        totalAlmondSyrupOz += quantity;
-                        break;
-
-                    case "Sucrose":
-                        totalSucroseSyrupOz += quantity;
-                        break;
-                }
-            }
-        }
-
-        //Display inventory
-        System.out.println("\n--- Aggregate Inventory ---");
-        System.out.printf("Coffee Beans     : %.2f g\n", totalCoffeeGrams);
-        System.out.printf("Milk             : %.2f oz\n", totalMilkOz);
-        System.out.printf("Water            : %.2f oz\n", totalWaterOz);
-        System.out.printf("Hazelnut Syrup   : %.2f oz\n", totalHazelnutSyrupOz);
-        System.out.printf("Chocolate Syrup  : %.2f oz\n", totalChocolateSyrupOz);
-        System.out.printf("Almond Syrup     : %.2f oz\n", totalAlmondSyrupOz);
-        System.out.printf("Sucrose Syrup    : %.2f oz\n", totalSucroseSyrupOz);
-        System.out.println("Small Cups      : " + totalSmallCups);
-        System.out.println("Medium Cups     : " + totalMediumCups);
-        System.out.println("Large Cups      : " + totalLargeCups);
-    }
-*/
 
     public void displayTruckInfo(CoffeeTruck selectedTruck){
 
@@ -387,7 +301,6 @@ public class TruckController{
     /**
      * Restocks all bins that have an assigned item.
      */
-
     public void restockAllBins(CoffeeTruck truck){
 
         int i;

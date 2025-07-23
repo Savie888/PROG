@@ -6,4 +6,10 @@ public class Syrup extends Ingredient{
 
         super(name, 640);
     }
+
+    @Override
+    public Syrup clone(){
+
+        return this;
+    }
 }

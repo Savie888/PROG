@@ -1,10 +1,47 @@
 package Metthy.View;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class MenuView extends View{
+
+    private JFrame frame;
+    private JPanel cardPanel;
+    private CardLayout cardLayout;
+
+    private MainMenuPanel mainMenuPanel;
 
     public MenuView(){
 
         super();
+
+        frame = new JFrame("Java Jeeps");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
+
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
+
+        // Initialize panels
+        mainMenuPanel = new MainMenuPanel(this);
+        //createTruckPanel = new CreateTruckPanel(this);
+        //simulateTruckPanel = new SimulateTruckPanel(this);
+        //dashboardPanel = new DashboardPanel(this);
+
+        // Add panels to cardPanel
+        cardPanel.add(mainMenuPanel, "MAIN_MENU");
+        //cardPanel.add(createTruckPanel, "CREATE_TRUCK");
+        //cardPanel.add(simulateTruckPanel, "SIMULATE_TRUCK");
+        //cardPanel.add(dashboardPanel, "DASHBOARD");
+
+        frame.add(cardPanel);
+        frame.setVisible(true);
+    }
+
+    public void showPanel(String panelName){
+
+        cardLayout.show(cardPanel, panelName);
     }
 
     public void displayWelcomeMessage(){

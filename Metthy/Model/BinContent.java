@@ -17,4 +17,6 @@ public interface BinContent {
     void useQuantity(double amount);
 
     int getCapacity();
+
+    BinContent clone();
 }

@@ -203,42 +203,37 @@ public abstract class CoffeeTruck {
         brewType = "Standard"; //Set brew type to standard by default
         ratio = drinkView.getBrewRatio(brewType);
 
-        if(coffeeType == null || coffeeSize == null)
-            drinkView.invalidDrinkPrepInputMessage(); //Consider removing
+        Drink drink = drinkController.getDrink(coffeeType, coffeeSize);
+        ingredients = drinkController.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
 
-        else{
-            Drink drink = drinkController.getDrink(coffeeType, coffeeSize);
-            ingredients = drinkController.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
+        drinkView.showIngredients(coffeeType, coffeeSize, brewType, ingredients); //Show required ingredients
 
-            drinkView.showIngredients(coffeeType, coffeeSize, brewType, ingredients); //Show required ingredients
+        StorageBin beanBin = findBin("Coffee Bean"); //Find bin with coffee beans
+        StorageBin milkBin = findBin("Milk"); //Find bin with milk
+        StorageBin waterBin = findBin("Water"); //Find bin with water
+        StorageBin cupBin = findBin(coffeeSize + " Cup"); //Find bin with specified cup size
+        StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
 
-            StorageBin beanBin = findBin("Coffee Bean"); //Find bin with coffee beans
-            StorageBin milkBin = findBin("Milk"); //Find bin with milk
-            StorageBin waterBin = findBin("Water"); //Find bin with water
-            StorageBin cupBin = findBin(coffeeSize + " Cup"); //Find bin with specified cup size
-            StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
+        //Check if storage bins have sufficient ingredients
+        if(drinkController.hasSufficientIngredients(bins, ingredients)){
 
-            //Check if storage bins have sufficient ingredients
-            if(drinkController.hasSufficientIngredients(bins, ingredients)){
+            espressoGrams = ingredients[0];
+            milkOz = ingredients[1];
+            waterOz = ingredients[2];
+            price = drink.getPrice();
 
-                espressoGrams = ingredients[0];
-                milkOz = ingredients[1];
-                waterOz = ingredients[2];
-                price = drink.getPrice();
+            //Deduct ingredients from storage bins
+            drinkController.useIngredients(bins, ingredients);
 
-                //Deduct ingredients from storage bins
-                drinkController.useIngredients(bins, ingredients);
+            drinkView.displayPreparationSteps(coffeeType, coffeeSize, "Standard", ingredients);
+            drinkView.showTotalPrice(drink.getPrice());
 
-                drinkView.displayPreparationSteps(coffeeType, coffeeSize, "Standard", ingredients);
-                drinkView.showTotalPrice(drink.getPrice());
-
-                addToTotalSales(price); //Update total sales
-                recordSale(coffeeType, coffeeSize, espressoGrams, milkOz, waterOz, price); //Update sales log
-            }
-
-            else
-                drinkView.showInsufficientIngredients();
+            addToTotalSales(price); //Update total sales
+            recordSale(coffeeType, coffeeSize, espressoGrams, milkOz, waterOz, price); //Update sales log
         }
+
+        else
+            drinkView.showInsufficientIngredients();
     }
 
     //GETTERS AND SETTERS
