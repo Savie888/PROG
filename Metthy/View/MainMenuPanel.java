@@ -10,16 +10,25 @@ public class MainMenuPanel extends JPanel{
 
     public MainMenuPanel(MenuView menuView){
 
-        this.menuView = menuView;
+        backgroundImage = new ImageIcon("BG_jeep.png").getImage();
 
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
 
-        backgroundImage = new ImageIcon("BG_jeep.png").getImage(); // replace with your path
+        // Stylized title
+        JLabel titleLabel = new JLabel("Java Jeeps", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 36));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setOpaque(false);
+        titleLabel.setBackground(new Color(28, 20, 34)); // Persona 5 Crossroads bar vibe
 
-        // Centered Button panel
+        add(titleLabel, BorderLayout.CENTER);
+
+        // Button panel
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(new Color(45, 34, 59));
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setOpaque(false); // Transparent so background shows through
+
+        //buttonPanel.setBackground(new Color(45, 34, 59));
+        buttonPanel.setLayout(new GridLayout(2, 2, 10, 10));
 
         JButton createTruckButton = new JButton("Create Truck");
         JButton simulateTruckButton = new JButton("Simulate Truck");
@@ -33,29 +42,25 @@ public class MainMenuPanel extends JPanel{
         exitButton.addActionListener(e -> System.exit(0));
 
         // Style buttons
-        Font buttonFont = new Font("SansSerif", Font.BOLD, 16);
         for (JButton button : new JButton[]{createTruckButton, simulateTruckButton, dashboardButton, exitButton}) {
-            button.setFont(buttonFont);
-            button.setAlignmentX(Component.CENTER_ALIGNMENT);
-            button.setMaximumSize(new Dimension(200, 40));
-            buttonPanel.add(button);
-            buttonPanel.add(Box.createVerticalStrut(15)); // spacing
+            button.setFont(new Font("SansSerif", Font.PLAIN, 20));
+            button.setFocusPainted(false);
+            button.setBackground(new Color(80, 60, 100));
+            button.setForeground(Color.WHITE);
         }
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        add(buttonPanel, gbc);
+        buttonPanel.add(createTruckButton);
+        buttonPanel.add(simulateTruckButton);
+        buttonPanel.add(dashboardButton);
+        buttonPanel.add(exitButton);
+
+        add(buttonPanel, BorderLayout.CENTER);
     }
-
     @Override
-    protected void paintComponent(Graphics g){
-
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Draw the background scaled to the panel size
+        // Draw image scaled to panel size
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
+
 }
