@@ -80,6 +80,7 @@ public class DrinkController {
         do{
             syrupOzPrice = drinkView.enterSyrupOzPrice();
         } while(syrupOzPrice < 0);
+
     }
 
     /**
@@ -125,7 +126,7 @@ public class DrinkController {
         String[] types = {"Americano", "Latte", "Cappuccino"};
         String[] sizes = {"Small", "Medium", "Large"};
 
-        System.out.println("\n--- Drinks Menu ---");
+        drinkView.drinkMenuHeader();
 
         for(i = 0; i < types.length; i++){
 
@@ -391,7 +392,6 @@ public class DrinkController {
 
                 if (available < required)
                     flag = false;
-                System.out.println("success");
             }
         }
 

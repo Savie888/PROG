@@ -1,9 +1,6 @@
 package Metthy.Controller;
 
-import Metthy.Model.BinContent;
-import Metthy.Model.CoffeeTruck;
-import Metthy.Model.TruckManager;
-import Metthy.Model.StorageBin;
+import Metthy.Model.*;
 import Metthy.View.MenuView;
 import Metthy.View.TruckView;
 
@@ -76,6 +73,35 @@ public class TruckController{
                 StorageBin bin = bins.get(i);
                 truckView.showBinSetupPrompt(bin.getBinNumber());
                 modifyBin(truck, bin.getBinNumber());
+            }
+
+            truckView.showLoadoutComplete(truck);
+        }
+    }
+
+    public void specialTruckLoadout(SpecialCoffeeTruck truck){
+
+        int i, binNumber;
+        String setDefault;
+        ArrayList<StorageBin> bins = truck.getBins();
+
+        setDefault = truckView.showDefaultLoadoutPrompt(truck);
+
+        if(truckManager.isYes(setDefault))
+            truck.setDefaultLoadout(); //Set to default loadout
+
+        else{
+            for(i = 0; i < bins.size(); i++){
+
+                StorageBin bin = bins.get(i);
+                binNumber = bin.getBinNumber();
+                truckView.showBinSetupPrompt(binNumber);
+
+                if(binNumber == 9 || binNumber == 10)
+                    truck.modifySyrupBin(binNumber);
+
+                else
+                    modifyBin(truck, bin.getBinNumber());
             }
 
             truckView.showLoadoutComplete(truck);
@@ -209,15 +235,17 @@ public class TruckController{
         totalCount = truckManager.getTrucks().size();
 
         truckView.displayTruckDeployment(regularCount, specialCount, totalCount);
+
+        truckView.displayTruckSalesInfo(truckManager.getTrucks());
     }
 
     /**
      * Aggregates and displays the total inventory across all deployed trucks.
      * Includes coffee beans (grams), milk (oz), water (oz), and cup counts by size.
      *
-     * @param trucks the list of all deployed coffee trucks
+     * //@param trucks the list of all deployed coffee trucks
      */
-  /*  private void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
+    /*private void displayTotalInventory(ArrayList<CoffeeTruck> trucks){
 
         int i, j;
         int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
@@ -301,35 +329,8 @@ public class TruckController{
         System.out.println("Large Cups      : " + totalLargeCups);
     }
 */
-    /**
-     * Displays the sales log and total revenue across all deployed trucks.
-     * Also displays the individual sales log and revenue of each truck.
-     *
-     * @param trucks the list of all deployed coffee trucks
-     */
-    private void displayTotalSales(ArrayList<CoffeeTruck> trucks){
 
-        int i, j;
-        double combinedSales = 0;
 
-        System.out.println("\n--- Sales Summary ---");
-
-        for(i = 0; i < trucks.size(); i++){
-
-            CoffeeTruck truck = trucks.get(i);
-            combinedSales += truck.getTotalSales(); //Compute combined sales across all trucks
-            ArrayList<String> log = truck.getSalesLog();
-
-            for(j = 0; j < log.size(); j++)
-                System.out.println("[" + truck.getName() + "] " + log.get(j));
-
-            //Display total sales of a truck
-            System.out.printf("Total for [%s]   : $%.2f\n\n", truck.getName(), truck.getTotalSales());
-        }
-
-        //Display combined total sales of all truck
-        System.out.printf("\nTotal Sales    : $%.2f\n", combinedSales);
-    }
 
     public void displayTruckInfo(CoffeeTruck selectedTruck){
 
@@ -357,6 +358,7 @@ public class TruckController{
     /**
      * Restocks all bins that have an assigned item.
      */
+
     public void restockAllBins(CoffeeTruck truck){
 
         int i;

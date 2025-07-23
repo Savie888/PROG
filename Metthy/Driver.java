@@ -4,15 +4,16 @@ package Metthy;
     //Continue on method refactoring
     //Continue on Truck Maintenances
     //Error messages for duplicate name and location
-    //Test revamped Simulate Menu
     //Work on bins
 
 //Work on drinks
     //refactor for BinContent
     //use Cup object in getCupSize
-    //Check find bin
+    //transaction format
+    //syrup class
 
-
+//Special Truck Features
+    //Modify Syrup Bin in truck controller
 
 //Menu Looping
 //GUI

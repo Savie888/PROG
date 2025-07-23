@@ -131,18 +131,18 @@ public abstract class CoffeeTruck {
     public StorageBin findBin(String itemName){
 
         int i;
+        boolean flag = true;
         StorageBin result = null;
 
-        bins = getBins();
-        String item;
-
-        for(i = 0; i < bins.size(); i++){
+        for(i = 0; i < bins.size() && flag; i++){
 
             StorageBin bin = bins.get(i);
             BinContent content = bin.getContent();
 
-            if(content != null && content.getName().equalsIgnoreCase(itemName))
+            if(content != null && content.getName().equalsIgnoreCase(itemName)){
                 result = bin;
+                flag = false;
+            }
         }
 
         return result;
@@ -212,13 +212,12 @@ public abstract class CoffeeTruck {
 
             drinkView.showIngredients(coffeeType, coffeeSize, brewType, ingredients); //Show required ingredients
 
-            StorageBin beanBin = findBin("Coffee Beans"); //Find bin with coffee beans
+            StorageBin beanBin = findBin("Coffee Bean"); //Find bin with coffee beans
             StorageBin milkBin = findBin("Milk"); //Find bin with milk
             StorageBin waterBin = findBin("Water"); //Find bin with water
             StorageBin cupBin = findBin(coffeeSize + " Cup"); //Find bin with specified cup size
             StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
 
-            System.out.println("reached");
             //Check if storage bins have sufficient ingredients
             if(drinkController.hasSufficientIngredients(bins, ingredients)){
 

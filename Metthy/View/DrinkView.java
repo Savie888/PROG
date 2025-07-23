@@ -68,6 +68,11 @@ public class DrinkView extends View{
 
 
     //Messages
+
+    public void drinkMenuHeader(){
+        System.out.println("\n--- Drinks Menu ---");
+    }
+
     public void prepareDrinkHeader() {
         System.out.println("\n--- Prepare Coffee Drink ---");
     }

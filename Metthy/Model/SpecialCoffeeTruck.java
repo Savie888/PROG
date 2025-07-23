@@ -32,10 +32,10 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
         getBins().add(new StorageBin(10));
     }
 
-    /*
+
     public void modifySyrupBin(int binNumber){
 
-        int choice, maxCapacity = 640;
+        int choice;
         int binIndex = binNumber - 1;
         double quantity;
         boolean invalidQuantity;
@@ -105,7 +105,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
             }
         } while(bin.getItemType() == null || invalidQuantity);
     }
-*/
+
     /*
     public void setSpecialLoadout(){
 

@@ -4,6 +4,6 @@ public class Milk extends Ingredient{
 
     public Milk(){
 
-        super("Milk", 640, 0);
+        super("Milk", 640);
     }
 }

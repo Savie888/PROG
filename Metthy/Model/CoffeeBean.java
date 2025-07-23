@@ -4,6 +4,6 @@ public class CoffeeBean extends Ingredient{
 
     public CoffeeBean(){
 
-        super("Coffee Bean", 1008, 0);
+        super("Coffee Bean", 1008);
     }
 }

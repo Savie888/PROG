@@ -2,7 +2,6 @@ package Metthy.Model;
 
 public abstract class Ingredient implements BinContent{
 
-
     protected String type;
     protected double quantity;
 
@@ -10,13 +9,11 @@ public abstract class Ingredient implements BinContent{
      * The maximum capacity of this item.
      */
     protected int capacity;
-    protected double cost;
 
-    public Ingredient(String type, int capacity, double cost){
+    public Ingredient(String type, int capacity){
 
         this.type = type;
         this.capacity = capacity;
-        this.cost = cost;
     }
 
     @Override
@@ -75,9 +72,4 @@ public abstract class Ingredient implements BinContent{
 
         quantity -= amount;
     }
-    public double getCost() {
-
-        return cost;
-    }
-
 }

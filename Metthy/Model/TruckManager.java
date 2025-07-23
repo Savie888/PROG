@@ -136,6 +136,7 @@ public class TruckManager extends Model{
         trucks.remove(truckIndex);
     }
 
+
     public int getRegularTruckCount(){
 
         int i, count = 0;

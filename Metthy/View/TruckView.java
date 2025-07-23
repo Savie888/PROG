@@ -144,6 +144,10 @@ public class TruckView extends View{
         return repeat;
     }
 
+    public void salesSummaryHeader(){
+        System.out.println("\n--- Sales Summary ---");
+    }
+
     /**
      * Displays the current contents of all storage bins in the truck.
      * Empty bins are marked as [Empty].
@@ -219,6 +223,36 @@ public class TruckView extends View{
         System.out.println("Total Trucks     : " + total); //Display total number of trucks
 
     }
+
+    /**
+     * Displays the sales log and total revenue across all deployed trucks.
+     * Also displays the individual sales log and revenue of each truck.
+     *
+     * @param trucks the list of all deployed coffee trucks
+     */
+    public void displayTruckSalesInfo(ArrayList<CoffeeTruck> trucks){
+
+        int i, j;
+        double combinedSales = 0;
+
+        salesSummaryHeader();
+
+        for(i = 0; i < trucks.size(); i++){
+            CoffeeTruck truck = trucks.get(i);
+            combinedSales += truck.getTotalSales(); //Compute combined sales across all trucks
+            ArrayList<String> log = truck.getSalesLog();
+
+            for(j = 0; j < log.size(); j++)
+                System.out.println("[" + truck.getName() + "] " + log.get(j));
+
+            //Display total sales of a truck
+            System.out.printf("Total for [%s]   : $%.2f\n\n", truck.getName(), truck.getTotalSales());
+        }
+
+        //Display combined total sales of all truck
+        System.out.printf("\nTotal Sales    : $%.2f\n", combinedSales);
+    }
+
 
     //SELECTS
 
