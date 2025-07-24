@@ -15,7 +15,7 @@ public class MenuView extends View{
 
         super();
 
-        frame = new JFrame("Java Jeeps");
+        frame = new JFrame("Main Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
