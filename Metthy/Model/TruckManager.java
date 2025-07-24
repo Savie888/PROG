@@ -30,48 +30,48 @@ public class TruckManager extends Model{
      * Checks if the given truck name is already taken.
      *
      * @param name The name to check.
-     * @return true if the name is taken; false if it's available.
+     * @return true if the name is unique; false otherwise.
      */
-    public boolean checkName(String name) {
+    public boolean checkTruckName(String name) {
 
         int i;
-        boolean flag = false;
+        boolean flag = true;
 
         name = name.trim(); //Trim white spaces
 
-        for(i = 0; i < trucks.size() && !flag; i++){
+        for(i = 0; i < trucks.size() && flag; i++){
 
             CoffeeTruck truck = trucks.get(i);
 
             if(name.equalsIgnoreCase(truck.getName()))
-                flag = true; //Set flag to true if the name is already taken
+                flag = false; //Set flag to false if the name is already taken
         }
 
-        return flag; //Return true if name is taken, false otherwise
+        return flag; //Return true if name is unique, true otherwise
     }
 
     /**
      * Checks if the given truck location is already taken.
      *
      * @param location The location to check.
-     * @return true if the location is taken; false if it's available.
+     * @return true if the location is unique; false otherwise.
      */
-    public boolean checkLocation(String location) {
+    public boolean checkTruckLocation(String location) {
 
         int i;
-        boolean flag = false;
+        boolean flag = true;
 
         location = location.trim();
 
-        for(i = 0; i < trucks.size() && !flag; i++){
+        for(i = 0; i < trucks.size() && flag; i++){
 
             CoffeeTruck truck = trucks.get(i);
 
             if (location.equalsIgnoreCase(truck.getLocation()))
-                flag = true; //Set flag to true if the location is already taken
+                flag = false; //Set flag to false if the location is already taken
         }
 
-        return flag; //Return true if location is taken, false otherwise
+        return flag; //Return true if location is unique, false otherwise
     }
 
     public boolean checkTruckType(int choice){

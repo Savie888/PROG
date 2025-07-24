@@ -18,9 +18,26 @@ public class TruckController{
     public TruckController(MenuView menuView){
 
         this.menuView = menuView;
-        this.truckView = new TruckView();
+        this.truckView = new TruckView(this);
         this.truckManager = new TruckManager();
         this.drinkController = new DrinkController();
+
+        menuView.registerTruckPanels(truckView); //Load the other menu options involving trucks
+    }
+
+    public boolean isTruckNameUnique(String name){
+
+        return truckManager.checkTruckName(name);
+    }
+
+    public boolean isTruckLocationUnique(String location){
+
+        return truckManager.checkTruckLocation(location);
+    }
+
+    public boolean isValidTruckType(int truckType){
+
+        return truckManager.checkTruckType(truckType);
     }
 
     public void modifyBin(CoffeeTruck truck, int binNumber){
@@ -131,31 +148,17 @@ public class TruckController{
         }
     }
 
-    public void truckCreation(){
+    public void truckCreation(String name, String location, int truckType){
 
-        int truckType;
-        String name, location, setLoadout, repeat;
+        String setLoadout, repeat;
         CoffeeTruck truck;
 
         do{
-            do{
-                name = truckView.enterUniqueName();
-            } while(truckManager.checkName(name));
-
-            do{
-                location = truckView.enterUniqueLocation();
-            } while(truckManager.checkLocation(location));
-
-            do{
-                truckType = truckView.enterTruckType();
-            } while(!truckManager.checkTruckType(truckType));
-
             truck = truckManager.createTruck(name, location, truckType, drinkController);
 
             do{
                 setLoadout = truckView.showLoadoutPrompt();
             } while(!truckManager.checkYesOrNo(setLoadout));
-
 
             if(truckManager.isYes(setLoadout)){
 
@@ -273,7 +276,6 @@ public class TruckController{
 
         truckView.displayTruckSalesInfo(truckManager.getTrucks());
     }
-
 
     public void displayTruckInfo(CoffeeTruck selectedTruck){
 

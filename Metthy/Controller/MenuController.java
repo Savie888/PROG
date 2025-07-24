@@ -19,7 +19,7 @@ public class MenuController{
         switch (option) {
 
             case 1:
-                truckController.truckCreation();
+                //truckController.truckCreation();
                 break;
             case 2:
                 truckController.truckRemoval();

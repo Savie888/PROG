@@ -8,8 +8,11 @@ public class MenuView extends View{
     private JFrame frame;
     private JPanel cardPanel;
     private CardLayout cardLayout;
-
     private MainMenuPanel mainMenuPanel;
+    private CreateTruckPanel createTruckPanel;
+    //private RemoveTruckPanel removeTruckPanel;
+    //private SimulateTruckPanel simulateTruckPanel;
+    //private DashboardPanel dashboardPanel;
 
     public MenuView(){
 
@@ -25,13 +28,11 @@ public class MenuView extends View{
 
         // Initialize panels
         mainMenuPanel = new MainMenuPanel(this);
-        //createTruckPanel = new CreateTruckPanel(this);
         //simulateTruckPanel = new SimulateTruckPanel(this);
         //dashboardPanel = new DashboardPanel(this);
 
         // Add panels to cardPanel
         cardPanel.add(mainMenuPanel, "MAIN_MENU");
-        //cardPanel.add(createTruckPanel, "CREATE_TRUCK");
         //cardPanel.add(simulateTruckPanel, "SIMULATE_TRUCK");
         //cardPanel.add(dashboardPanel, "DASHBOARD");
 
@@ -39,7 +40,13 @@ public class MenuView extends View{
         frame.setUndecorated(true); // Remove title bar
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize
         frame.setVisible(true);
+    }
 
+    public void registerTruckPanels(TruckView truckView){
+
+        cardPanel.add(truckView.getCreateTruckPanel(), "CREATE_TRUCK");
+        //cardPanel.add(truckView.getSimulateTruckPanel(), "SIMULATE_TRUCK");
+        //cardPanel.add(truckView.getDashboardPanel(), "DASHBOARD");
     }
 
     public void showPanel(String panelName){

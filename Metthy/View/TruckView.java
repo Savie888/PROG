@@ -1,17 +1,53 @@
 package Metthy.View;
 
+import Metthy.Controller.TruckController;
 import Metthy.Model.*;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class TruckView extends View{
 
-    public TruckView(){
+    private JFrame frame;
+    private JPanel panelContainer;
+    private JPanel cardPanel;
+    private CardLayout cardLayout;
+
+    private CreateTruckPanel createTruckPanel;
+
+    public TruckView(TruckController controller){
 
         super();
+
+        cardLayout = new CardLayout();
+        panelContainer = new JPanel(cardLayout);
+
+        createTruckPanel = new CreateTruckPanel(controller);
+        //simulateTruckPanel = new SimulateTruckPanel(controller);
+        //dashboardPanel = new DashboardPanel(controller);
+
+        panelContainer.add(createTruckPanel, "CREATE");
+        //panelContainer.add(simulateTruckPanel, "SIMULATE");
+        //panelContainer.add(dashboardPanel, "DASHBOARD");
+
+        //this.setLayout(new BorderLayout());
+        //this.add(panelContainer, BorderLayout.CENTER);
     }
 
+    public void showPanel(String name){
+
+        cardLayout.show(panelContainer, name);
+    }
+
+
     //PROMPTS AND DISPLAYS
+
+    public CreateTruckPanel getCreateTruckPanel(){
+
+        return createTruckPanel;
+    }
+
     /**
      * Prompts user to enter a unique truck name
      *
