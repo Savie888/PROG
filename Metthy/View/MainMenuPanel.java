@@ -2,6 +2,8 @@ package Metthy.View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -9,18 +11,47 @@ public class MainMenuPanel extends JPanel{
 
     public MainMenuPanel(MenuView menuView) {
 
-        ImageIcon backgroundImage = new ImageIcon(getClass().getResource("BG_jeep.png"));
-        JLabel backgroundPanel = new JLabel(backgroundImage);
+        //Setup Background Image
+        ImageIcon backgroundImage = new ImageIcon(getClass().getResource("Red_City_BG.jpg"));
+        Image image = backgroundImage.getImage();
+
+        Image scaledImage = image.getScaledInstance(Toolkit.getDefaultToolkit().getScreenSize().width,
+                Toolkit.getDefaultToolkit().getScreenSize().height,
+                Image.SCALE_SMOOTH);
+
+        ImageIcon scaledBackgroundImage = new ImageIcon(scaledImage);
+        JLabel backgroundPanel = new JLabel(scaledBackgroundImage);
         backgroundPanel.setLayout(new BorderLayout());
+
+        //Setup Title
+        JPanel titleWrapper = new JPanel(new BorderLayout());
+        titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.X_AXIS));
+        titleWrapper.setOpaque(false);
+        titleWrapper.setBorder(BorderFactory.createEmptyBorder(120, 0, 10, 0)); // Adds spacing from top
 
         // Stylized title
         JLabel titleLabel = new JLabel("Java Jeeps Coffee Truck Simulator", SwingConstants.CENTER);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
+        titleLabel.setMaximumSize(new Dimension(5, 50));
         titleLabel.setForeground(Color.WHITE);
-        titleLabel.setOpaque(false);
         titleLabel.setBackground(Color.BLACK); //Persona 5 Crossroads bar vibe
+        titleLabel.setOpaque(true);
 
-        backgroundPanel.add(titleLabel, BorderLayout.NORTH);
+        titleLabel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.RED, 4),
+                BorderFactory.createEmptyBorder(10, 20, 10, 20) // top, left, bottom, right padding
+        ));
+
+        // Force label to hug its text
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setMaximumSize(titleLabel.getPreferredSize());
+
+        // Add label centered in wrapper
+        titleWrapper.add(Box.createHorizontalGlue());
+        titleWrapper.add(titleLabel);
+        titleWrapper.add(Box.createHorizontalGlue());
+
+        backgroundPanel.add(titleWrapper, BorderLayout.NORTH);
 
         // Panel to center the button panel
         JPanel centerWrapper = new JPanel(new GridBagLayout());
@@ -51,7 +82,7 @@ public class MainMenuPanel extends JPanel{
             btn.setFocusPainted(false);
             btn.setBackground(Color.BLACK);
             btn.setForeground(Color.WHITE);
-            btn.setBorder(BorderFactory.createLineBorder(Color.RED, 4));
+            btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4));
             btn.setFont(new Font("SansSerif", Font.BOLD, 18));
 
             addButtonHoverAnimation(btn, originalSize);
@@ -69,23 +100,22 @@ public class MainMenuPanel extends JPanel{
 
     private void addButtonHoverAnimation(JButton btn, Dimension ogSize) {
 
-        Dimension originalSize = ogSize;
         Dimension hoverSize = new Dimension(210, 70);
         Timer[] currentTimer = {null};
 
         // Set initial size
-        btn.setPreferredSize(originalSize);
-        btn.setMaximumSize(originalSize);
+        btn.setPreferredSize(ogSize);
+        btn.setMaximumSize(ogSize);
 
         btn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                startAnimation(btn, originalSize, hoverSize, 5, currentTimer);
+                startAnimation(btn, ogSize, hoverSize, 5, currentTimer);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                startAnimation(btn, hoverSize, originalSize, 5, currentTimer);
+                startAnimation(btn, hoverSize, ogSize, 5, currentTimer);
             }
         });
     }

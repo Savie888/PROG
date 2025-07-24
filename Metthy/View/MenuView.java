@@ -36,7 +36,10 @@ public class MenuView extends View{
         //cardPanel.add(dashboardPanel, "DASHBOARD");
 
         frame.add(cardPanel);
+        frame.setUndecorated(true); // Remove title bar
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize
         frame.setVisible(true);
+
     }
 
     public void showPanel(String panelName){
