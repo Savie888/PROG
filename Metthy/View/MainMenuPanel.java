@@ -1,5 +1,7 @@
 package Metthy.View;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -67,10 +69,29 @@ public class MainMenuPanel extends JPanel{
         JButton dashboardButton = new JButton("Dashboard");
         JButton exitButton = new JButton("Exit");
 
-        createTruckButton.addActionListener(e -> menuView.showPanel("CREATE_TRUCK"));
-        simulateTruckButton.addActionListener(e -> menuView.showPanel("SIMULATE_TRUCK"));
-        dashboardButton.addActionListener(e -> menuView.showPanel("DASHBOARD"));
-        exitButton.addActionListener(e -> System.exit(0));
+        createTruckButton.addActionListener(e -> {
+
+            SoundPlayer.playSound("select_sound_effect.wav");
+            menuView.showPanel("CREATE_TRUCK");
+        });
+
+        simulateTruckButton.addActionListener(e -> {
+            SoundPlayer.playSound("select_sound_effect.wav");
+            menuView.showPanel("SIMULATE_TRUCK");
+        });
+
+        dashboardButton.addActionListener(e -> {
+            SoundPlayer.playSound("select_sound_effect.wav");
+            menuView.showPanel("DASHBOARD");
+        });
+
+        exitButton.addActionListener(e -> {
+            SoundPlayer.playSound("select_sound_effect.wav");
+            // Add a slight delay before exiting so the sound plays
+            Timer timer = new Timer(300, evt -> System.exit(0));
+            timer.setRepeats(false);
+            timer.start();
+        });
 
         // Style and center align
         JButton[] buttons = { createTruckButton, simulateTruckButton, dashboardButton, exitButton };
