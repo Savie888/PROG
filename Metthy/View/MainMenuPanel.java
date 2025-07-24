@@ -15,10 +15,10 @@ public class MainMenuPanel extends JPanel{
 
         // Stylized title
         JLabel titleLabel = new JLabel("Java Jeeps Coffee Truck Simulator", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Serif", Font.BOLD, 36));
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setOpaque(false);
-        titleLabel.setBackground(new Color(28, 20, 34)); // Persona 5 Crossroads bar vibe
+        titleLabel.setBackground(Color.BLACK); //Persona 5 Crossroads bar vibe
 
         backgroundPanel.add(titleLabel, BorderLayout.NORTH);
 
@@ -49,8 +49,10 @@ public class MainMenuPanel extends JPanel{
             btn.setMaximumSize(originalSize);
             btn.setOpaque(true);
             btn.setFocusPainted(false);
-            btn.setBackground(new Color(190, 0, 0)); // deep red, like Persona 5 palette
-            btn.setForeground(Color.BLACK);
+            btn.setBackground(Color.BLACK);
+            btn.setForeground(Color.WHITE);
+            btn.setBorder(BorderFactory.createLineBorder(Color.RED, 4));
+            btn.setFont(new Font("SansSerif", Font.BOLD, 18));
 
             addButtonHoverAnimation(btn, originalSize);
 
