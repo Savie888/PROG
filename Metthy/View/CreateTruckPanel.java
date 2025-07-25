@@ -10,21 +10,21 @@ import java.awt.*;
 public class CreateTruckPanel extends BasePanel {
 
     private final TruckController controller;
+    private final TruckView truckView;
     private final MenuView menuView;
     private BackgroundPanel backgroundPanel;
-    private JPanel titleWrapper;
     private JLabel titleLabel, errorLabel, locationLabel, truckTypeLabel;
     private JTextField nameField, locationField;
     private JComboBox<String> typeBox;
     private JButton createButton;
-    private JPanel formPanel;
-    private JPanel formBackgroundPanel;
+    private JPanel titleWrapper, formPanel, formBackgroundPanel;
     private CoffeeTruck truck;
 
-    public CreateTruckPanel(TruckController controller, MenuView menuView){
+    public CreateTruckPanel(TruckController controller, MenuView menuView, TruckView truckView){
 
         this.controller = controller;
         this.menuView = menuView;
+        this.truckView = truckView;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -106,9 +106,9 @@ public class CreateTruckPanel extends BasePanel {
         JLabel nameLabel = new JLabel("Enter truck name:");
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        //formPanel.add(Box.createVerticalStrut(20));
+        formPanel.add(Box.createVerticalStrut(20));
         formPanel.add(nameLabel);
-        //formPanel.add(Box.createVerticalStrut(5));
+        formPanel.add(Box.createVerticalStrut(5));
         formPanel.add(nameField);
 
         nameField.addActionListener(e -> {
@@ -191,7 +191,7 @@ public class CreateTruckPanel extends BasePanel {
 
             truck = controller.truckCreation(name, location, type); //Create truck
 
-            truckLoadout();
+            truckLoadout(truck);
 
             int repeat = repeat();
 
@@ -203,40 +203,8 @@ public class CreateTruckPanel extends BasePanel {
         });
     }
 
-    public int repeat(){
 
-        int choice = JOptionPane.showOptionDialog(
-                this,
-                "Truck created successfully!\nCreate another one?",
-                "Success",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                new Object[] { "Yes, create another", "Back to Menu" },
-                "Yes, create another"
-        );
-
-        return choice;
-    }
-
-    private void resetFields(){
-
-        nameField.setText("");
-        locationField.setText("");
-        typeBox.setSelectedIndex(0);
-
-        // Only show nameField
-        locationLabel.setVisible(false);
-        locationField.setVisible(false);
-        typeBox.setVisible(false);
-        truckTypeLabel.setVisible(false);
-        createButton.setVisible(false);
-
-        // Optionally reset error
-        errorLabel.setText(" ");
-    }
-
-    public void truckLoadout(){
+    public void truckLoadout(CoffeeTruck truck){
 
         //Set loadout option
         int response = setLoadoutOption();
@@ -249,10 +217,8 @@ public class CreateTruckPanel extends BasePanel {
                 controller.setDefaultTruckLoadout(truck);
 
             else{
-                if(truck instanceof SpecialCoffeeTruck)
-                    controller.specialTruckLoadout((SpecialCoffeeTruck) truck);
-                else
-                    controller.truckLoadout(truck);
+
+                truckView.showTruckLoadoutPanel(truck);
             }
         }
     }
@@ -281,5 +247,37 @@ public class CreateTruckPanel extends BasePanel {
         return set;
     }
 
+    private void resetFields(){
+
+        nameField.setText("");
+        locationField.setText("");
+        typeBox.setSelectedIndex(0);
+
+        // Only show nameField
+        locationLabel.setVisible(false);
+        locationField.setVisible(false);
+        typeBox.setVisible(false);
+        truckTypeLabel.setVisible(false);
+        createButton.setVisible(false);
+
+        // Optionally reset error
+        errorLabel.setText(" ");
+    }
+
+    public int repeat(){
+
+        int choice = JOptionPane.showOptionDialog(
+                this,
+                "Truck created successfully!\nCreate another one?",
+                "Success",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                new Object[] { "Yes, create another", "Back to Menu" },
+                "Yes, create another"
+        );
+
+        return choice;
+    }
 
 }

@@ -35,12 +35,6 @@ public class TruckController{
         return truckManager.checkTruckLocation(location);
     }
 
-    /* not needed
-    public boolean isValidTruckType(int truckType){
-
-        return truckManager.checkTruckType(truckType);
-    }
-*/
     public void modifyBin(CoffeeTruck truck, int binNumber){
 
         int option, max;
@@ -143,25 +137,23 @@ public class TruckController{
 
         return truckManager.createTruck(name, location, truckType, drinkController);
     }
-        /*
-            do{
-                setLoadout = truckView.showLoadoutPrompt();
-            } while(!truckManager.checkYesOrNo(setLoadout));
 
-            if(truckManager.isYes(setLoadout)){
-
-                if(truck instanceof RegularCoffeeTruck)
-                    truckLoadout(truck);
-                else
-                    specialTruckLoadout((SpecialCoffeeTruck) truck);
-            }
-
-            //Add new truck to arraylist of trucks
-            truckManager.addTruck(truck);
-
-            repeat = truckView.repeatTruckCreationPrompt();
+    public ArrayList<BinContent> getIngredients(){
 
 
+        return truckManager.getIngredientList();
+    }
+
+    public BinContent getIngredientFromOption(int option) {
+
+        return truckManager.getIngredientFromOption(option);
+    }
+
+    public void assignItemToBin(CoffeeTruck truck, StorageBin bin, BinContent content, double itemQuantity){
+
+        truck.assignItemToBin(bin, content, itemQuantity);
+    }
+    /*
         if(pricesInitialized){
             drinkController.setIngredientPrices(); //Set initial ingredient prices
             pricesInitialized = false;

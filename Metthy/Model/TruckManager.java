@@ -173,4 +173,8 @@ public class TruckManager extends Model{
         return trucks;
     }
 
+    public ArrayList<BinContent> getIngredientList() {
+
+        return ingredientList;
+    }
 }

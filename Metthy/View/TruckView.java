@@ -9,28 +9,34 @@ import java.util.ArrayList;
 
 public class TruckView extends View{
 
+    private MenuView menuView;
     private JFrame frame;
     private JPanel panelContainer;
     private JPanel cardPanel;
     private CardLayout cardLayout;
 
     private CreateTruckPanel createTruckPanel;
+    private TruckLoadoutPanel truckLoadoutPanel;
 
     public TruckView(TruckController controller, MenuView menuView){
 
         super();
+        this.menuView = menuView;
 
         cardLayout = new CardLayout();
         panelContainer = new JPanel(cardLayout);
 
-        createTruckPanel = new CreateTruckPanel(controller, menuView);
+        createTruckPanel = new CreateTruckPanel(controller, menuView, this);
+        truckLoadoutPanel = new TruckLoadoutPanel(controller, menuView);
         //simulateTruckPanel = new SimulateTruckPanel(controller);
         //dashboardPanel = new DashboardPanel(controller);
 
-        panelContainer.add(createTruckPanel, "CREATE");
+        panelContainer.add(createTruckPanel, "CREATE_TRUCK");
+        panelContainer.add(truckLoadoutPanel, "TRUCK_LOADOUT");
         //panelContainer.add(simulateTruckPanel, "SIMULATE");
         //panelContainer.add(dashboardPanel, "DASHBOARD");
 
+        panelContainer.setVisible(true);
         //this.setLayout(new BorderLayout());
         //this.add(panelContainer, BorderLayout.CENTER);
     }
@@ -40,12 +46,22 @@ public class TruckView extends View{
         cardLayout.show(panelContainer, name);
     }
 
-
     //PROMPTS AND DISPLAYS
 
     public CreateTruckPanel getCreateTruckPanel(){
 
         return createTruckPanel;
+    }
+
+    public TruckLoadoutPanel getTruckLoadoutPanel(){
+
+        return truckLoadoutPanel;
+    }
+
+    public void showTruckLoadoutPanel(CoffeeTruck truck) {
+
+        truckLoadoutPanel.startLoadout(truck);
+        menuView.showPanel("TRUCK_LOADOUT");
     }
 
     /**

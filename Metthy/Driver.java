@@ -12,8 +12,8 @@ package Metthy;
 
 //GUI
     //Menu logic
-    //Create Truck Menu Formatting
-        //Move Create Button to constructor
+    //Fix Create Truck Menu Formatting
+    //Implement truck loadout logic
 
 
 import Metthy.Controller.MenuController;
