@@ -11,7 +11,8 @@ package Metthy;
 //Change currency to peso
 
 //GUI
-    //Start with main menu
+    //Menu logic
+    //Finish Create Truck Menu
 
 
 import Metthy.Controller.MenuController;

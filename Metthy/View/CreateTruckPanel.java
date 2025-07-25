@@ -157,7 +157,7 @@ public class CreateTruckPanel extends BasePanel {
             String location = locationField.getText().trim();
             int type = Integer.parseInt(((String) typeBox.getSelectedItem()).substring(0, 1));
 
-            controller.truckCreation(name, location, type);
+            //controller.truckCreation(name, location, type);
         });
     }
 }
