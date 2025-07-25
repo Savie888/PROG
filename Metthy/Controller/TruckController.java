@@ -18,7 +18,7 @@ public class TruckController{
     public TruckController(MenuView menuView){
 
         this.menuView = menuView;
-        this.truckView = new TruckView(this);
+        this.truckView = new TruckView(this, menuView);
         this.truckManager = new TruckManager();
         this.drinkController = new DrinkController();
 
@@ -35,11 +35,12 @@ public class TruckController{
         return truckManager.checkTruckLocation(location);
     }
 
+    /* not needed
     public boolean isValidTruckType(int truckType){
 
         return truckManager.checkTruckType(truckType);
     }
-
+*/
     public void modifyBin(CoffeeTruck truck, int binNumber){
 
         int option, max;
@@ -99,63 +100,50 @@ public class TruckController{
     public void truckLoadout(CoffeeTruck truck){
 
         int i;
-        String setDefault;
         ArrayList<StorageBin> bins = truck.getBins();
 
-        setDefault = truckView.showDefaultLoadoutPrompt(truck);
+        for(i = 0; i < bins.size(); i++){
 
-        if(truckManager.isYes(setDefault))
-            truck.setDefaultLoadout(); //Set to default loadout
-
-        else{
-            for(i = 0; i < bins.size(); i++){
-
-                StorageBin bin = bins.get(i);
-                truckView.showBinSetupPrompt(bin.getBinNumber());
-                modifyBin(truck, bin.getBinNumber());
-            }
-
-            truckView.showLoadoutComplete(truck);
+            StorageBin bin = bins.get(i);
+            truckView.showBinSetupPrompt(bin.getBinNumber());
+            modifyBin(truck, bin.getBinNumber());
         }
+
+        truckView.showLoadoutComplete(truck);
     }
 
     public void specialTruckLoadout(SpecialCoffeeTruck truck){
 
         int i, binNumber;
-        String setDefault;
         ArrayList<StorageBin> bins = truck.getBins();
 
-        setDefault = truckView.showDefaultLoadoutPrompt(truck);
+        for(i = 0; i < bins.size(); i++){
 
-        if(truckManager.isYes(setDefault))
-            truck.setDefaultLoadout(); //Set to default loadout
+            StorageBin bin = bins.get(i);
+            binNumber = bin.getBinNumber();
+            truckView.showBinSetupPrompt(binNumber);
 
-        else{
-            for(i = 0; i < bins.size(); i++){
+            if(binNumber == 9 || binNumber == 10)
+                modifySyrupBin(truck, binNumber);
 
-                StorageBin bin = bins.get(i);
-                binNumber = bin.getBinNumber();
-                truckView.showBinSetupPrompt(binNumber);
-
-                if(binNumber == 9 || binNumber == 10)
-                    modifySyrupBin(truck, binNumber);
-
-                else
-                    modifyBin(truck, bin.getBinNumber());
-            }
-
-            truckView.showLoadoutComplete(truck);
+            else
+                modifyBin(truck, bin.getBinNumber());
         }
+
+        truckView.showLoadoutComplete(truck);
     }
 
-    public void truckCreation(String name, String location, int truckType){
+    public void setDefaultTruckLoadout(CoffeeTruck truck){
 
-        String setLoadout, repeat;
-        CoffeeTruck truck;
+        truck.setDefaultLoadout();
+    }
 
-        do{
-            truck = truckManager.createTruck(name, location, truckType, drinkController);
+    public CoffeeTruck truckCreation(String name, String location, int truckType) {
 
+
+        return truckManager.createTruck(name, location, truckType, drinkController);
+    }
+        /*
             do{
                 setLoadout = truckView.showLoadoutPrompt();
             } while(!truckManager.checkYesOrNo(setLoadout));
@@ -173,13 +161,12 @@ public class TruckController{
 
             repeat = truckView.repeatTruckCreationPrompt();
 
-        } while(repeat.equalsIgnoreCase("yes"));
 
         if(pricesInitialized){
             drinkController.setIngredientPrices(); //Set initial ingredient prices
             pricesInitialized = false;
         }
-    }
+        */
 
     /**
      * Removes a coffee truck selected by the user.

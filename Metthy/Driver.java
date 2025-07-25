@@ -13,6 +13,7 @@ package Metthy;
 //GUI
     //Menu logic
     //Finish Create Truck Menu
+        //Move Create Button to constructor
 
 
 import Metthy.Controller.MenuController;

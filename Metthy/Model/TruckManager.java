@@ -128,6 +128,8 @@ public class TruckManager extends Model{
         else
             truck = new SpecialCoffeeTruck(name, location, this, drinkController);
 
+        addTruck(truck);
+
         return truck;
     }
 

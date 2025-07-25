@@ -16,14 +16,14 @@ public class TruckView extends View{
 
     private CreateTruckPanel createTruckPanel;
 
-    public TruckView(TruckController controller){
+    public TruckView(TruckController controller, MenuView menuView){
 
         super();
 
         cardLayout = new CardLayout();
         panelContainer = new JPanel(cardLayout);
 
-        createTruckPanel = new CreateTruckPanel(controller);
+        createTruckPanel = new CreateTruckPanel(controller, menuView);
         //simulateTruckPanel = new SimulateTruckPanel(controller);
         //dashboardPanel = new DashboardPanel(controller);
 
