@@ -12,7 +12,7 @@ package Metthy;
 
 //GUI
     //Menu logic
-    //Finish Create Truck Menu
+    //Create Truck Menu Formatting
         //Move Create Button to constructor
 
 

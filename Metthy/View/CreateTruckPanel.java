@@ -10,10 +10,10 @@ import java.awt.*;
 public class CreateTruckPanel extends BasePanel {
 
     private final TruckController controller;
+    private final MenuView menuView;
     private BackgroundPanel backgroundPanel;
     private JPanel titleWrapper;
-    private JLabel titleLabel;
-    private JLabel errorLabel;
+    private JLabel titleLabel, errorLabel, locationLabel, truckTypeLabel;
     private JTextField nameField, locationField;
     private JComboBox<String> typeBox;
     private JButton createButton;
@@ -24,6 +24,7 @@ public class CreateTruckPanel extends BasePanel {
     public CreateTruckPanel(TruckController controller, MenuView menuView){
 
         this.controller = controller;
+        this.menuView = menuView;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -41,15 +42,8 @@ public class CreateTruckPanel extends BasePanel {
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
         titleLabel.setMaximumSize(new Dimension(5, 50));
         titleLabel.setForeground(Color.BLACK);
-        //titleLabel.setBackground(Color.BLACK);
         titleLabel.setOpaque(false);
 
-/*
-        titleLabel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.WHITE, 4),
-                BorderFactory.createEmptyBorder(10, 20, 10, 20) // top, left, bottom, right padding
-        ));
-*/
         // Force label to hug its text
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setMaximumSize(titleLabel.getPreferredSize());
@@ -88,7 +82,7 @@ public class CreateTruckPanel extends BasePanel {
             menuView.showPanel("MAIN_MENU");
         });
 
-        // Error label
+        //Error label
         errorLabel = new JLabel(" ");
         errorLabel.setForeground(Color.RED);
         errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -96,11 +90,10 @@ public class CreateTruckPanel extends BasePanel {
 
         setupNameField();
 
-        // Add formPanel into the background container
+        //Add formPanel into the background container
         formBackgroundPanel.add(formPanel, BorderLayout.CENTER);
-
         backgroundPanel.add(formBackgroundPanel, BorderLayout.CENTER);
-        backgroundPanel.add(bottomPanel, BorderLayout.SOUTH);
+        backgroundPanel.add(bottomPanel, BorderLayout.SOUTH); //Add south panel
     }
 
     private void setupNameField(){
@@ -113,9 +106,9 @@ public class CreateTruckPanel extends BasePanel {
         JLabel nameLabel = new JLabel("Enter truck name:");
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        formPanel.add(Box.createVerticalStrut(20));
+        //formPanel.add(Box.createVerticalStrut(20));
         formPanel.add(nameLabel);
-        formPanel.add(Box.createVerticalStrut(5));
+        //formPanel.add(Box.createVerticalStrut(5));
         formPanel.add(nameField);
 
         nameField.addActionListener(e -> {
@@ -141,12 +134,12 @@ public class CreateTruckPanel extends BasePanel {
         locationField.setMaximumSize(new Dimension(200, 30));
         locationField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel locationLabel = new JLabel("Enter truck location:");
+        locationLabel = new JLabel("Enter truck location:");
         locationLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        formPanel.add(Box.createVerticalStrut(20));
+        //formPanel.add(Box.createVerticalStrut(20));
         formPanel.add(locationLabel);
-        formPanel.add(Box.createVerticalStrut(5));
+        //formPanel.add(Box.createVerticalStrut(5));
         formPanel.add(locationField);
         formPanel.revalidate();
         formPanel.repaint();
@@ -163,6 +156,7 @@ public class CreateTruckPanel extends BasePanel {
             }
 
             errorLabel.setText(" ");
+
             setupTruckTypeSelector();
         });
     }
@@ -174,7 +168,7 @@ public class CreateTruckPanel extends BasePanel {
         typeBox.setMaximumSize(new Dimension(200, 30));
         typeBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel truckTypeLabel = new JLabel("Select truck type:");
+        truckTypeLabel = new JLabel("Select truck type:");
         truckTypeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         createButton = new JButton("Create Truck");
@@ -199,17 +193,47 @@ public class CreateTruckPanel extends BasePanel {
 
             truckLoadout();
 
-            // Reset fields
-            nameField.setText("");
-            locationField.setText("");
-            typeBox.setSelectedIndex(0);
+            int repeat = repeat();
+
+            if (repeat == JOptionPane.YES_OPTION)
+                resetFields();
+
+            else
+                menuView.showPanel("MAIN_MENU");
         });
+    }
 
+    public int repeat(){
 
-        /*
-        else {
-            // set prices or return to main menu
-        }*/
+        int choice = JOptionPane.showOptionDialog(
+                this,
+                "Truck created successfully!\nCreate another one?",
+                "Success",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                new Object[] { "Yes, create another", "Back to Menu" },
+                "Yes, create another"
+        );
+
+        return choice;
+    }
+
+    private void resetFields(){
+
+        nameField.setText("");
+        locationField.setText("");
+        typeBox.setSelectedIndex(0);
+
+        // Only show nameField
+        locationLabel.setVisible(false);
+        locationField.setVisible(false);
+        typeBox.setVisible(false);
+        truckTypeLabel.setVisible(false);
+        createButton.setVisible(false);
+
+        // Optionally reset error
+        errorLabel.setText(" ");
     }
 
     public void truckLoadout(){
@@ -257,8 +281,5 @@ public class CreateTruckPanel extends BasePanel {
         return set;
     }
 
-    public int repeat(){
 
-
-    }
 }
