@@ -18,8 +18,8 @@ public class TruckController{
     public TruckController(MenuView menuView){
 
         this.menuView = menuView;
-        this.truckView = new TruckView(this, menuView);
         this.truckManager = new TruckManager();
+        this.truckView = new TruckView(this, menuView);
         this.drinkController = new DrinkController();
 
         menuView.registerTruckPanels(truckView); //Load the other menu options involving trucks
@@ -392,5 +392,10 @@ public class TruckController{
     public TruckView getTruckView() {
 
         return truckView;
+    }
+
+    public ArrayList<CoffeeTruck> getTrucks(){
+
+        return truckManager.getTrucks();
     }
 }

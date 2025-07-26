@@ -44,7 +44,7 @@ public class MenuView extends View{
 
         cardPanel.add(truckView.getCreateTruckPanel(), "CREATE_TRUCK");
         cardPanel.add(truckView.getTruckLoadoutPanel(), "TRUCK_LOADOUT");
-        //cardPanel.add(truckView.getSimulateTruckPanel(), "SIMULATE_TRUCK");
+        cardPanel.add(truckView.getSimulateTruckPanel(), "SIMULATE_TRUCK");
         //cardPanel.add(truckView.getDashboardPanel(), "DASHBOARD");
     }
 

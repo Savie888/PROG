@@ -13,7 +13,11 @@ package Metthy;
 //GUI
     //Menu logic
     //Fix Create Truck Menu Formatting
-    //Implement truck loadout logic
+    //Implement Truck Loadout Menu
+        //Change JOptionPanel with Label
+    //Simulate Menu
+        //View Truck Info //ASAP
+    //Truck display in dashboard //POSTPONED
 
 
 import Metthy.Controller.MenuController;

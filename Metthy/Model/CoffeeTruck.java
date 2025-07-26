@@ -16,6 +16,7 @@ public abstract class CoffeeTruck {
      * The current location of the coffee truck.
      */
     protected String location;
+
     protected ArrayList<StorageBin> bins;
     /**
      * Log of all sales made by this truck.
@@ -308,4 +309,9 @@ public abstract class CoffeeTruck {
         return totalSales;
     }
 
+    @Override
+    public String toString() {
+
+        return name;
+    }
 }

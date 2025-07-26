@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class TruckView extends View{
 
+    private TruckController truckController;
     private MenuView menuView;
     private JFrame frame;
     private JPanel panelContainer;
@@ -17,23 +18,26 @@ public class TruckView extends View{
 
     private CreateTruckPanel createTruckPanel;
     private TruckLoadoutPanel truckLoadoutPanel;
+    private SimulateTruckPanel simulateTruckPanel;
+    private DashboardPanel dashboardPanel;
 
-    public TruckView(TruckController controller, MenuView menuView){
+    public TruckView(TruckController truckController, MenuView menuView){
 
         super();
+        this.truckController = truckController;
         this.menuView = menuView;
 
         cardLayout = new CardLayout();
         panelContainer = new JPanel(cardLayout);
 
-        createTruckPanel = new CreateTruckPanel(controller, menuView, this);
-        truckLoadoutPanel = new TruckLoadoutPanel(controller, menuView);
-        //simulateTruckPanel = new SimulateTruckPanel(controller);
-        //dashboardPanel = new DashboardPanel(controller);
+        createTruckPanel = new CreateTruckPanel(truckController, menuView, this); //maybe remove truckView
+        truckLoadoutPanel = new TruckLoadoutPanel(truckController, menuView);
+        simulateTruckPanel = new SimulateTruckPanel(truckController, menuView);
+        //dashboardPanel = new DashboardPanel(truckController, menuView);
 
         panelContainer.add(createTruckPanel, "CREATE_TRUCK");
         panelContainer.add(truckLoadoutPanel, "TRUCK_LOADOUT");
-        //panelContainer.add(simulateTruckPanel, "SIMULATE");
+        panelContainer.add(simulateTruckPanel, "SIMULATE_TRUCK");
         //panelContainer.add(dashboardPanel, "DASHBOARD");
 
         panelContainer.setVisible(true);
@@ -56,6 +60,16 @@ public class TruckView extends View{
     public TruckLoadoutPanel getTruckLoadoutPanel(){
 
         return truckLoadoutPanel;
+    }
+
+    public SimulateTruckPanel getSimulateTruckPanel(){
+
+        return simulateTruckPanel;
+    }
+
+    public DashboardPanel getDashboardPanel(){
+
+        return dashboardPanel;
     }
 
     public void showTruckLoadoutPanel(CoffeeTruck truck) {
