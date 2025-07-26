@@ -79,4 +79,9 @@ public abstract class Ingredient implements BinContent{
 
     public abstract Ingredient clone();
 
+    @Override
+    public String toString() {
+
+        return type;
+    }
 }

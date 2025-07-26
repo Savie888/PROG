@@ -7,6 +7,7 @@ import Metthy.Model.StorageBin;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class TruckLoadoutPanel extends BasePanel {
@@ -15,13 +16,14 @@ public class TruckLoadoutPanel extends BasePanel {
     private TruckView truckView;
     private MenuView menuView;
 
-    private JComboBox<String> ingredientBox;
+    private JComboBox<BinContent> ingredientBox;
     private JSpinner quantitySpinner;
     private JLabel binLabel, capacityLabel, quantityLabel, ingredientLabel;
     private JButton confirmButton, skipButton;
 
     private CoffeeTruck truck;
     private ArrayList<StorageBin> bins;
+    private ArrayList<BinContent> ingredients;
     private int currentBinIndex = 0;
 
     private BackgroundPanel backgroundPanel;
@@ -32,11 +34,6 @@ public class TruckLoadoutPanel extends BasePanel {
 
         this.controller = controller;
         this.menuView = menuView;
-
-        setupUI();
-    }
-
-    public void setupUI(){
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("special.png"));
@@ -86,7 +83,8 @@ public class TruckLoadoutPanel extends BasePanel {
         binLabel = new JLabel("Setting up Bin #1");
         binLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         binLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        formPanel.add(binLabel);
+        formPanel.add(binLabel, CENTER_ALIGNMENT);
+        formPanel.add(Box.createVerticalStrut(20));
 
         ingredientLabel = new JLabel("Select Ingredient:");
         ingredientBox = new JComboBox<>();
@@ -97,7 +95,7 @@ public class TruckLoadoutPanel extends BasePanel {
         quantityLabel = new JLabel("Enter Quantity:");
         quantitySpinner = new JSpinner(new SpinnerNumberModel(1.0, 0.0, 100.0, 1.0));
         quantitySpinner.setMaximumSize(new Dimension(200, 30));
-        formPanel.add(quantityLabel);
+        formPanel.add(quantityLabel, CENTER_ALIGNMENT);
         formPanel.add(quantitySpinner);
 
         capacityLabel = new JLabel(""); // Will update dynamically
@@ -117,7 +115,7 @@ public class TruckLoadoutPanel extends BasePanel {
 
         //Bottom Panel for back button
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        bottomPanel.setOpaque(false); // match your translucent look
+        bottomPanel.setOpaque(false);
 
         JButton backButton = createButton("Exit to Previous Menu");
         bottomPanel.add(backButton);
@@ -149,53 +147,48 @@ public class TruckLoadoutPanel extends BasePanel {
 
     private void updateUIForCurrentBin() {
         if (currentBinIndex >= bins.size()) {
-            truckView.showLoadoutComplete(truck);
-            truckView.showPanel("MAIN_MENU"); // or go wherever you want next
+            //truckView.showLoadoutComplete(truck);
+            menuView.showPanel("CREATE_TRUCK");
             return;
         }
 
         StorageBin bin = bins.get(currentBinIndex);
-        ArrayList<BinContent> ingredients = controller.getIngredients();
+        ingredients = controller.getIngredients();
 
         binLabel.setText("Setting up Bin #" + bin.getBinNumber());
 
         ingredientBox.removeAllItems();
-        ingredientBox.addItem("Skip this bin");
 
-        for (int i = 0; i < ingredients.size(); i++) {
-            ingredientBox.addItem((i + 1) + ". " + ingredients.get(i));
+        for (BinContent ingredient : ingredients) {
+            ingredientBox.addItem(ingredient);  // directly store the object
         }
+        /*
+        for (int i = 0; i < ingredients.size(); i++) {
+            ingredientBox.addItem((i + 1) + ". " + ingredients.get(i).getName());
+        }
+*/
 
-        ingredientBox.setSelectedIndex(0);
         quantitySpinner.setValue(1.0);
         capacityLabel.setText("");
 
+        for (ActionListener al : ingredientBox.getActionListeners()) {
+            ingredientBox.removeActionListener(al);
+        }
+
         ingredientBox.addActionListener(e -> {
-            int index = ingredientBox.getSelectedIndex();
-            if (index > 0) {
-                BinContent selected = ingredients.get(index);
-                int capacity = selected.getCapacity();
-                capacityLabel.setText("Max Capacity: " + capacity);
-                quantitySpinner.setModel(new SpinnerNumberModel(1.0, 0.0, capacity, 1.0));
-            } else {
-                capacityLabel.setText("Bin will be skipped.");
-                quantitySpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 0.0, 0.0));
-            }
+            BinContent selected = (BinContent) ingredientBox.getSelectedItem();
+            int capacity = selected.getCapacity();
+            capacityLabel.setText("Max Capacity: " + capacity);
+            quantitySpinner.setModel(new SpinnerNumberModel(1.0, 0.0, capacity, 1.0));
         });
 
         revalidate();
         repaint();
     }
 
-    private void handleConfirm() {
-        int selectedIndex = ingredientBox.getSelectedIndex();
+    private void handleConfirm(){
 
-        if (selectedIndex == 0) {
-            handleSkip(); // Treat as skip
-            return;
-        }
-
-        BinContent selected = controller.getIngredientFromOption(selectedIndex);
+        BinContent selected = (BinContent) ingredientBox.getSelectedItem();
         double quantity = (double) quantitySpinner.getValue();
 
         if (quantity > selected.getCapacity() || quantity <= 0) {
@@ -219,5 +212,4 @@ public class TruckLoadoutPanel extends BasePanel {
         currentBinIndex++;
         updateUIForCurrentBin();
     }
-
 }

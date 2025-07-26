@@ -13,6 +13,7 @@ public class BackgroundPanel extends JPanel {
         setLayout(new BorderLayout());
     }
 
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

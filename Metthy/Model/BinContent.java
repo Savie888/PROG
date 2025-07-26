@@ -19,4 +19,6 @@ public interface BinContent {
     int getCapacity();
 
     BinContent clone();
+
+    String toString();
 }

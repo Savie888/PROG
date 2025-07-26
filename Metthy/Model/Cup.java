@@ -74,4 +74,10 @@ public abstract class Cup implements BinContent{
     }
 
     public abstract Cup clone();
+
+    @Override
+    public String toString() {
+
+        return size;
+    }
 }

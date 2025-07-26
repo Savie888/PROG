@@ -13,7 +13,7 @@ public class CreateTruckPanel extends BasePanel {
     private final TruckView truckView;
     private final MenuView menuView;
     private BackgroundPanel backgroundPanel;
-    private JLabel titleLabel, errorLabel, locationLabel, truckTypeLabel;
+    private JLabel titleLabel, errorLabel, nameLabel, locationLabel, truckTypeLabel;
     private JTextField nameField, locationField;
     private JComboBox<String> typeBox;
     private JButton createButton;
@@ -61,14 +61,115 @@ public class CreateTruckPanel extends BasePanel {
         // === Form Background Panel ===
         formBackgroundPanel = new TranslucentPanel();
         formBackgroundPanel.setLayout(new BorderLayout());
-        formBackgroundPanel.setOpaque(false);
-        formBackgroundPanel.setBackground(new Color(78, 53, 36, 200));
-        formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(30, 110, 60, 90));
+        //formBackgroundPanel.setBackground(new Color(78, 53, 36, 200));
+        formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 700, 20, 700));
 
         // === Form Panel ===
-        formPanel = new TranslucentPanel();
-        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 50, 80)); // adjust padding as needed
+        formPanel = new JPanel();
+        formPanel.setLayout(new GridBagLayout());
+        formPanel.setBackground((new Color(123, 79, 43)));
+        formPanel.setOpaque(false);
+        formPanel.setBorder(BorderFactory.createEmptyBorder(0, 60, 50, 60)); // adjust padding as needed
+
+        //Set up layout
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 1.0;
+        gbc.gridx = 0;
+
+        // Row 0: Truck Name Label
+        gbc.gridy = 0;
+        nameLabel = new JLabel("Enter truck name:");
+        formPanel.add(nameLabel, gbc);
+        formPanel.add(Box.createVerticalStrut(5));
+
+        // Row 1: Truck Name Field
+        gbc.gridy++;
+        nameField = new JTextField(20);
+        formPanel.add(nameField, gbc);
+
+        // Row 2: Truck Location Label
+        gbc.gridy++;
+        locationLabel = new JLabel("Enter truck location:");
+        formPanel.add(locationLabel, gbc);
+        formPanel.add(Box.createVerticalStrut(5));
+
+        // Row 3: Truck Location Field
+        gbc.gridy++;
+        locationField = new JTextField(20);
+        formPanel.add(Box.createVerticalStrut(5));
+        formPanel.add(locationField, gbc);
+
+        // Row 4: Truck Type ComboBox
+        gbc.gridy++;
+        String[] truckTypes = {"1. Regular", "2. Special"};
+        truckTypeLabel = new JLabel("Select truck type:");
+        truckTypeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        formPanel.add(truckTypeLabel, gbc);
+        formPanel.add(Box.createVerticalStrut(5));
+
+        gbc.gridy++;
+        typeBox = new JComboBox<>(truckTypes);
+        formPanel.add(typeBox, gbc);
+        formPanel.add(Box.createVerticalStrut(5));
+
+        // Row 5: Create Truck Button
+        gbc.gridy++;
+        createButton = new JButton("Create Truck");
+        createButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        formPanel.add(createButton, gbc);
+
+        createButton.addActionListener(e -> {
+
+            playSound("select_sound_effect.wav"); //Play sound effect
+
+            String name = nameField.getText().trim();
+            String location = locationField.getText().trim();
+            int type = Integer.parseInt(((String) typeBox.getSelectedItem()).substring(0, 1));
+
+            // Validate name
+            if (name.isEmpty()) {
+                errorLabel.setText("Name can't be empty.");
+                return;
+            }
+            if (!controller.isTruckNameUnique(name)) {
+                errorLabel.setText("Name already used.");
+                return;
+            }
+
+            // Validate location
+            if (location.isEmpty()) {
+                errorLabel.setText("Location can't be empty.");
+                return;
+            }
+            if (!controller.isTruckLocationUnique(location)) {
+                errorLabel.setText("Location already used.");
+                return;
+            }
+
+            // If all is good, clear errors and continue
+            errorLabel.setText(" ");
+
+            truck = controller.truckCreation(name, location, type); //Create truck
+
+            truckLoadout(truck);
+
+            int repeat = repeat();
+
+            if (repeat == JOptionPane.YES_OPTION)
+                resetFields();
+
+            else
+                menuView.showPanel("MAIN_MENU");
+        });
+
+        // Row 6: Error Label
+        gbc.gridy++;
+        errorLabel = new JLabel(" ");
+        errorLabel.setForeground(Color.RED);
+        formPanel.add(errorLabel, gbc);
 
         //Bottom Panel for back button
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -82,13 +183,6 @@ public class CreateTruckPanel extends BasePanel {
             menuView.showPanel("MAIN_MENU");
         });
 
-        //Error label
-        errorLabel = new JLabel(" ");
-        errorLabel.setForeground(Color.RED);
-        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.add(errorLabel);
-
-        setupNameField();
 
         //Add formPanel into the background container
         formBackgroundPanel.add(formPanel, BorderLayout.CENTER);
@@ -96,6 +190,7 @@ public class CreateTruckPanel extends BasePanel {
         backgroundPanel.add(bottomPanel, BorderLayout.SOUTH); //Add south panel
     }
 
+    /*
     private void setupNameField(){
 
         // Name field
@@ -103,7 +198,7 @@ public class CreateTruckPanel extends BasePanel {
         nameField.setMaximumSize(new Dimension(200, 30));
         nameField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel nameLabel = new JLabel("Enter truck name:");
+        nameLabel = new JLabel("Enter truck name:");
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         formPanel.add(Box.createVerticalStrut(20));
@@ -202,26 +297,7 @@ public class CreateTruckPanel extends BasePanel {
                 menuView.showPanel("MAIN_MENU");
         });
     }
-
-
-    public void truckLoadout(CoffeeTruck truck){
-
-        //Set loadout option
-        int response = setLoadoutOption();
-
-        if (response == JOptionPane.YES_OPTION) {
-
-            int set = setDefaultLoadoutOption();
-
-            if(set == JOptionPane.YES_OPTION)
-                controller.setDefaultTruckLoadout(truck);
-
-            else{
-
-                truckView.showTruckLoadoutPanel(truck);
-            }
-        }
-    }
+*/
 
     public int setLoadoutOption(){
 
@@ -252,15 +328,6 @@ public class CreateTruckPanel extends BasePanel {
         nameField.setText("");
         locationField.setText("");
         typeBox.setSelectedIndex(0);
-
-        // Only show nameField
-        locationLabel.setVisible(false);
-        locationField.setVisible(false);
-        typeBox.setVisible(false);
-        truckTypeLabel.setVisible(false);
-        createButton.setVisible(false);
-
-        // Optionally reset error
         errorLabel.setText(" ");
     }
 
@@ -279,5 +346,26 @@ public class CreateTruckPanel extends BasePanel {
 
         return choice;
     }
+
+
+    public void truckLoadout(CoffeeTruck truck){
+
+        //Set loadout option
+        int response = setLoadoutOption();
+
+        if (response == JOptionPane.YES_OPTION) {
+
+            int set = setDefaultLoadoutOption();
+
+            if(set == JOptionPane.YES_OPTION)
+                controller.setDefaultTruckLoadout(truck);
+
+            else{
+
+                truckView.showTruckLoadoutPanel(truck);
+            }
+        }
+    }
+
 
 }
