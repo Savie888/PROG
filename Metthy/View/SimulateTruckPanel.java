@@ -2,6 +2,7 @@ package Metthy.View;
 
 import Metthy.Controller.TruckController;
 import Metthy.Model.CoffeeTruck;
+import Metthy.Model.SpecialCoffeeTruck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,35 +69,29 @@ public class SimulateTruckPanel extends BasePanel{
 
         trucks = truckController.getTrucks();
 
-        DefaultListModel<CoffeeTruck> listModel = new DefaultListModel<>();
-        for (CoffeeTruck t : trucks) {
-            listModel.addElement(t);
+        DefaultComboBoxModel<CoffeeTruck> comboBoxModel = new DefaultComboBoxModel<>();
+
+        for(int i = 0; i < trucks.size(); i++){
+
+            CoffeeTruck truck = trucks.get(i);
+            comboBoxModel.addElement(truck);
         }
 
-        JList<CoffeeTruck> truckList = new JList<>(listModel);
-        truckList.setCellRenderer(new TruckListRenderer());
-        truckList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        //truckList.setOpaque(false);
-        //truckList.setBackground(new Color(0, 0, 0, 0)); // Transparent
+        JComboBox<CoffeeTruck> truckComboBox = new JComboBox<CoffeeTruck>(comboBoxModel);
+        truckComboBox.setMaximumSize(new Dimension(200, 200));
+        truckComboBox.addActionListener(e -> {
 
-        JScrollPane scrollPane = new JScrollPane(truckList);
-        scrollPane.setPreferredSize(new Dimension(500, 100));
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false); // <– super important!
-
-        truckList.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                CoffeeTruck selected = truckList.getSelectedValue();
+            CoffeeTruck selected = (CoffeeTruck) truckComboBox.getSelectedItem();
                 if (selected != null) {
                     //simulateTruck(selected); // Or enable buttons, update info, etc.
                     prepareDrinkButton.setEnabled(true);
                     displayTruckInfoButton.setEnabled(true);
                     truckMaintenanceButton.setEnabled(true);
                 }
-            }
+
         });
 
-        formPanel.add(scrollPane, BorderLayout.WEST); //Add scroll panel to the left
+        formPanel.add(truckComboBox, BorderLayout.WEST); //Add scroll panel to the left
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setOpaque(false);
@@ -122,6 +117,7 @@ public class SimulateTruckPanel extends BasePanel{
         gbc.gridy = 0;
         buttonPanel.add(prepareDrinkButton, gbc);
         buttonPanel.add(Box.createVerticalStrut(15));
+
         //Row 1: Display Truck Information Button
         gbc.gridy++;
         buttonPanel.add(displayTruckInfoButton, gbc);
