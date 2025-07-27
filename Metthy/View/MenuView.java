@@ -1,6 +1,7 @@
 package Metthy.View;
 
 import Metthy.Controller.MenuController;
+import Metthy.Model.CoffeeTruck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ public class MenuView extends View{
     private CardLayout cardLayout;
     private MainMenuPanel mainMenuPanel;
     //private RemoveTruckPanel removeTruckPanel;
-    //private SimulateTruckPanel simulateTruckPanel;
+    private SimulateTruckPanel simulateTruckPanel;
     //private DashboardPanel dashboardPanel;
 
     public MenuView(MenuController menuController){
@@ -31,7 +32,7 @@ public class MenuView extends View{
 
         // Initialize panels
         mainMenuPanel = new MainMenuPanel(this, menuController);
-        //simulateTruckPanel = new SimulateTruckPanel(this);
+        //simulateTruckPanel = new SimulateTruckPanel(menuController);
         //dashboardPanel = new DashboardPanel(this);
 
         // Add panels to cardPanel
@@ -44,11 +45,17 @@ public class MenuView extends View{
         frame.setVisible(true);
     }
 
+    public MenuController getMenuController(){
+
+        return menuController;
+    }
+
     public void registerTruckPanels(TruckView truckView){
 
         cardPanel.add(truckView.getCreateTruckPanel(), "CREATE_TRUCK");
         cardPanel.add(truckView.getTruckLoadoutPanel(), "TRUCK_LOADOUT");
         cardPanel.add(truckView.getSimulateTruckPanel(), "SIMULATE_TRUCK");
+        cardPanel.add(truckView.getTruckInfoPanel(), "TRUCK_INFO");
         //cardPanel.add(truckView.getDashboardPanel(), "DASHBOARD");
     }
 
@@ -56,6 +63,8 @@ public class MenuView extends View{
 
         cardLayout.show(cardPanel, panelName);
     }
+
+
 
     public void displayWelcomeMessage(){
 

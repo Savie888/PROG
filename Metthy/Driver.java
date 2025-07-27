@@ -11,6 +11,7 @@ package Metthy;
 //Change currency to peso
 
 //GUI
+    //Change menu views to truck views
     //Menu logic
     //Fix Create Truck Menu Formatting
     //Implement Truck Loadout Menu

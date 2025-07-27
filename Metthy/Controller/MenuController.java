@@ -1,5 +1,6 @@
 package Metthy.Controller;
 
+import Metthy.Model.CoffeeTruck;
 import Metthy.View.MenuView;
 import Metthy.View.TruckView;
 
@@ -21,6 +22,12 @@ public class MenuController{
 
         truckView.startTruckSimulation();
         menuView.showPanel("SIMULATE_TRUCK");
+    }
+
+    public void showTruckLoadoutPanel(CoffeeTruck truck){
+
+        truckView.showTruckInformationPanel(truck);
+        menuView.showPanel("TRUCK_INFO");
     }
 
     public void mainMenu(int option){

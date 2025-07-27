@@ -11,14 +11,13 @@ public class TruckView extends View{
 
     private TruckController truckController;
     private MenuView menuView;
-    private JFrame frame;
     private JPanel panelContainer;
-    private JPanel cardPanel;
     private CardLayout cardLayout;
 
     private CreateTruckPanel createTruckPanel;
     private TruckLoadoutPanel truckLoadoutPanel;
     private SimulateTruckPanel simulateTruckPanel;
+    private TruckInfoPanel truckInfoPanel;
     private DashboardPanel dashboardPanel;
 
     public TruckView(TruckController truckController, MenuView menuView){
@@ -33,11 +32,14 @@ public class TruckView extends View{
         createTruckPanel = new CreateTruckPanel(truckController, menuView, this); //maybe remove truckView
         truckLoadoutPanel = new TruckLoadoutPanel(truckController, menuView);
         simulateTruckPanel = new SimulateTruckPanel(truckController, menuView);
+        truckInfoPanel = new TruckInfoPanel(truckController, menuView);
+
         //dashboardPanel = new DashboardPanel(truckController, menuView);
 
         panelContainer.add(createTruckPanel, "CREATE_TRUCK");
         panelContainer.add(truckLoadoutPanel, "TRUCK_LOADOUT");
         panelContainer.add(simulateTruckPanel, "SIMULATE_TRUCK");
+        panelContainer.add(truckInfoPanel, "TRUCK_INFO");
         //panelContainer.add(dashboardPanel, "DASHBOARD");
 
         panelContainer.setVisible(true);
@@ -52,6 +54,19 @@ public class TruckView extends View{
 
     //PROMPTS AND DISPLAYS
 
+    public void startTruckSimulation(){
+
+        simulateTruckPanel.startSimulation();
+        menuView.showPanel("SIMULATE_TRUCK");
+    }
+
+
+
+    public SimulateTruckPanel getSimulateTruckPanel(){
+
+        return simulateTruckPanel;
+    }
+
     public CreateTruckPanel getCreateTruckPanel(){
 
         return createTruckPanel;
@@ -62,20 +77,19 @@ public class TruckView extends View{
         return truckLoadoutPanel;
     }
 
-    public void startTruckSimulation(){
+    public TruckInfoPanel getTruckInfoPanel(){
 
-        simulateTruckPanel.startSimulation();
-        menuView.showPanel("SIMULATE_TRUCK");
-    }
-
-    public SimulateTruckPanel getSimulateTruckPanel(){
-
-        return simulateTruckPanel;
+        return truckInfoPanel;
     }
 
     public DashboardPanel getDashboardPanel(){
 
         return dashboardPanel;
+    }
+
+    public void showTruckInformationPanel(CoffeeTruck truck){
+
+        truckInfoPanel.displayTruckInfo(truck);
     }
 
     public void showTruckLoadoutPanel(CoffeeTruck truck) {

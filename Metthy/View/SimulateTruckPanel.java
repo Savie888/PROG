@@ -12,11 +12,12 @@ public class SimulateTruckPanel extends BasePanel{
     private final TruckController truckController;
     private final MenuView menuView;
     private BackgroundPanel backgroundPanel;
-    private JPanel titleWrapper, formPanel, formBackgroundPanel, truckSelectorPanel;
+    private JPanel titleWrapper, formPanel, formBackgroundPanel;
     private JLabel titleLabel, truckSelectorLabel, errorLabel;
     private JComboBox<CoffeeTruck> truckComboBox;
     private DefaultComboBoxModel<CoffeeTruck> model;
-    private JButton prepareDrinkButton, displayTruckInfoButton, truckMaintenanceButton, exitButton;
+    private JButton selectButton, prepareDrinkButton, displayTruckInfoButton, truckMaintenanceButton, exitButton;
+    private CoffeeTruck selectedTruck;
     private ArrayList<CoffeeTruck> trucks;
 
     public SimulateTruckPanel(TruckController truckController, MenuView menuView){
@@ -69,8 +70,6 @@ public class SimulateTruckPanel extends BasePanel{
         formPanel.setBorder(BorderFactory.createEmptyBorder(0, 300, 20, 200));
 
         //Set up truck selector layout
-        truckSelectorPanel = new JPanel(new GridBagLayout());
-        truckSelectorPanel.setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -84,12 +83,12 @@ public class SimulateTruckPanel extends BasePanel{
         truckComboBox.setPreferredSize(new Dimension(300, 25));
         truckSelectorLabel = new JLabel("Select a Coffee Truck:");
         truckSelectorLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-        truckSelectorLabel.setForeground(Color.WHITE);
+        truckSelectorLabel.setForeground(Color.BLACK);
 
         errorLabel = new JLabel("");
         errorLabel.setForeground(Color.RED);
 
-// Layout setup
+        //Setup Panel
         JPanel comboPanel = new JPanel();
         comboPanel.setLayout(new GridBagLayout());
         comboPanel.setOpaque(false);
@@ -97,54 +96,41 @@ public class SimulateTruckPanel extends BasePanel{
 
         truckComboBox.addActionListener(e -> {
             CoffeeTruck selected = (CoffeeTruck) truckComboBox.getSelectedItem();
-            if (selected != null) {
-                System.out.println("Selected: " + selected.getName());
-            }
+            if (selected != null)
+                selectButton.setEnabled(true); //If selected truck is valid, enable select button
         });
 
-        // Add components to comboPanel
+        //Add components to comboPanel
+
+        //Row 0: Truck Select Label
         gbc.gridy = 0;
         comboPanel.add(truckSelectorLabel, gbc);
-        comboPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+
+        //Row 1: Truck Combo Box
         gbc.gridy++;
         comboPanel.add(truckComboBox, gbc);
-        comboPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        //Row 2: Error Label
         gbc.gridy++;
         comboPanel.add(errorLabel, gbc);
 
-        formPanel.add(comboPanel, BorderLayout.WEST); //Add Truck Selector to the left
-
-        /*
-        //Row 0: Error Label
-        gbc.gridy = 0;
-        errorLabel = new JLabel();
-        errorLabel.setForeground(Color.RED);
-        truckSelectorPanel.add(errorLabel, gbc);
-
-        //Row 1: Truck Selector Label
+        //Row 3: Select Button
         gbc.gridy++;
-        truckSelectorLabel = new JLabel();
-        truckSelectorPanel.add(truckSelectorLabel, gbc);
+        selectButton = createButton("Select Truck");
+        selectButton.setEnabled(false);
+        comboPanel.add(selectButton, gbc);
 
-        //Row 2: Truck Selector ComboBox
-        gbc.gridy++;
-        truckComboBox = new JComboBox<>();
-        truckComboBox.setPreferredSize(new Dimension(300, 25));
+        selectButton.addActionListener(e ->{
+            playSound("select_sound_effect.wav");
+            selectedTruck = (CoffeeTruck) truckComboBox.getSelectedItem();
 
-        truckSelectorPanel.add(truckComboBox, gbc);
-
-        formPanel.add(truckSelectorPanel, BorderLayout.WEST); //Add Truck Selector to the left
-
-        truckComboBox.addActionListener(e -> {
-            CoffeeTruck selected = (CoffeeTruck) truckComboBox.getSelectedItem();
-
-            if (selected != null){
-                prepareDrinkButton.setEnabled(true);
-                displayTruckInfoButton.setEnabled(true);
-                truckMaintenanceButton.setEnabled(true);
-            }
+            prepareDrinkButton.setEnabled(true);
+            displayTruckInfoButton.setEnabled(true);
+            truckMaintenanceButton.setEnabled(true);
         });
-*/
+
+        formPanel.add(comboPanel, BorderLayout.WEST); //Add comboPanel to the left of formPanel
+
         //Set up button panel layout
         gbc.anchor = GridBagConstraints.CENTER;
 
@@ -185,22 +171,26 @@ public class SimulateTruckPanel extends BasePanel{
         prepareDrinkButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
             //menuView.showPanel("PREPARE_DRINK");
+            resetTruckSelector();
         });
 
         displayTruckInfoButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //menuView.showPanel("TRUCK_INFO");
+            menuView.getMenuController().showTruckLoadoutPanel(selectedTruck);
+            resetTruckSelector();
         });
 
         truckMaintenanceButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
             //menuView.showPanel("TRUCK_MAINTENANCE");
+            resetTruckSelector();
         });
 
         exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            // Add a slight delay before exiting so the sound plays
+            //Add a slight delay before exiting so the sound plays
             menuView.showPanel("MAIN_MENU");
+            resetTruckSelector();
         });
 
         formBackgroundPanel.add(formPanel, BorderLayout.CENTER);
@@ -210,10 +200,9 @@ public class SimulateTruckPanel extends BasePanel{
 
     public void startSimulation(){
 
-        //this.trucks = truckController.getTrucks();
         setupTruckSelector();
     }
-    //ArrayList<CoffeeTruck> trucks
+
     private void setupTruckSelector() {
 
         trucks = truckController.getTrucks();
@@ -232,14 +221,28 @@ public class SimulateTruckPanel extends BasePanel{
             for(int i = 0; i < trucks.size(); i++){
 
                 CoffeeTruck truck = trucks.get(i);
-                if(truck != null) {
+
+                if(truck != null)
                     truckComboBox.addItem(truck);
-                    System.out.println("Adding truck: " + truck.getName());
-                }
             }
         }
 
         formPanel.revalidate();
         formPanel.repaint();
+    }
+
+    public void resetTruckSelector(){
+
+        truckComboBox.setSelectedItem(null); //Deselect
+        selectedTruck = null;
+
+        // Disable buttons again
+        selectButton.setEnabled(false);
+        prepareDrinkButton.setEnabled(false);
+        displayTruckInfoButton.setEnabled(false);
+        truckMaintenanceButton.setEnabled(false);
+
+        // Optional: also clear error messages or labels
+        errorLabel.setText("");
     }
 }

@@ -25,6 +25,8 @@ public class TruckController{
         menuView.registerTruckPanels(truckView); //Load the other menu options involving trucks
     }
 
+
+
     public boolean isTruckNameUnique(String name){
 
         return truckManager.checkTruckName(name);

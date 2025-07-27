@@ -8,7 +8,7 @@ public class TranslucentPanel extends JPanel {
     public TranslucentPanel(){
 
         setOpaque(false); //Set opaque false to blend with background
-        setLayout(new GridBagLayout());
+        //setLayout(new GridBagLayout());
     }
 
     @Override

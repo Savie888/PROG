@@ -7,12 +7,11 @@ import Metthy.Model.StorageBin;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class TruckLoadoutPanel extends BasePanel {
 
-    private TruckController controller;
+    private TruckController truckController;
     private MenuView menuView;
 
     private JComboBox<BinContent> ingredientBox;
@@ -29,9 +28,9 @@ public class TruckLoadoutPanel extends BasePanel {
     private JPanel titleWrapper, formPanel, formBackgroundPanel;
     private JLabel titleLabel, errorLabel;
 
-    public TruckLoadoutPanel(TruckController controller, MenuView menuView){
+    public TruckLoadoutPanel(TruckController truckController, MenuView menuView){
 
-        this.controller = controller;
+        this.truckController = truckController;
         this.menuView = menuView;
 
         //Setup Background Image
@@ -189,7 +188,7 @@ public class TruckLoadoutPanel extends BasePanel {
         }
 
         StorageBin bin = bins.get(currentBinIndex);
-        ingredients = controller.getIngredients();
+        ingredients = truckController.getIngredients();
 
         binLabel.setText("Setting up Bin #" + bin.getBinNumber());
 
@@ -232,7 +231,7 @@ public class TruckLoadoutPanel extends BasePanel {
         }
 
         StorageBin bin = bins.get(currentBinIndex);
-        controller.assignItemToBin(truck, bin, selected.clone(), quantity);
+        truckController.assignItemToBin(truck, bin, selected.clone(), quantity);
 
         JOptionPane.showMessageDialog(this, "Bin #" + bin.getBinNumber() + " loaded with " + quantity + " of " + selected.getName());
 

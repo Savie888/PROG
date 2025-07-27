@@ -94,7 +94,7 @@ public class MainMenuPanel extends BasePanel{
 
         removeTruckButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-
+            //Remove truck panel
         });
 
         simulateTruckButton.addActionListener(e -> {
