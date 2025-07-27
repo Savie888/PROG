@@ -1,6 +1,5 @@
 package Metthy.View;
 
-import Metthy.Controller.TruckController;
 import Metthy.Model.BinContent;
 import Metthy.Model.CoffeeTruck;
 import Metthy.Model.SpecialCoffeeTruck;
@@ -11,30 +10,24 @@ import java.awt.*;
 
 public class TruckInfoPanel extends BasePanel{
 
-    private TruckController truckController;
-    private MenuView menuView;
-    private BackgroundPanel backgroundPanel;
-    private JPanel titleWrapper, centerWrapper, infoDisplayPanel, formBackgroundPanel, bottomPanel;
-    private JLabel titleLabel, binLabel, transactionHeader, transactionLabel, totalSalesLabel;
 
-    public TruckInfoPanel(TruckController truckController, MenuView menuView){
+    private JPanel infoDisplayPanel;
 
-        this.truckController = truckController;
-        this.menuView = menuView;
+    public TruckInfoPanel(MenuView menuView){
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
         Image image = backgroundImage.getImage();
-        backgroundPanel = new BackgroundPanel(image);
+        BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
-        titleWrapper = new JPanel(new BorderLayout());
+        JPanel titleWrapper = new JPanel(new BorderLayout());
         titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.X_AXIS));
         titleWrapper.setOpaque(false);
         titleWrapper.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0)); // Adds spacing from top
 
         //Stylized title
-        titleLabel = new JLabel("Truck Information", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Truck Information", SwingConstants.CENTER);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
         titleLabel.setMaximumSize(new Dimension(5, 50));
         titleLabel.setForeground(Color.BLACK);
@@ -53,7 +46,7 @@ public class TruckInfoPanel extends BasePanel{
         this.add(backgroundPanel, BorderLayout.CENTER);
 
         //Form Background Panel
-        formBackgroundPanel = new TranslucentPanel();
+        JPanel formBackgroundPanel = new TranslucentPanel();
         formBackgroundPanel.setLayout(new BorderLayout());
         formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 200, 20, 200));
 
@@ -64,7 +57,7 @@ public class TruckInfoPanel extends BasePanel{
         infoDisplayPanel.setBorder(BorderFactory.createEmptyBorder(100, 0, 20, 0));
 
         //Bottom Panel
-        bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.setOpaque(false);
 
         JButton backButton = createButton("Exit to Previous Menu");
@@ -85,7 +78,7 @@ public class TruckInfoPanel extends BasePanel{
         infoDisplayPanel.removeAll(); //Reset Panel
 
         //Set up a center wrapper
-        centerWrapper = new JPanel();
+        JPanel centerWrapper = new JPanel();
         centerWrapper.setLayout(new BoxLayout(centerWrapper, BoxLayout.Y_AXIS));
         centerWrapper.setOpaque(false);
 
@@ -107,12 +100,14 @@ public class TruckInfoPanel extends BasePanel{
         for (StorageBin bin : truck.getBins()) {
             BinContent content = bin.getContent();
             String binInfo = "Bin #" + bin.getBinNumber() + ": ";
-            if (content == null) {
+
+            if (content == null)
                 binInfo += "[Empty]";
-            } else {
+
+            else
                 binInfo += String.format("%s - %.2f / %d", content.getName(), content.getQuantity(), content.getCapacity());
-            }
-            binLabel = createInfoLabel(binInfo);
+
+            JLabel binLabel = createInfoLabel(binInfo);
             binLabel.setAlignmentX(CENTER_ALIGNMENT);
             centerWrapper.add(binLabel);
         }
@@ -120,19 +115,19 @@ public class TruckInfoPanel extends BasePanel{
         centerWrapper.add(Box.createVerticalStrut(20));
 
         // Transactions
-        transactionHeader = createInfoLabel("--- Transactions ---");
+        JLabel transactionHeader = createInfoLabel("--- Transactions ---");
         transactionHeader.setAlignmentX(CENTER_ALIGNMENT);
         centerWrapper.add(transactionHeader);
 
         if (truck.getSalesLog().isEmpty()) {
-            transactionLabel = createInfoLabel("No transactions yet.");
+            JLabel transactionLabel = createInfoLabel("No transactions yet.");
             transactionLabel.setAlignmentX(CENTER_ALIGNMENT);
             centerWrapper.add(transactionLabel);
         }
 
         else {
             for (String transaction : truck.getSalesLog()) {
-                transactionLabel = createInfoLabel(transaction);
+                JLabel transactionLabel = createInfoLabel(transaction);
                 transactionLabel.setAlignmentX(CENTER_ALIGNMENT);
                 centerWrapper.add(transactionLabel); // Customize if needed
             }
@@ -140,7 +135,7 @@ public class TruckInfoPanel extends BasePanel{
         centerWrapper.add(Box.createVerticalStrut(20));
 
         // Total Sales
-        totalSalesLabel = createInfoLabel("Total Sales: $" + String.format("%.2f", truck.getTotalSales()));
+        JLabel totalSalesLabel = createInfoLabel("Total Sales: $" + String.format("%.2f", truck.getTotalSales()));
         totalSalesLabel.setAlignmentX(CENTER_ALIGNMENT);
         centerWrapper.add(totalSalesLabel);
 

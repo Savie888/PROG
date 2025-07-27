@@ -30,11 +30,11 @@ public class TruckView extends View{
         cardLayout = new CardLayout();
         panelContainer = new JPanel(cardLayout);
 
-        createTruckPanel = new CreateTruckPanel(truckController, menuView, this); //maybe remove truckView
+        createTruckPanel = new CreateTruckPanel(truckController, menuView, this);
         truckLoadoutPanel = new TruckLoadoutPanel(truckController, menuView);
         removeTruckPanel = new RemoveTruckPanel(truckController, menuView);
         simulateTruckPanel = new SimulateTruckPanel(truckController, menuView);
-        truckInfoPanel = new TruckInfoPanel(truckController, menuView);
+        truckInfoPanel = new TruckInfoPanel(menuView);
 
         //dashboardPanel = new DashboardPanel(truckController, menuView);
 

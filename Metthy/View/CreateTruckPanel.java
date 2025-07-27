@@ -9,35 +9,32 @@ import java.awt.*;
 public class CreateTruckPanel extends BasePanel {
 
     private final TruckController truckController;
-    private final TruckView truckView;
     private final MenuView menuView;
-    private BackgroundPanel backgroundPanel;
-    private JPanel titleWrapper, formPanel, formBackgroundPanel, bottomPanel;
-    private JLabel titleLabel, errorLabel, nameLabel, locationLabel, truckTypeLabel;
+
+    private JLabel errorLabel;
     private JTextField nameField, locationField;
     private JComboBox<String> typeBox;
-    private JButton createButton;
+
     private CoffeeTruck truck;
 
     public CreateTruckPanel(TruckController controller, MenuView menuView, TruckView truckView){
 
         this.truckController = controller;
         this.menuView = menuView;
-        this.truckView = truckView;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
         Image image = backgroundImage.getImage();
-        backgroundPanel = new BackgroundPanel(image);
+        BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
-        titleWrapper = new JPanel(new BorderLayout());
+        JPanel titleWrapper = new JPanel(new BorderLayout());
         titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.X_AXIS));
         titleWrapper.setOpaque(false);
         titleWrapper.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0)); // Adds spacing from top
 
         //Stylized title
-        titleLabel = new JLabel("Truck Creation", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Truck Creation", SwingConstants.CENTER);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
         titleLabel.setMaximumSize(new Dimension(5, 50));
         titleLabel.setForeground(Color.BLACK);
@@ -58,12 +55,12 @@ public class CreateTruckPanel extends BasePanel {
         this.add(backgroundPanel, BorderLayout.CENTER);
 
         //Form Background Panel
-        formBackgroundPanel = new TranslucentPanel();
+        JPanel formBackgroundPanel = new TranslucentPanel();
         formBackgroundPanel.setLayout(new BorderLayout());
         formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 800, 20, 800));
 
         //Form Panel
-        formPanel = new JPanel();
+        JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridBagLayout());
         formPanel.setBackground((new Color(123, 79, 43)));
         formPanel.setOpaque(false);
@@ -79,7 +76,7 @@ public class CreateTruckPanel extends BasePanel {
 
         //Row 0: Truck Name Label
         gbc.gridy = 0;
-        nameLabel = new JLabel("Enter truck name:");
+        JLabel nameLabel = new JLabel("Enter truck name:");
         formPanel.add(nameLabel, gbc);
         formPanel.add(Box.createVerticalStrut(5));
 
@@ -90,7 +87,7 @@ public class CreateTruckPanel extends BasePanel {
 
         //Row 2: Truck Location Label
         gbc.gridy++;
-        locationLabel = new JLabel("Enter truck location:");
+        JLabel locationLabel = new JLabel("Enter truck location:");
         formPanel.add(locationLabel, gbc);
         formPanel.add(Box.createVerticalStrut(5));
 
@@ -103,7 +100,7 @@ public class CreateTruckPanel extends BasePanel {
         //Row 4: Truck Type ComboBox
         gbc.gridy++;
         String[] truckTypes = {"1. Regular", "2. Special"};
-        truckTypeLabel = new JLabel("Select truck type:");
+        JLabel truckTypeLabel = new JLabel("Select truck type:");
         formPanel.add(truckTypeLabel, gbc);
         formPanel.add(Box.createVerticalStrut(5));
 
@@ -114,7 +111,7 @@ public class CreateTruckPanel extends BasePanel {
 
         //Row 5: Create Truck Button
         gbc.gridy++;
-        createButton = createButton("Create Truck");
+        JButton createButton = createButton("Create Truck");
         createButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.add(createButton, gbc);
 
@@ -171,7 +168,6 @@ public class CreateTruckPanel extends BasePanel {
 
             else
                 repeat();
-
         });
 
         //Row 6: Error Label
@@ -181,7 +177,7 @@ public class CreateTruckPanel extends BasePanel {
         formPanel.add(errorLabel, gbc);
 
         //Bottom Panel
-        bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.setOpaque(false); // match your translucent look
 
         JButton exitButton = createButton("Exit to Main Menu");
@@ -243,33 +239,9 @@ public class CreateTruckPanel extends BasePanel {
                 "Yes, create another"
         );
 
-        if(choice == 0)
-            resetFields();
-        else{
-            resetFields();
+        resetFields();
+
+        if(choice == 1)
             menuView.showPanel("MAIN_MENU");
-        }
     }
-
-    public void truckLoadout(CoffeeTruck truck){
-
-        //Set loadout option
-        int response = setLoadoutOption();
-
-        if (response == JOptionPane.YES_OPTION) {
-
-            int set = setDefaultLoadoutOption();
-
-            if(set == JOptionPane.YES_OPTION)
-                truckController.setDefaultTruckLoadout(truck);
-
-            else{
-
-                truckView.showTruckLoadoutPanel(truck);
-            }
-        }
-
-    }
-
-
 }

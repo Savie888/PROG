@@ -10,34 +10,31 @@ import java.util.ArrayList;
 public class SimulateTruckPanel extends BasePanel{
 
     private final TruckController truckController;
-    private final MenuView menuView;
-    private BackgroundPanel backgroundPanel;
-    private JPanel titleWrapper, formPanel, formBackgroundPanel, comboPanel;
-    private JLabel titleLabel, truckSelectorLabel, errorLabel;
+
+    private JPanel formPanel;
+    private JLabel truckSelectorLabel, errorLabel;
     private JComboBox<CoffeeTruck> truckComboBox;
-    private DefaultComboBoxModel<CoffeeTruck> model;
-    private JButton selectButton, prepareDrinkButton, displayTruckInfoButton, truckMaintenanceButton, exitButton;
+    private JButton selectButton, prepareDrinkButton, displayTruckInfoButton, truckMaintenanceButton;
+
     private CoffeeTruck selectedTruck;
-    private ArrayList<CoffeeTruck> trucks;
 
     public SimulateTruckPanel(TruckController truckController, MenuView menuView){
 
         this.truckController = truckController;
-        this.menuView = menuView;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
         Image image = backgroundImage.getImage();
-        backgroundPanel = new BackgroundPanel(image);
+        BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
-        titleWrapper = new JPanel(new BorderLayout());
+        JPanel titleWrapper = new JPanel(new BorderLayout());
         titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.X_AXIS));
         titleWrapper.setOpaque(false);
         titleWrapper.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0)); // Adds spacing from top
 
         //Stylized title
-        titleLabel = new JLabel("Truck Simulation", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Truck Simulation", SwingConstants.CENTER);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
         titleLabel.setMaximumSize(new Dimension(5, 50));
         titleLabel.setForeground(Color.BLACK);
@@ -58,7 +55,7 @@ public class SimulateTruckPanel extends BasePanel{
         this.add(backgroundPanel, BorderLayout.CENTER);
 
         //Form Background Panel
-        formBackgroundPanel = new TranslucentPanel();
+        JPanel formBackgroundPanel = new TranslucentPanel();
         formBackgroundPanel.setLayout(new BorderLayout());
         formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 200, 20, 200));
 
@@ -87,7 +84,7 @@ public class SimulateTruckPanel extends BasePanel{
         errorLabel.setForeground(Color.RED);
 
         //Setup Panel
-        comboPanel = new JPanel();
+        JPanel comboPanel = new JPanel();
         comboPanel.setLayout(new GridBagLayout());
         comboPanel.setOpaque(false);
         comboPanel.setPreferredSize(new Dimension(300, 25));
@@ -142,7 +139,7 @@ public class SimulateTruckPanel extends BasePanel{
         truckMaintenanceButton = createButton("Truck Maintenance");
         truckMaintenanceButton.setEnabled(false);
 
-        exitButton = createButton("Exit to Main Menu");
+        JButton exitButton = createButton("Exit to Main Menu");
 
         //Row 0: Prepare Drink Button
         gbc.gridy = 0;
@@ -198,7 +195,7 @@ public class SimulateTruckPanel extends BasePanel{
 
     public void startSimulation(){
 
-        trucks = truckController.getTrucks();
+        ArrayList<CoffeeTruck> trucks = truckController.getTrucks();
 
         if (trucks.isEmpty()) {
             errorLabel.setText("No trucks available");

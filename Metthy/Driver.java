@@ -12,12 +12,13 @@ package Metthy;
 
 //GUI
     //Change menu views to truck views
-    //Menu logic
-    //Fix Create Truck Menu Formatting
-    //Implement Truck Loadout Menu
+    //Truck Loadout Menu
         //Change JOptionPanel with Label
+        //Quantity not properly set
+
     //Simulate Menu
-        
+        //Truck Maintenance Menu
+
     //Eventually remove error label in remove truck and simulate truck once main menu button disablers set up
     //Truck display in dashboard //POSTPONED
 

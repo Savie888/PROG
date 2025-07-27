@@ -11,22 +11,18 @@ import java.util.ArrayList;
 
 public class TruckLoadoutPanel extends BasePanel {
 
-    private TruckController truckController;
-    private MenuView menuView;
+    private final TruckController truckController;
+    private final MenuView menuView;
 
+    private JPanel formPanel;
+    private JLabel binLabel, capacityLabel, errorLabel;
     private JComboBox<BinContent> ingredientBox;
     private JSpinner quantitySpinner;
-    private JLabel binLabel, capacityLabel, quantityLabel, ingredientLabel;
-    private JButton confirmButton, skipButton;
 
     private CoffeeTruck truck;
     private ArrayList<StorageBin> bins;
-    private ArrayList<BinContent> ingredients;
     private int currentBinIndex = 0;
 
-    private BackgroundPanel backgroundPanel;
-    private JPanel titleWrapper, formPanel, formBackgroundPanel;
-    private JLabel titleLabel, errorLabel;
 
     public TruckLoadoutPanel(TruckController truckController, MenuView menuView){
 
@@ -36,16 +32,16 @@ public class TruckLoadoutPanel extends BasePanel {
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("special.png"));
         Image image = backgroundImage.getImage();
-        backgroundPanel = new BackgroundPanel(image);
+        BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
-        titleWrapper = new JPanel(new BorderLayout());
+        JPanel titleWrapper = new JPanel(new BorderLayout());
         titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.X_AXIS));
         titleWrapper.setOpaque(false);
         titleWrapper.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0)); // Adds spacing from top
 
         //Stylized title
-        titleLabel = new JLabel("Truck Loadout", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Truck Loadout", SwingConstants.CENTER);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
         titleLabel.setMaximumSize(new Dimension(5, 50));
         titleLabel.setForeground(Color.BLACK);
@@ -66,7 +62,7 @@ public class TruckLoadoutPanel extends BasePanel {
         this.add(backgroundPanel, BorderLayout.CENTER);
 
         // === Form Background Panel ===
-        formBackgroundPanel = new TranslucentPanel();
+        JPanel formBackgroundPanel = new TranslucentPanel();
         formBackgroundPanel.setLayout(new BorderLayout());
         formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 700, 20, 700));
 
@@ -95,7 +91,7 @@ public class TruckLoadoutPanel extends BasePanel {
 
         //Row 1: Ingredient Label
         gbc.gridy++;
-        ingredientLabel = new JLabel("Select Ingredient:");
+        JLabel ingredientLabel = new JLabel("Select Ingredient:");
         formPanel.add(ingredientLabel, gbc);
         formPanel.add(Box.createVerticalStrut(20));
 
@@ -108,7 +104,7 @@ public class TruckLoadoutPanel extends BasePanel {
 
         //Row 3: Quantity Label
         gbc.gridy++;
-        quantityLabel = new JLabel("Enter Quantity:");
+        JLabel quantityLabel = new JLabel("Enter Quantity:");
         formPanel.add(quantityLabel, gbc);
         formPanel.add(Box.createVerticalStrut(20));
 
@@ -128,8 +124,8 @@ public class TruckLoadoutPanel extends BasePanel {
         gbc.gridy++;
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
-        confirmButton = new JButton("Confirm");
-        skipButton = new JButton("Skip Bin");
+        JButton confirmButton = new JButton("Confirm");
+        JButton skipButton = new JButton("Skip Bin");
 
         buttonPanel.add(confirmButton);
         buttonPanel.add(skipButton);
@@ -164,6 +160,7 @@ public class TruckLoadoutPanel extends BasePanel {
     }
 
     public void startLoadout(CoffeeTruck truck){
+
         this.truck = truck;
         this.bins = truck.getBins();
         this.currentBinIndex = 0;
@@ -173,10 +170,11 @@ public class TruckLoadoutPanel extends BasePanel {
 
     private void updateUIForCurrentBin(){
 
-        if (currentBinIndex >= bins.size()) {
-            //truckView.showLoadoutComplete(truck);
+        if(currentBinIndex >= bins.size()){
+
             menuView.showPanel("CREATE_TRUCK");
 
+            //Delay repeat option until after returning to truck creation menu
             SwingUtilities.invokeLater(() -> {
                 int repeat = repeat();
 
@@ -188,7 +186,7 @@ public class TruckLoadoutPanel extends BasePanel {
         }
 
         StorageBin bin = bins.get(currentBinIndex);
-        ingredients = truckController.getIngredients();
+        ArrayList<BinContent> ingredients = truckController.getIngredients();
 
         binLabel.setText("Setting up Bin #" + bin.getBinNumber());
 
@@ -200,18 +198,17 @@ public class TruckLoadoutPanel extends BasePanel {
             ingredientBox.addItem(ingredient);
         }
 
-        quantitySpinner.setValue(1.0);
-        capacityLabel.setText("");
-
         ingredientBox.addActionListener(e -> {
+
             BinContent selected = (BinContent) ingredientBox.getSelectedItem();
 
-            if (selected == null)
-                return;
-
-            int capacity = selected.getCapacity();
-            capacityLabel.setText("Max Capacity: " + capacity);
-            quantitySpinner.setModel(new SpinnerNumberModel(1.0, 0.0, capacity, 1.0));
+            if (selected != null) {
+                int capacity = selected.getCapacity();
+                double currentValue = (double) quantitySpinner.getValue();
+                double newValue = Math.min(currentValue, capacity);
+                quantitySpinner.setModel(new SpinnerNumberModel(newValue, 0.0, capacity, 1.0));
+                capacityLabel.setText("Max Capacity: " + capacity);
+            }
         });
 
         formPanel.revalidate();

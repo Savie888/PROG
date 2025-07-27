@@ -1,7 +1,6 @@
 package Metthy.View;
 
 import Metthy.Controller.MenuController;
-import Metthy.Model.CoffeeTruck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,9 +12,6 @@ public class MenuView extends View{
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private MainMenuPanel mainMenuPanel;
-    //private RemoveTruckPanel removeTruckPanel;
-    //private SimulateTruckPanel simulateTruckPanel;
-    //private DashboardPanel dashboardPanel;
 
     public MenuView(MenuController menuController){
 
@@ -32,13 +28,9 @@ public class MenuView extends View{
 
         // Initialize panels
         mainMenuPanel = new MainMenuPanel(this, menuController);
-        //simulateTruckPanel = new SimulateTruckPanel(menuController);
-        //dashboardPanel = new DashboardPanel(this);
 
         // Add panels to cardPanel
         cardPanel.add(mainMenuPanel, "MAIN_MENU");
-        //cardPanel.add(simulateTruckPanel, "SIMULATE_TRUCK");
-        //cardPanel.add(dashboardPanel, "DASHBOARD");
 
         frame.add(cardPanel);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize
@@ -64,8 +56,6 @@ public class MenuView extends View{
 
         cardLayout.show(cardPanel, panelName);
     }
-
-
 
     public void displayWelcomeMessage(){
 

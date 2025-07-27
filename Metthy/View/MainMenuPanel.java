@@ -7,19 +7,13 @@ import java.awt.*;
 
 public class MainMenuPanel extends BasePanel{
 
-    private MenuView menuView;
-    private MenuController menuController;
-    private BackgroundPanel backgroundPanel;
 
     public MainMenuPanel(MenuView menuView, MenuController menuController) {
-
-        this.menuView = menuView;
-        this.menuController = menuController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("BG_jeep.png"));
         Image image = backgroundImage.getImage();
-        backgroundPanel = new BackgroundPanel(image);
+        BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
         JPanel titleWrapper = new JPanel(new BorderLayout());
