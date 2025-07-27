@@ -2,7 +2,6 @@ package Metthy.View;
 
 import Metthy.Controller.TruckController;
 import Metthy.Model.CoffeeTruck;
-import Metthy.Model.SpecialCoffeeTruck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,8 +12,9 @@ public class SimulateTruckPanel extends BasePanel{
     private final TruckController truckController;
     private final MenuView menuView;
     private BackgroundPanel backgroundPanel;
-    private JPanel titleWrapper, formPanel, formBackgroundPanel;
-    private JLabel titleLabel;
+    private JPanel titleWrapper, formPanel, formBackgroundPanel, truckSelectorPanel;
+    private JLabel titleLabel, truckSelectorLabel, errorLabel;
+    private JComboBox<CoffeeTruck> truckComboBox;
     private JButton prepareDrinkButton, displayTruckInfoButton, truckMaintenanceButton, exitButton;
     private ArrayList<CoffeeTruck> trucks;
 
@@ -65,44 +65,55 @@ public class SimulateTruckPanel extends BasePanel{
         formPanel.setLayout(new BorderLayout());
         formPanel.setBackground((new Color(123, 79, 43)));
         formPanel.setOpaque(false);
-        formPanel.setBorder(BorderFactory.createEmptyBorder(0, 200, 20, 200));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(0, 300, 20, 200));
 
-        trucks = truckController.getTrucks();
+        //Set up truck selector layout
+        truckSelectorPanel = new JPanel(new GridBagLayout());
+        truckSelectorPanel.setOpaque(false);
 
-        DefaultComboBoxModel<CoffeeTruck> comboBoxModel = new DefaultComboBoxModel<>();
-
-        for(int i = 0; i < trucks.size(); i++){
-
-            CoffeeTruck truck = trucks.get(i);
-            comboBoxModel.addElement(truck);
-        }
-
-        JComboBox<CoffeeTruck> truckComboBox = new JComboBox<CoffeeTruck>(comboBoxModel);
-        truckComboBox.setMaximumSize(new Dimension(200, 200));
-        truckComboBox.addActionListener(e -> {
-
-            CoffeeTruck selected = (CoffeeTruck) truckComboBox.getSelectedItem();
-                if (selected != null) {
-                    //simulateTruck(selected); // Or enable buttons, update info, etc.
-                    prepareDrinkButton.setEnabled(true);
-                    displayTruckInfoButton.setEnabled(true);
-                    truckMaintenanceButton.setEnabled(true);
-                }
-
-        });
-
-        formPanel.add(truckComboBox, BorderLayout.WEST); //Add scroll panel to the left
-
-        JPanel buttonPanel = new JPanel(new GridBagLayout());
-        buttonPanel.setOpaque(false);
-
-        //Set up layout
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.anchor = GridBagConstraints.NORTH;
         gbc.weightx = 1.0;
         gbc.gridx = 0;
+
+        //Row 0: Error Label
+        gbc.gridy = 0;
+        errorLabel = new JLabel();
+        errorLabel.setForeground(Color.RED);
+        truckSelectorPanel.add(errorLabel, gbc);
+
+        //Row 1: Truck Selector Label
+        gbc.gridy++;
+        truckSelectorLabel = new JLabel("Select a Coffee Truck:");
+        truckSelectorPanel.add(truckSelectorLabel, gbc);
+
+        //Row 2: Truck Selector ComboBox
+        gbc.gridy++;
+        truckComboBox = new JComboBox<>();
+        truckComboBox.setPreferredSize(new Dimension(300, 25));
+
+        truckComboBox.addActionListener(e -> {
+            CoffeeTruck selected = (CoffeeTruck) truckComboBox.getSelectedItem();
+            if (selected != null) {
+                prepareDrinkButton.setEnabled(true);
+                displayTruckInfoButton.setEnabled(true);
+                truckMaintenanceButton.setEnabled(true);
+            }
+        });
+
+        truckSelectorPanel.add(truckComboBox, gbc);
+
+        formPanel.add(truckSelectorPanel, BorderLayout.WEST); //Add Truck Selector to the left
+
+        updateTruckSelector();
+
+        //Set up button panel layout
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        buttonPanel.setOpaque(false);
 
         prepareDrinkButton = createButton("Prepare Drink");
         prepareDrinkButton.setEnabled(false);
@@ -158,5 +169,31 @@ public class SimulateTruckPanel extends BasePanel{
 
         formBackgroundPanel.add(formPanel, BorderLayout.CENTER);
         backgroundPanel.add(formBackgroundPanel, BorderLayout.CENTER);
+    }
+
+    private void updateTruckSelector() {
+
+        trucks = truckController.getTrucks();
+
+        DefaultComboBoxModel<CoffeeTruck> model = (DefaultComboBoxModel<CoffeeTruck>) truckComboBox.getModel();
+        model.removeAllElements();
+
+        if (trucks.isEmpty()) {
+            errorLabel.setText("No trucks available");
+            truckSelectorLabel.setText("");
+        }
+
+        else {
+            errorLabel.setText("");
+            truckSelectorLabel.setText("Select a Coffee Truck:");
+
+            for (CoffeeTruck truck : trucks) {
+                if (truck != null) model.addElement(truck);
+            }
+            truckComboBox.setSelectedIndex(0);
+        }
+
+        truckSelectorPanel.revalidate();
+        truckSelectorPanel.repaint();
     }
 }

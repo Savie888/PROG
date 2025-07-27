@@ -312,6 +312,6 @@ public abstract class CoffeeTruck {
     @Override
     public String toString() {
 
-        return name;
+        return name + " (" + location + ")";
     }
 }

@@ -146,7 +146,7 @@ public class CreateTruckPanel extends BasePanel {
                 return;
             }
 
-            // If all is good, clear errors and continue
+            //Clear errors and continue
             errorLabel.setText(" ");
 
             truck = controller.truckCreation(name, location, type); //Create truck
