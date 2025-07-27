@@ -1,10 +1,13 @@
 package Metthy.View;
 
+import Metthy.Controller.MenuController;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class MenuView extends View{
 
+    private MenuController menuController;
     private JFrame frame;
     private JPanel cardPanel;
     private CardLayout cardLayout;
@@ -13,9 +16,10 @@ public class MenuView extends View{
     //private SimulateTruckPanel simulateTruckPanel;
     //private DashboardPanel dashboardPanel;
 
-    public MenuView(){
+    public MenuView(MenuController menuController){
 
         super();
+        this.menuController = menuController;
 
         frame = new JFrame("Main Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,7 +30,7 @@ public class MenuView extends View{
         cardPanel = new JPanel(cardLayout);
 
         // Initialize panels
-        mainMenuPanel = new MainMenuPanel(this);
+        mainMenuPanel = new MainMenuPanel(this, menuController);
         //simulateTruckPanel = new SimulateTruckPanel(this);
         //dashboardPanel = new DashboardPanel(this);
 

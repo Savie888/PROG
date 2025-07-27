@@ -1,11 +1,19 @@
 package Metthy.View;
 
+import Metthy.Controller.MenuController;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class MainMenuPanel extends BasePanel{
 
-    public MainMenuPanel(MenuView menuView) {
+    private MenuView menuView;
+    private MenuController menuController;
+
+    public MainMenuPanel(MenuView menuView, MenuController menuController) {
+
+        this.menuView = menuView;
+        this.menuController = menuController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("BG_jeep.png"));
@@ -86,7 +94,7 @@ public class MainMenuPanel extends BasePanel{
 
         removeTruckButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            menuView.showPanel("REMOVE_TRUCK");
+            menuController.showSimulateTruckPanel();
         });
 
         simulateTruckButton.addActionListener(e -> {

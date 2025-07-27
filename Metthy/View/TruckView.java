@@ -62,6 +62,12 @@ public class TruckView extends View{
         return truckLoadoutPanel;
     }
 
+    public void startTruckSimulation(){
+
+        simulateTruckPanel.startSimulation();
+        menuView.showPanel("SIMULATE_TRUCK");
+    }
+
     public SimulateTruckPanel getSimulateTruckPanel(){
 
         return simulateTruckPanel;

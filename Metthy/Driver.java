@@ -21,7 +21,6 @@ package Metthy;
 
 
 import Metthy.Controller.MenuController;
-import Metthy.View.MenuView;
 
 
 /**
@@ -45,8 +44,7 @@ public class Driver {
 
     public static void main(String[] args){
 
-        MenuView menuView = new MenuView();
-        MenuController menuController = new MenuController(menuView);
+        MenuController menuController = new MenuController();
         menuController.start();
     }
 }

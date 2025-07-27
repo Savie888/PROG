@@ -245,8 +245,10 @@ public class CreateTruckPanel extends BasePanel {
 
         if(choice == 0)
             resetFields();
-        else
+        else{
+            resetFields();
             menuView.showPanel("MAIN_MENU");
+        }
     }
 
     public void truckLoadout(CoffeeTruck truck){

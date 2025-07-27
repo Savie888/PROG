@@ -201,7 +201,6 @@ public class TruckLoadoutPanel extends BasePanel {
             ingredientBox.addItem(ingredient);
         }
 
-
         quantitySpinner.setValue(1.0);
         capacityLabel.setText("");
 

@@ -199,7 +199,7 @@ public class TruckController{
 
         int truckNumber, option, choice;
         CoffeeTruck selectedTruck;
-        ArrayList<CoffeeTruck> trucks = truckManager.getTrucks();
+        ArrayList<CoffeeTruck> trucks = getTrucks();
 
         boolean running = true;
 

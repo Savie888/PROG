@@ -15,6 +15,7 @@ public class SimulateTruckPanel extends BasePanel{
     private JPanel titleWrapper, formPanel, formBackgroundPanel, truckSelectorPanel;
     private JLabel titleLabel, truckSelectorLabel, errorLabel;
     private JComboBox<CoffeeTruck> truckComboBox;
+    private DefaultComboBoxModel<CoffeeTruck> model;
     private JButton prepareDrinkButton, displayTruckInfoButton, truckMaintenanceButton, exitButton;
     private ArrayList<CoffeeTruck> trucks;
 
@@ -77,7 +78,43 @@ public class SimulateTruckPanel extends BasePanel{
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.weightx = 1.0;
         gbc.gridx = 0;
+        trucks = truckController.getTrucks();
 
+        truckComboBox = new JComboBox<>();
+        truckComboBox.setPreferredSize(new Dimension(300, 25));
+        truckSelectorLabel = new JLabel("Select a Coffee Truck:");
+        truckSelectorLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        truckSelectorLabel.setForeground(Color.WHITE);
+
+        errorLabel = new JLabel("");
+        errorLabel.setForeground(Color.RED);
+
+// Layout setup
+        JPanel comboPanel = new JPanel();
+        comboPanel.setLayout(new GridBagLayout());
+        comboPanel.setOpaque(false);
+        comboPanel.setPreferredSize(new Dimension(300, 25));
+
+        truckComboBox.addActionListener(e -> {
+            CoffeeTruck selected = (CoffeeTruck) truckComboBox.getSelectedItem();
+            if (selected != null) {
+                System.out.println("Selected: " + selected.getName());
+            }
+        });
+
+        // Add components to comboPanel
+        gbc.gridy = 0;
+        comboPanel.add(truckSelectorLabel, gbc);
+        comboPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        gbc.gridy++;
+        comboPanel.add(truckComboBox, gbc);
+        comboPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        gbc.gridy++;
+        comboPanel.add(errorLabel, gbc);
+
+        formPanel.add(comboPanel, BorderLayout.WEST); //Add Truck Selector to the left
+
+        /*
         //Row 0: Error Label
         gbc.gridy = 0;
         errorLabel = new JLabel();
@@ -86,7 +123,7 @@ public class SimulateTruckPanel extends BasePanel{
 
         //Row 1: Truck Selector Label
         gbc.gridy++;
-        truckSelectorLabel = new JLabel("Select a Coffee Truck:");
+        truckSelectorLabel = new JLabel();
         truckSelectorPanel.add(truckSelectorLabel, gbc);
 
         //Row 2: Truck Selector ComboBox
@@ -94,21 +131,20 @@ public class SimulateTruckPanel extends BasePanel{
         truckComboBox = new JComboBox<>();
         truckComboBox.setPreferredSize(new Dimension(300, 25));
 
+        truckSelectorPanel.add(truckComboBox, gbc);
+
+        formPanel.add(truckSelectorPanel, BorderLayout.WEST); //Add Truck Selector to the left
+
         truckComboBox.addActionListener(e -> {
             CoffeeTruck selected = (CoffeeTruck) truckComboBox.getSelectedItem();
-            if (selected != null) {
+
+            if (selected != null){
                 prepareDrinkButton.setEnabled(true);
                 displayTruckInfoButton.setEnabled(true);
                 truckMaintenanceButton.setEnabled(true);
             }
         });
-
-        truckSelectorPanel.add(truckComboBox, gbc);
-
-        formPanel.add(truckSelectorPanel, BorderLayout.WEST); //Add Truck Selector to the left
-
-        updateTruckSelector();
-
+*/
         //Set up button panel layout
         gbc.anchor = GridBagConstraints.CENTER;
 
@@ -171,12 +207,16 @@ public class SimulateTruckPanel extends BasePanel{
         backgroundPanel.add(formBackgroundPanel, BorderLayout.CENTER);
     }
 
-    private void updateTruckSelector() {
+
+    public void startSimulation(){
+
+        //this.trucks = truckController.getTrucks();
+        setupTruckSelector();
+    }
+    //ArrayList<CoffeeTruck> trucks
+    private void setupTruckSelector() {
 
         trucks = truckController.getTrucks();
-
-        DefaultComboBoxModel<CoffeeTruck> model = (DefaultComboBoxModel<CoffeeTruck>) truckComboBox.getModel();
-        model.removeAllElements();
 
         if (trucks.isEmpty()) {
             errorLabel.setText("No trucks available");
@@ -187,13 +227,19 @@ public class SimulateTruckPanel extends BasePanel{
             errorLabel.setText("");
             truckSelectorLabel.setText("Select a Coffee Truck:");
 
-            for (CoffeeTruck truck : trucks) {
-                if (truck != null) model.addElement(truck);
+            truckComboBox.removeAllItems();
+
+            for(int i = 0; i < trucks.size(); i++){
+
+                CoffeeTruck truck = trucks.get(i);
+                if(truck != null) {
+                    truckComboBox.addItem(truck);
+                    System.out.println("Adding truck: " + truck.getName());
+                }
             }
-            truckComboBox.setSelectedIndex(0);
         }
 
-        truckSelectorPanel.revalidate();
-        truckSelectorPanel.repaint();
+        formPanel.revalidate();
+        formPanel.repaint();
     }
 }
