@@ -9,6 +9,7 @@ public class MainMenuPanel extends BasePanel{
 
     private MenuView menuView;
     private MenuController menuController;
+    private BackgroundPanel backgroundPanel;
 
     public MainMenuPanel(MenuView menuView, MenuController menuController) {
 
@@ -18,14 +19,7 @@ public class MainMenuPanel extends BasePanel{
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("BG_jeep.png"));
         Image image = backgroundImage.getImage();
-
-        Image scaledImage = image.getScaledInstance(Toolkit.getDefaultToolkit().getScreenSize().width,
-                Toolkit.getDefaultToolkit().getScreenSize().height,
-                Image.SCALE_SMOOTH);
-
-        ImageIcon scaledBackgroundImage = new ImageIcon(scaledImage);
-        JLabel backgroundPanel = new JLabel(scaledBackgroundImage);
-        backgroundPanel.setLayout(new BorderLayout());
+        backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
         JPanel titleWrapper = new JPanel(new BorderLayout());
@@ -94,7 +88,7 @@ public class MainMenuPanel extends BasePanel{
 
         removeTruckButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //Remove truck panel
+            menuController.showRemoveTruckPanel();
         });
 
         simulateTruckButton.addActionListener(e -> {

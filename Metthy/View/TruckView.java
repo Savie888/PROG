@@ -16,6 +16,7 @@ public class TruckView extends View{
 
     private CreateTruckPanel createTruckPanel;
     private TruckLoadoutPanel truckLoadoutPanel;
+    private RemoveTruckPanel removeTruckPanel;
     private SimulateTruckPanel simulateTruckPanel;
     private TruckInfoPanel truckInfoPanel;
     private DashboardPanel dashboardPanel;
@@ -31,6 +32,7 @@ public class TruckView extends View{
 
         createTruckPanel = new CreateTruckPanel(truckController, menuView, this); //maybe remove truckView
         truckLoadoutPanel = new TruckLoadoutPanel(truckController, menuView);
+        removeTruckPanel = new RemoveTruckPanel(truckController, menuView);
         simulateTruckPanel = new SimulateTruckPanel(truckController, menuView);
         truckInfoPanel = new TruckInfoPanel(truckController, menuView);
 
@@ -38,6 +40,7 @@ public class TruckView extends View{
 
         panelContainer.add(createTruckPanel, "CREATE_TRUCK");
         panelContainer.add(truckLoadoutPanel, "TRUCK_LOADOUT");
+        panelContainer.add(removeTruckPanel, "REMOVE_TRUCK");
         panelContainer.add(simulateTruckPanel, "SIMULATE_TRUCK");
         panelContainer.add(truckInfoPanel, "TRUCK_INFO");
         //panelContainer.add(dashboardPanel, "DASHBOARD");
@@ -62,11 +65,6 @@ public class TruckView extends View{
 
 
 
-    public SimulateTruckPanel getSimulateTruckPanel(){
-
-        return simulateTruckPanel;
-    }
-
     public CreateTruckPanel getCreateTruckPanel(){
 
         return createTruckPanel;
@@ -75,6 +73,16 @@ public class TruckView extends View{
     public TruckLoadoutPanel getTruckLoadoutPanel(){
 
         return truckLoadoutPanel;
+    }
+
+    public RemoveTruckPanel getRemoveTruckPanel(){
+
+        return removeTruckPanel;
+    }
+
+    public SimulateTruckPanel getSimulateTruckPanel(){
+
+        return simulateTruckPanel;
     }
 
     public TruckInfoPanel getTruckInfoPanel(){
@@ -87,9 +95,10 @@ public class TruckView extends View{
         return dashboardPanel;
     }
 
-    public void showTruckInformationPanel(CoffeeTruck truck){
+    public void showRemoveTruckPanel(){
 
-        truckInfoPanel.displayTruckInfo(truck);
+        removeTruckPanel.start();
+        menuView.showPanel("REMOVE_TRUCK");
     }
 
     public void showTruckLoadoutPanel(CoffeeTruck truck) {
@@ -97,6 +106,13 @@ public class TruckView extends View{
         truckLoadoutPanel.startLoadout(truck);
         menuView.showPanel("TRUCK_LOADOUT");
     }
+
+    public void showTruckInformationPanel(CoffeeTruck truck){
+
+        truckInfoPanel.displayTruckInfo(truck);
+    }
+
+
 
     /**
      * Prompts user to enter a unique truck name

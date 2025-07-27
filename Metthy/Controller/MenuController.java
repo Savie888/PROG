@@ -18,16 +18,26 @@ public class MenuController{
         this.truckView = truckController.getTruckView();
     }
 
+    public void showTruckLoadoutPanel(CoffeeTruck truck){
+
+        truckView.showTruckInformationPanel(truck);
+        menuView.showPanel("TRUCK_INFO");
+    }
+
+    public void showRemoveTruckPanel(){
+
+        truckView.showRemoveTruckPanel();
+    }
+
     public void showSimulateTruckPanel(){
 
         truckView.startTruckSimulation();
         menuView.showPanel("SIMULATE_TRUCK");
     }
 
-    public void showTruckLoadoutPanel(CoffeeTruck truck){
+    public TruckController getTruckController(){
 
-        truckView.showTruckInformationPanel(truck);
-        menuView.showPanel("TRUCK_INFO");
+        return truckController;
     }
 
     public void mainMenu(int option){
@@ -38,7 +48,7 @@ public class MenuController{
                 //truckController.truckCreation();
                 break;
             case 2:
-                truckController.truckRemoval();
+                //truckController.truckRemoval();
                 break;
             case 3:
                 truckController.simulateMenu();

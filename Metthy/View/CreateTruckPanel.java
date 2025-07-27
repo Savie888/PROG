@@ -12,7 +12,7 @@ public class CreateTruckPanel extends BasePanel {
     private final TruckView truckView;
     private final MenuView menuView;
     private BackgroundPanel backgroundPanel;
-    private JPanel titleWrapper, formPanel, formBackgroundPanel;
+    private JPanel titleWrapper, formPanel, formBackgroundPanel, bottomPanel;
     private JLabel titleLabel, errorLabel, nameLabel, locationLabel, truckTypeLabel;
     private JTextField nameField, locationField;
     private JComboBox<String> typeBox;
@@ -60,7 +60,7 @@ public class CreateTruckPanel extends BasePanel {
         //Form Background Panel
         formBackgroundPanel = new TranslucentPanel();
         formBackgroundPanel.setLayout(new BorderLayout());
-        formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 700, 20, 700));
+        formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 800, 20, 800));
 
         //Form Panel
         formPanel = new JPanel();
@@ -114,7 +114,7 @@ public class CreateTruckPanel extends BasePanel {
 
         //Row 5: Create Truck Button
         gbc.gridy++;
-        createButton = new JButton("Create Truck");
+        createButton = createButton("Create Truck");
         createButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.add(createButton, gbc);
 
@@ -181,13 +181,13 @@ public class CreateTruckPanel extends BasePanel {
         formPanel.add(errorLabel, gbc);
 
         //Bottom Panel
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.setOpaque(false); // match your translucent look
 
-        JButton backButton = createButton("Exit to Main Menu");
-        bottomPanel.add(backButton);
+        JButton exitButton = createButton("Exit to Main Menu");
+        bottomPanel.add(exitButton);
 
-        backButton.addActionListener(e -> {
+        exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
             menuView.showPanel("MAIN_MENU");
         });
@@ -195,7 +195,7 @@ public class CreateTruckPanel extends BasePanel {
         //Add formPanel into the background container
         formBackgroundPanel.add(formPanel, BorderLayout.CENTER);
         backgroundPanel.add(formBackgroundPanel, BorderLayout.CENTER);
-        backgroundPanel.add(bottomPanel, BorderLayout.SOUTH); //Add south panel
+        backgroundPanel.add(bottomPanel, BorderLayout.SOUTH); //Add bottom panel
     }
 
     public int setLoadoutOption(){

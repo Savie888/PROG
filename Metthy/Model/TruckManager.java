@@ -133,9 +133,9 @@ public class TruckManager extends Model{
         return truck;
     }
 
-    public void removeTruck(int truckIndex){
+    public void removeTruck(CoffeeTruck truck){
 
-        trucks.remove(truckIndex);
+        trucks.remove(truck);
     }
 
     public int getRegularTruckCount(){

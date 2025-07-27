@@ -14,7 +14,7 @@ public class MenuView extends View{
     private CardLayout cardLayout;
     private MainMenuPanel mainMenuPanel;
     //private RemoveTruckPanel removeTruckPanel;
-    private SimulateTruckPanel simulateTruckPanel;
+    //private SimulateTruckPanel simulateTruckPanel;
     //private DashboardPanel dashboardPanel;
 
     public MenuView(MenuController menuController){
@@ -54,6 +54,7 @@ public class MenuView extends View{
 
         cardPanel.add(truckView.getCreateTruckPanel(), "CREATE_TRUCK");
         cardPanel.add(truckView.getTruckLoadoutPanel(), "TRUCK_LOADOUT");
+        cardPanel.add(truckView.getRemoveTruckPanel(), "REMOVE_TRUCK");
         cardPanel.add(truckView.getSimulateTruckPanel(), "SIMULATE_TRUCK");
         cardPanel.add(truckView.getTruckInfoPanel(), "TRUCK_INFO");
         //cardPanel.add(truckView.getDashboardPanel(), "DASHBOARD");

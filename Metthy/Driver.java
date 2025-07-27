@@ -17,7 +17,8 @@ package Metthy;
     //Implement Truck Loadout Menu
         //Change JOptionPanel with Label
     //Simulate Menu
-        //View Truck Info //ASAP
+        
+    //Eventually remove error label in remove truck and simulate truck once main menu button disablers set up
     //Truck display in dashboard //POSTPONED
 
 

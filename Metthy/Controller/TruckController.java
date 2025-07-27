@@ -165,16 +165,9 @@ public class TruckController{
     /**
      * Removes a coffee truck selected by the user.
      */
-    public void truckRemoval(){
+    public void truckRemoval(CoffeeTruck truck){
 
-        int truckNumber;
-        ArrayList<CoffeeTruck> trucks = truckManager.getTrucks();
-
-        do{
-            truckNumber = truckView.selectTruck(trucks);
-        } while(truckView.checkTruckNumber(truckNumber - 1, trucks));
-
-        truckManager.removeTruck(truckNumber - 1);
+        truckManager.removeTruck(truck);
     }
 
     public int selectTruck(){
