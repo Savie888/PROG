@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+//OBSOLETE
+
 public class TruckView extends View{
 
     private TruckController truckController;

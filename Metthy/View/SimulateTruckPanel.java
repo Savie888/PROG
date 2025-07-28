@@ -154,7 +154,6 @@ public class SimulateTruckPanel extends BasePanel{
 
         truckMaintenanceButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //menuView.getMenuController().sh
             truckController.truckMaintenancePanel(selectedTruck);
             resetTruckSelector();
         });

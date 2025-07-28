@@ -51,6 +51,7 @@ public class MenuView extends View{
         cardPanel.add(removeTruckPanel, "REMOVE_TRUCK");
         cardPanel.add(simulateTruckPanel, "SIMULATE_TRUCK");
         cardPanel.add(truckInfoPanel, "TRUCK_INFO");
+        cardPanel.add(truckMaintenancePanel, "TRUCK_MAINTENANCE");
         //cardPanel.add(dashboardPanel, "DASHBOARD");
 
         cardPanel.setVisible(true);
@@ -95,12 +96,33 @@ public class MenuView extends View{
         showPanel("TRUCK_INFO");
     }
 
+    /**
+     * Displays the truck simulation menu for a selected coffee truck.
+     * <p>Allows user to:</p>
+     * <ul>
+     *   <li>Prepare coffee drinks using the truck's inventory</li>
+     *   <li>View the selected truck's information</li>
+     *   <li>Enter the truck maintenance submenu</li>
+     *   <li>Exit to the main menu</li>
+     * </ul>
+     */
     public void showTruckSimulationMenu(){
 
         simulateTruckPanel.startSimulation();
         showPanel("SIMULATE_TRUCK");
     }
 
+    /**
+     * Displays the truck maintenance menu for a selected coffee truck.
+     * <p>Allows the user to:</p>
+     * <ul>
+     *   <li>Restock bins (either all or individually)</li>
+     *   <li>Modify storage bin contents (either all or individually)</li>
+     *   <li>Empty bins (either all or individually)</li>
+     *   <li>Edit the truck's name or location</li>
+     *   <li>Edit global drink ingredient prices</li>
+     * </ul>
+     */
     public void showTruckMaintenancePanel(CoffeeTruck truck){
 
         truckMaintenancePanel.startMaintenance(truck);

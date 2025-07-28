@@ -2,15 +2,20 @@ package Metthy.View;
 
 import Metthy.Controller.TruckController;
 import Metthy.Model.CoffeeTruck;
+import Metthy.Model.SpecialCoffeeTruck;
+import Metthy.Model.StorageBin;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class TruckMaintenancePanel extends BasePanel {
 
+    private final TruckController truckController;
     private CoffeeTruck selectedTruck;
 
     public TruckMaintenancePanel(TruckController truckController){
+
+        this.truckController = truckController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("special.png"));
@@ -25,6 +30,11 @@ public class TruckMaintenancePanel extends BasePanel {
         JPanel formBackgroundPanel = new TranslucentPanel();
         formBackgroundPanel.setLayout(new BorderLayout());
         formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 200, 20, 200));
+
+        //Error label
+        JLabel errorLabel = new JLabel();
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setText(" ");
 
         //Center wrapper for the button panel
         JPanel centerWrapper = new JPanel(new GridBagLayout());
@@ -63,29 +73,107 @@ public class TruckMaintenancePanel extends BasePanel {
         buttonPanel.add(exitButton);
         buttonPanel.add(Box.createVerticalStrut(15));
 
+        buttonPanel.add(errorLabel);
+
         restockButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //menuView.showPanel("CREATE_TRUCK");
+            int option = selectBinOption();
+
+            if(option == 0) //Restock all bins
+                restockAll();
+
+            else if(option == 1)
+                restock();
         });
 
         modifyButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //menuController.showRemoveTruckPanel();
+            /*int option = selectBinOption();
+            int binNumber;
+
+            if(option == 0) //Empty all bins
+                truckController.modifyAllBins(selectedTruck);
+
+            else if(option == 1){
+                binNumber = selectBin(selectedTruck); //Get a bin number
+
+                if(binNumber == -1) //User cancelled
+                    return;
+
+                if(!truckController.validBinNumber(binNumber)){
+                    JOptionPane.showMessageDialog(null, "Invalid bin number");
+                    return;
+                }
+
+                StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
+                //truckController.emptyBin(selectedTruck, bin); //Empty one bin
+            }*/
         });
 
         emptyButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
+            int option = selectBinOption();
+            int binNumber;
 
+            if(option == 0) //Empty all bins
+                truckController.emptyAllBins(selectedTruck);
+
+            else if(option == 1){
+                binNumber = selectBin(selectedTruck); //Get a bin number
+
+                if(binNumber == -1) //User cancelled
+                    return;
+
+                if(!truckController.validBinNumber(binNumber)){
+                    JOptionPane.showMessageDialog(null, "Invalid bin number");
+                    return;
+                }
+
+                StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
+                truckController.emptyBin(selectedTruck, bin); //Empty one bin
+            }
         });
 
         editNameButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //menuView.showPanel("DASHBOARD");
+            String currentName = selectedTruck.getName();
+            String newName = JOptionPane.showInputDialog(null,
+                    "Current Name: " + currentName + "\nEnter new name:",
+                    "Edit Truck Name",
+                    JOptionPane.PLAIN_MESSAGE);
+
+            if(newName.isEmpty())
+                errorLabel.setText("Name can't be empty.");
+
+            else if(!truckController.isTruckNameUnique(newName))
+                errorLabel.setText("Name already used.");
+
+            else{
+                errorLabel.setText("");
+                selectedTruck.setName(newName);
+                JOptionPane.showMessageDialog(null, "Truck name updated to: " + newName);
+            }
         });
 
         editLocationButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //menuView.showPanel("DASHBOARD");
+            String currentLocation = selectedTruck.getLocation(); // Adjust as needed
+            String newLocation = JOptionPane.showInputDialog(null,
+                    "Current Location: " + currentLocation + "\nEnter new location:",
+                    "Edit Truck Location",
+                    JOptionPane.PLAIN_MESSAGE);
+
+            if(newLocation.isEmpty())
+                errorLabel.setText("Location can't be empty.");
+
+            else if(!truckController.isTruckLocationUnique(newLocation))
+                errorLabel.setText("Location already used.");
+
+            else{
+                errorLabel.setText(" ");
+                selectedTruck.setLocation(newLocation);
+                JOptionPane.showMessageDialog(null, "Truck location updated to: " + newLocation);
+            }
         });
 
         editPricesButton.addActionListener(e -> {
@@ -98,6 +186,13 @@ public class TruckMaintenancePanel extends BasePanel {
             truckController.simulateTruckPanel(); //Return to simulate truck panel
         });
 
+        //Panel for error display
+        JPanel errorWrapper = new JPanel();
+        errorWrapper.setOpaque(false);
+        errorWrapper.setPreferredSize(new Dimension(300, 20)); // Fixed height
+        errorWrapper.add(errorLabel);
+
+        buttonPanel.add(errorWrapper);
         centerWrapper.add(buttonPanel);
         formBackgroundPanel.add(centerWrapper, BorderLayout.CENTER);
         backgroundPanel.add(formBackgroundPanel, BorderLayout.CENTER);
@@ -110,4 +205,161 @@ public class TruckMaintenancePanel extends BasePanel {
 
         this.selectedTruck = truck;
     }
+
+    private int selectBinOption(){
+
+        String[] options = {"Select all bins", "Select one bin"};
+
+        int result = JOptionPane.showOptionDialog(
+                this,
+                "Select Action",
+                "Bin Maintenance",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        return result;
+    }
+
+    private int selectBin(CoffeeTruck truck){
+
+        int max = 8;
+
+        if(truck instanceof SpecialCoffeeTruck)
+            max = 10;
+
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, max, 1);
+        JSpinner spinner = new JSpinner(spinnerModel);
+
+        int result = JOptionPane.showOptionDialog(
+                this,
+                spinner,
+                "Select a Bin",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                null,
+                null
+        );
+
+        if(result == JOptionPane.OK_OPTION)
+            return (int) spinner.getValue();
+
+        else
+            return -1; //Cancelled
+    }
+
+    public int selectRestockMode(){
+
+        String[] options = {"Fully Restock", "Add Quantities"};
+
+        int option = JOptionPane.showOptionDialog(
+                this,
+                "Choose restock mode:",
+                "Restock Bins",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        return option;
+    }
+
+    public int getRestockQuantity(){
+
+        SpinnerNumberModel model = new SpinnerNumberModel(0, 1, 1000, 1);
+        JSpinner spinner = new JSpinner(model);
+
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                spinner,
+                "Enter quantity to add (0 for full restock)",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if(result == JOptionPane.OK_OPTION)
+            return (int) spinner.getValue();
+
+        else
+            return -1; //User cancelled
+    }
+
+    public void restock(){
+
+        double quantity;
+
+        int binNumber = selectBin(selectedTruck); //Get a bin number
+
+        if(binNumber == -1) //User cancelled
+            return;
+
+        if(!truckController.validBinNumber(binNumber)){
+            JOptionPane.showMessageDialog(null, "Invalid bin number");
+            return;
+        }
+
+        StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
+
+        int mode = selectRestockMode();
+
+        if(mode == 0) //Full Restock
+            truckController.fullRestockBin(selectedTruck, bin);
+
+        else{
+            quantity = getRestockQuantity();
+            truckController.restockBin(selectedTruck, bin, quantity);
+        }
+    }
+
+    public void restockAll(){
+
+        int binNumber, mode;
+        double quantity;
+
+        mode = selectRestockMode();
+
+        if(mode == -1)
+            return;
+
+        if(mode == 0)
+            truckController.fullRestockAllBins(selectedTruck);
+
+        else{
+            for(int i = 0; i < selectedTruck.getBins().size(); i++){
+                binNumber = i + 1;
+                StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
+                quantity = getRestockQuantity();
+
+                if(quantity == 0) //Full Restock
+                    truckController.fullRestockBin(selectedTruck, bin);
+
+                else
+                    truckController.restockBin(selectedTruck, bin, quantity);
+            }
+        }
+    }
+
+    public void modify(){
+
+    }
+
+    public void modifyAll(){
+
+    }
+
+    public void empty(){
+
+    }
+
+    public void emptyAll(){
+
+    }
 }
+
+

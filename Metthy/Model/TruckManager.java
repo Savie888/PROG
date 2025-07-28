@@ -78,6 +78,11 @@ public class TruckManager extends Model{
         return flag; //Return true if location is unique, false otherwise
     }
 
+    public boolean checkBinNumber(int binNumber){
+
+        return binNumber > 0 && binNumber <= 10;
+    }
+
     public BinContent getIngredientFromOption(int option) {
 
         return ingredientList.get(option - 1);

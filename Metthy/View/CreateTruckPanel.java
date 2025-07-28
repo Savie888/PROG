@@ -94,8 +94,8 @@ public class CreateTruckPanel extends BasePanel {
 
             playSound("select_sound_effect.wav"); //Play sound effect
 
-            String name = nameField.getText().trim();
-            String location = locationField.getText().trim();
+            String name = nameField.getText();
+            String location = locationField.getText();
             int type = Integer.parseInt(((String) typeBox.getSelectedItem()).substring(0, 1));
 
             // Validate name
@@ -114,6 +114,7 @@ public class CreateTruckPanel extends BasePanel {
                 errorLabel.setText("Location can't be empty.");
                 return;
             }
+
             if (!truckController.isTruckLocationUnique(location)) {
                 errorLabel.setText("Location already used.");
                 return;
@@ -205,8 +206,9 @@ public class CreateTruckPanel extends BasePanel {
         errorLabel.setText(" ");
     }
 
-    public void repeat(){
+    private void repeat(){
 
+        String[] options = {"Yes, create another", "Back to Menu"};
         int choice = JOptionPane.showOptionDialog(
                 this,
                 "Truck created successfully!\nCreate another one?",
@@ -214,8 +216,8 @@ public class CreateTruckPanel extends BasePanel {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
-                new Object[] { "Yes, create another", "Back to Menu" },
-                "Yes, create another"
+                options,
+                options[0]
         );
 
         resetFields();

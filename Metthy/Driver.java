@@ -4,7 +4,7 @@ package Metthy;
     //Continue on method refactoring
     //Error messages for duplicate name and location
 
-//Work on drinks
+//Drinks
     //use Cup object in getCupSize
     //transaction format
 
@@ -19,6 +19,8 @@ package Metthy;
         //Truck Maintenance Menu
 
     //Eventually remove error label in remove truck and simulate truck once main menu button disablers set up
+
+    //Bin Maintenance: move logic to controller
 
     //Truck display in dashboard //POSTPONED
 

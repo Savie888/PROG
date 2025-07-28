@@ -5,6 +5,7 @@ import Metthy.View.MenuView;
 
 import java.util.ArrayList;
 
+
 public class TruckController{
 
     private final MenuView menuView;
@@ -39,33 +40,11 @@ public class TruckController{
         menuView.showTruckInformationPanel(truck);
     }
 
-    /**
-     * Displays the truck simulation menu for performing actions on a selected coffee truck.
-     * <p>Allows user to:</p>
-     * <ul>
-     *   <li>Prepare coffee drinks using the truck's inventory</li>
-     *   <li>View the selected truck's information</li>
-     *   <li>Enter the truck maintenance submenu</li>
-     *   <li>Exit to the main menu</li>
-     * </ul>
-     */
     public void simulateTruckPanel(){
 
         menuView.showTruckSimulationMenu();
     }
 
-    /**
-     * Displays the truck maintenance menu for a specific coffee truck.
-     * <p>Allows the user to:</p>
-     * <ul>
-     *   <li>Restock bins (either all or individually)</li>
-     *   <li>Modify storage bin contents (either all or individually)</li>
-     *   <li>Empty bins (either all or individually)</li>
-     *   <li>Edit the truck's name or location</li>
-     *   <li>Edit global drink ingredient prices</li>
-     * </ul>
-     *
-     */
     public void truckMaintenancePanel(CoffeeTruck truck){
 
         menuView.showTruckMaintenancePanel(truck);
@@ -76,11 +55,23 @@ public class TruckController{
         menuView.showTruckLoadoutPanel(truck);
     }
 
+    /**
+     * Checks if a name is unique
+     *
+     * @param name - the name to be checked
+     * @return true if unique, false otherwise
+     */
     public boolean isTruckNameUnique(String name){
 
         return truckManager.checkTruckName(name);
     }
 
+    /**
+     * Checks if a location is unique
+     *
+     * @param location - the location to be checked
+     * @return true if unique, false otherwise
+     */
     public boolean isTruckLocationUnique(String location){
 
         return truckManager.checkTruckLocation(location);
@@ -117,6 +108,47 @@ public class TruckController{
     public void assignItemToBin(CoffeeTruck truck, StorageBin bin, BinContent content, double itemQuantity){
 
         truck.assignItemToBin(bin, content, itemQuantity);
+    }
+
+    //Bin Maintenance
+
+    public StorageBin getBinByNumber(CoffeeTruck truck, int binNumber){
+
+        return truck.getBinByNumber(binNumber);
+    }
+
+    public void restockBin(CoffeeTruck truck, StorageBin bin, double quantity){
+
+        truck.restockBin(bin, quantity);
+    }
+
+    public void fullRestockBin(CoffeeTruck truck, StorageBin bin){
+
+        truck.fullRestockBin(bin);
+    }
+
+    public void fullRestockAllBins(CoffeeTruck truck){
+
+        truck.fullRestockAllBins();
+    }
+
+    public void modifyAllBins(CoffeeTruck truck){
+
+    }
+
+    public void emptyBin(CoffeeTruck truck, StorageBin bin){
+
+        truck.emptyBin(bin);
+    }
+
+    public void emptyAllBins(CoffeeTruck truck){
+
+        truck.emptyAllBins();
+    }
+
+    public boolean validBinNumber(int binNumber){
+
+        return truckManager.checkBinNumber(binNumber);
     }
 
     public ArrayList<CoffeeTruck> getTrucks(){

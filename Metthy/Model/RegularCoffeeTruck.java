@@ -23,7 +23,4 @@ public class RegularCoffeeTruck extends CoffeeTruck{
         for(i = 0; i <= 7; i++)
             bins.add(new StorageBin(i + 1));
     }
-
-
-
 }

@@ -86,6 +86,8 @@ public abstract class CoffeeTruck {
         }
     }
 
+
+
     /**
      * Restocks a specific storage bin.
      *
@@ -93,10 +95,20 @@ public abstract class CoffeeTruck {
      */
     public void restockBin(StorageBin bin, double quantity){
 
-        if(quantity == 0)
-            bin.fill(); //Fill bin
-        else
-            bin.addQuantity(quantity); //Add entered quantity to bin
+        bin.addQuantity(quantity); //Add entered quantity to bin
+    }
+
+    public void fullRestockBin(StorageBin bin){
+
+        bin.fill();
+    }
+
+    public void fullRestockAllBins(){
+
+        for(int i = 0; i < bins.size(); i++){
+            StorageBin bin = bins.get(i);
+            fullRestockBin(bin);
+        }
     }
 
     /**
@@ -277,6 +289,11 @@ public abstract class CoffeeTruck {
     public void setLocation(String location){
 
         this.location = location;
+    }
+
+    public StorageBin getBinByNumber(int binNumber){
+
+        return bins.get(binNumber - 1);
     }
 
     /**
