@@ -4,40 +4,13 @@ import Metthy.Model.CoffeeTruck;
 import Metthy.View.MenuView;
 import Metthy.View.TruckView;
 
+/*
 public class MenuController{
 
-    private final MenuView menuView;
-    private final TruckView truckView;
-    private final TruckController truckController;
     private boolean running;
 
     public MenuController(){
 
-        this.menuView = new MenuView(this);
-        this.truckController = new TruckController(menuView);
-        this.truckView = truckController.getTruckView();
-    }
-
-    public void showTruckLoadoutPanel(CoffeeTruck truck){
-
-        truckView.showTruckInformationPanel(truck);
-        menuView.showPanel("TRUCK_INFO");
-    }
-
-    public void showRemoveTruckPanel(){
-
-        truckView.showRemoveTruckPanel();
-    }
-
-    public void showSimulateTruckPanel(){
-
-        truckView.startTruckSimulation();
-        menuView.showPanel("SIMULATE_TRUCK");
-    }
-
-    public TruckController getTruckController(){
-
-        return truckController;
     }
 
     public void mainMenu(int option){
@@ -82,4 +55,4 @@ public class MenuController{
             mainMenu(option);
         }
     }
-}
+}*/

@@ -11,19 +11,19 @@ package Metthy;
 //Change currency to peso
 
 //GUI
-    //Change menu views to truck views
+
     //Truck Loadout Menu
         //Change JOptionPanel with Label
-        //Quantity not properly set
 
     //Simulate Menu
         //Truck Maintenance Menu
 
     //Eventually remove error label in remove truck and simulate truck once main menu button disablers set up
+
     //Truck display in dashboard //POSTPONED
 
 
-import Metthy.Controller.MenuController;
+import Metthy.Controller.TruckController;
 
 
 /**
@@ -47,7 +47,6 @@ public class Driver {
 
     public static void main(String[] args){
 
-        MenuController menuController = new MenuController();
-        menuController.start();
+        TruckController truckController = new TruckController();
     }
 }

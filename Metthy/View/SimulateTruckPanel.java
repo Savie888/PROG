@@ -18,7 +18,7 @@ public class SimulateTruckPanel extends BasePanel{
 
     private CoffeeTruck selectedTruck;
 
-    public SimulateTruckPanel(TruckController truckController, MenuView menuView){
+    public SimulateTruckPanel(TruckController truckController){
 
         this.truckController = truckController;
 
@@ -28,36 +28,13 @@ public class SimulateTruckPanel extends BasePanel{
         BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
-        JPanel titleWrapper = new JPanel(new BorderLayout());
-        titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.X_AXIS));
-        titleWrapper.setOpaque(false);
-        titleWrapper.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0)); // Adds spacing from top
-
-        //Stylized title
-        JLabel titleLabel = new JLabel("Truck Simulation", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
-        titleLabel.setMaximumSize(new Dimension(5, 50));
-        titleLabel.setForeground(Color.BLACK);
-        titleLabel.setOpaque(false);
-
-        //Force label to hug its text
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setMaximumSize(titleLabel.getPreferredSize());
-
-        //Add label centered in wrapper
-        titleWrapper.add(Box.createHorizontalGlue());
-        titleWrapper.add(titleLabel);
-        titleWrapper.add(Box.createHorizontalGlue());
-
-        backgroundPanel.add(titleWrapper, BorderLayout.NORTH);
-
-        this.setLayout(new BorderLayout());
-        this.add(backgroundPanel, BorderLayout.CENTER);
+        TitleWrapper title = new TitleWrapper("Truck Simulation");
+        backgroundPanel.add(title, BorderLayout.NORTH);
 
         //Form Background Panel
         JPanel formBackgroundPanel = new TranslucentPanel();
         formBackgroundPanel.setLayout(new BorderLayout());
-        formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 200, 20, 200));
+        formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(20, 200, 20, 200));
 
         //Form Panel
         formPanel = new JPanel();
@@ -171,25 +148,29 @@ public class SimulateTruckPanel extends BasePanel{
 
         displayTruckInfoButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            menuView.getMenuController().showTruckLoadoutPanel(selectedTruck);
+            truckController.truckInformationPanel(selectedTruck);
             resetTruckSelector();
         });
 
         truckMaintenanceButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //menuView.showPanel("TRUCK_MAINTENANCE");
+            //menuView.getMenuController().sh
+            truckController.truckMaintenancePanel(selectedTruck);
             resetTruckSelector();
         });
 
         exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
             //Add a slight delay before exiting so the sound plays
-            menuView.showPanel("MAIN_MENU");
+            truckController.mainMenuPanel();
             resetTruckSelector();
         });
 
         formBackgroundPanel.add(formPanel, BorderLayout.CENTER);
         backgroundPanel.add(formBackgroundPanel, BorderLayout.CENTER);
+
+        this.setLayout(new BorderLayout());
+        this.add(backgroundPanel, BorderLayout.CENTER);
     }
 
 

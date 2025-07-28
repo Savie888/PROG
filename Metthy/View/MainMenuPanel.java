@@ -1,19 +1,21 @@
 package Metthy.View;
 
-import Metthy.Controller.MenuController;
+import Metthy.Controller.TruckController;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MainMenuPanel extends BasePanel{
 
-
-    public MainMenuPanel(MenuView menuView, MenuController menuController) {
+    public MainMenuPanel(TruckController truckController) {
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("BG_jeep.png"));
         Image image = backgroundImage.getImage();
         BackgroundPanel backgroundPanel = new BackgroundPanel(image);
+
+        TitleWrapper title = new TitleWrapper("Java Jeeps Coffee Truck Simulator");
+        backgroundPanel.add(title, BorderLayout.NORTH);
 
         //Setup Title
         JPanel titleWrapper = new JPanel(new BorderLayout());
@@ -45,7 +47,7 @@ public class MainMenuPanel extends BasePanel{
 
         backgroundPanel.add(titleWrapper, BorderLayout.NORTH);
 
-        // Panel to center the button panel
+        //Center wrapper for the button panel
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         centerWrapper.setOpaque(false);
 
@@ -77,22 +79,22 @@ public class MainMenuPanel extends BasePanel{
 
         createTruckButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            menuView.showPanel("CREATE_TRUCK");
+            truckController.truckCreationPanel();
         });
 
         removeTruckButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            menuController.showRemoveTruckPanel();
+            truckController.removeTruckPanel();
         });
 
         simulateTruckButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            menuController.showSimulateTruckPanel();
+            truckController.simulateTruckPanel();
         });
 
         dashboardButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            menuView.showPanel("DASHBOARD");
+            //menuView.showPanel("DASHBOARD");
         });
 
         exitButton.addActionListener(e -> {
@@ -103,7 +105,7 @@ public class MainMenuPanel extends BasePanel{
             timer.start();
         });
 
-        centerWrapper.add(buttonPanel); // Centered in GridBagLayout
+        centerWrapper.add(buttonPanel); //Centered in GridBagLayout
         backgroundPanel.add(centerWrapper, BorderLayout.CENTER);
 
         this.setLayout(new BorderLayout());

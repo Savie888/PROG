@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class TruckLoadoutPanel extends BasePanel {
 
     private final TruckController truckController;
-    private final MenuView menuView;
 
     private JPanel formPanel;
     private JLabel binLabel, capacityLabel, errorLabel;
@@ -24,10 +23,9 @@ public class TruckLoadoutPanel extends BasePanel {
     private int currentBinIndex = 0;
 
 
-    public TruckLoadoutPanel(TruckController truckController, MenuView menuView){
+    public TruckLoadoutPanel(TruckController truckController){
 
         this.truckController = truckController;
-        this.menuView = menuView;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("special.png"));
@@ -35,28 +33,8 @@ public class TruckLoadoutPanel extends BasePanel {
         BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
-        JPanel titleWrapper = new JPanel(new BorderLayout());
-        titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.X_AXIS));
-        titleWrapper.setOpaque(false);
-        titleWrapper.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0)); // Adds spacing from top
-
-        //Stylized title
-        JLabel titleLabel = new JLabel("Truck Loadout", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
-        titleLabel.setMaximumSize(new Dimension(5, 50));
-        titleLabel.setForeground(Color.BLACK);
-        titleLabel.setOpaque(false);
-
-        // Force label to hug its text
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setMaximumSize(titleLabel.getPreferredSize());
-
-        // Add label centered in wrapper
-        titleWrapper.add(Box.createHorizontalGlue());
-        titleWrapper.add(titleLabel);
-        titleWrapper.add(Box.createHorizontalGlue());
-
-        backgroundPanel.add(titleWrapper, BorderLayout.NORTH);
+        TitleWrapper title = new TitleWrapper("Truck Loadout");
+        backgroundPanel.add(title, BorderLayout.NORTH);
 
         this.setLayout(new BorderLayout());
         this.add(backgroundPanel, BorderLayout.CENTER);
@@ -150,7 +128,7 @@ public class TruckLoadoutPanel extends BasePanel {
 
         backButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            menuView.showPanel("CREATE_TRUCK");
+            truckController.truckCreationPanel();
         });
 
         //Add formPanel into the background container
@@ -172,14 +150,14 @@ public class TruckLoadoutPanel extends BasePanel {
 
         if(currentBinIndex >= bins.size()){
 
-            menuView.showPanel("CREATE_TRUCK");
+            truckController.mainMenuPanel();
 
             //Delay repeat option until after returning to truck creation menu
             SwingUtilities.invokeLater(() -> {
                 int repeat = repeat();
 
                 if (repeat == JOptionPane.NO_OPTION)
-                    menuView.showPanel("MAIN_MENU");
+                    truckController.mainMenuPanel();
             });
 
             return;

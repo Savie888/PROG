@@ -10,52 +10,31 @@ import java.util.ArrayList;
 public class RemoveTruckPanel extends BasePanel{
 
     private TruckController truckController;
-    private MenuView menuView;
-    private BackgroundPanel backgroundPanel;
-    private JPanel titleWrapper, formBackgroundPanel, formPanel, comboPanel, bottomPanel;
-    private JLabel titleLabel, truckSelectorLabel, errorLabel;
-    private JButton selectButton, removeButton, exitButton;
+
+    private JPanel formPanel;
+    private JLabel truckSelectorLabel;
+    private JButton selectButton, removeButton;
     private JComboBox<CoffeeTruck> truckComboBox;
     private CoffeeTruck selectedTruck;
-    private ArrayList<CoffeeTruck> trucks;
 
-    public RemoveTruckPanel(TruckController truckController, MenuView menuView){
+    public RemoveTruckPanel(TruckController truckController){
 
         this.truckController = truckController;
-        this.menuView = menuView;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
         Image image = backgroundImage.getImage();
-        backgroundPanel = new BackgroundPanel(image);
+        BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
-        titleWrapper = new JPanel(new BorderLayout());
-        titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.X_AXIS));
-        titleWrapper.setOpaque(false);
-        titleWrapper.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0)); // Adds spacing from top
-
-        //Stylized title
-        titleLabel = new JLabel("Truck Removal", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
-        titleLabel.setMaximumSize(new Dimension(5, 50));
-        titleLabel.setForeground(Color.BLACK);
-        titleLabel.setOpaque(false);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setMaximumSize(titleLabel.getPreferredSize());
-
-        //Add label centered in wrapper
-        titleWrapper.add(Box.createHorizontalGlue());
-        titleWrapper.add(titleLabel);
-        titleWrapper.add(Box.createHorizontalGlue());
-
-        backgroundPanel.add(titleWrapper, BorderLayout.NORTH);
+        TitleWrapper title = new TitleWrapper("Truck Removal");
+        backgroundPanel.add(title, BorderLayout.NORTH);
 
         this.setLayout(new BorderLayout());
         this.add(backgroundPanel, BorderLayout.CENTER);
 
         //Form Background Panel
-        formBackgroundPanel = new TranslucentPanel();
+        JPanel formBackgroundPanel = new TranslucentPanel();
         formBackgroundPanel.setLayout(new BorderLayout());
         formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 250, 20, 250));
 
@@ -80,11 +59,11 @@ public class RemoveTruckPanel extends BasePanel{
         truckSelectorLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         truckSelectorLabel.setForeground(Color.BLACK);
 
-        errorLabel = new JLabel("");
+        JLabel errorLabel = new JLabel("");
         errorLabel.setForeground(Color.RED);
 
         //Setup Panel
-        comboPanel = new JPanel();
+        JPanel comboPanel = new JPanel();
         comboPanel.setLayout(new GridBagLayout());
         comboPanel.setOpaque(false);
         comboPanel.setPreferredSize(new Dimension(300, 200));
@@ -135,7 +114,7 @@ public class RemoveTruckPanel extends BasePanel{
         });
 
         //Bottom Panel
-        bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.setOpaque(false); // match your translucent look
 
         JButton exitButton = createButton("Exit to Main Menu");
@@ -143,7 +122,7 @@ public class RemoveTruckPanel extends BasePanel{
 
         exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            menuView.showPanel("MAIN_MENU");
+            truckController.mainMenuPanel();
             resetTruckSelector();
         });
 
@@ -155,7 +134,7 @@ public class RemoveTruckPanel extends BasePanel{
 
     public void start(){
 
-        trucks = truckController.getTrucks();
+        ArrayList<CoffeeTruck> trucks = truckController.getTrucks();
 
         truckSelectorLabel.setText("Select a Coffee Truck:");
 

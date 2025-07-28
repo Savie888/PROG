@@ -1,5 +1,6 @@
 package Metthy.View;
 
+import Metthy.Controller.TruckController;
 import Metthy.Model.BinContent;
 import Metthy.Model.CoffeeTruck;
 import Metthy.Model.SpecialCoffeeTruck;
@@ -13,7 +14,7 @@ public class TruckInfoPanel extends BasePanel{
 
     private JPanel infoDisplayPanel;
 
-    public TruckInfoPanel(MenuView menuView){
+    public TruckInfoPanel(TruckController truckController){
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -21,26 +22,8 @@ public class TruckInfoPanel extends BasePanel{
         BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
-        JPanel titleWrapper = new JPanel(new BorderLayout());
-        titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.X_AXIS));
-        titleWrapper.setOpaque(false);
-        titleWrapper.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0)); // Adds spacing from top
-
-        //Stylized title
-        JLabel titleLabel = new JLabel("Truck Information", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
-        titleLabel.setMaximumSize(new Dimension(5, 50));
-        titleLabel.setForeground(Color.BLACK);
-        titleLabel.setOpaque(false);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setMaximumSize(titleLabel.getPreferredSize());
-
-        //Add label centered in wrapper
-        titleWrapper.add(Box.createHorizontalGlue());
-        titleWrapper.add(titleLabel);
-        titleWrapper.add(Box.createHorizontalGlue());
-
-        backgroundPanel.add(titleWrapper, BorderLayout.NORTH);
+        TitleWrapper title = new TitleWrapper("Truck Information");
+        backgroundPanel.add(title, BorderLayout.NORTH);
 
         this.setLayout(new BorderLayout());
         this.add(backgroundPanel, BorderLayout.CENTER);
@@ -65,7 +48,7 @@ public class TruckInfoPanel extends BasePanel{
 
         backButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            menuView.getMenuController().showSimulateTruckPanel();
+            truckController.simulateTruckPanel();
         });
 
         formBackgroundPanel.add(infoDisplayPanel, BorderLayout.CENTER);

@@ -14,105 +14,15 @@ public class TruckView extends View{
     private JPanel panelContainer;
     private CardLayout cardLayout;
 
-    private CreateTruckPanel createTruckPanel;
-    private TruckLoadoutPanel truckLoadoutPanel;
-    private RemoveTruckPanel removeTruckPanel;
-    private SimulateTruckPanel simulateTruckPanel;
-    private TruckInfoPanel truckInfoPanel;
-    private DashboardPanel dashboardPanel;
 
     public TruckView(TruckController truckController, MenuView menuView){
 
         super();
         this.truckController = truckController;
         this.menuView = menuView;
-
-        cardLayout = new CardLayout();
-        panelContainer = new JPanel(cardLayout);
-
-        createTruckPanel = new CreateTruckPanel(truckController, menuView, this);
-        truckLoadoutPanel = new TruckLoadoutPanel(truckController, menuView);
-        removeTruckPanel = new RemoveTruckPanel(truckController, menuView);
-        simulateTruckPanel = new SimulateTruckPanel(truckController, menuView);
-        truckInfoPanel = new TruckInfoPanel(menuView);
-
-        //dashboardPanel = new DashboardPanel(truckController, menuView);
-
-        panelContainer.add(createTruckPanel, "CREATE_TRUCK");
-        panelContainer.add(truckLoadoutPanel, "TRUCK_LOADOUT");
-        panelContainer.add(removeTruckPanel, "REMOVE_TRUCK");
-        panelContainer.add(simulateTruckPanel, "SIMULATE_TRUCK");
-        panelContainer.add(truckInfoPanel, "TRUCK_INFO");
-        //panelContainer.add(dashboardPanel, "DASHBOARD");
-
-        panelContainer.setVisible(true);
-        //this.setLayout(new BorderLayout());
-        //this.add(panelContainer, BorderLayout.CENTER);
-    }
-
-    public void showPanel(String name){
-
-        cardLayout.show(panelContainer, name);
     }
 
     //PROMPTS AND DISPLAYS
-
-    public void startTruckSimulation(){
-
-        simulateTruckPanel.startSimulation();
-        menuView.showPanel("SIMULATE_TRUCK");
-    }
-
-
-
-    public CreateTruckPanel getCreateTruckPanel(){
-
-        return createTruckPanel;
-    }
-
-    public TruckLoadoutPanel getTruckLoadoutPanel(){
-
-        return truckLoadoutPanel;
-    }
-
-    public RemoveTruckPanel getRemoveTruckPanel(){
-
-        return removeTruckPanel;
-    }
-
-    public SimulateTruckPanel getSimulateTruckPanel(){
-
-        return simulateTruckPanel;
-    }
-
-    public TruckInfoPanel getTruckInfoPanel(){
-
-        return truckInfoPanel;
-    }
-
-    public DashboardPanel getDashboardPanel(){
-
-        return dashboardPanel;
-    }
-
-    public void showRemoveTruckPanel(){
-
-        removeTruckPanel.start();
-        menuView.showPanel("REMOVE_TRUCK");
-    }
-
-    public void showTruckLoadoutPanel(CoffeeTruck truck) {
-
-        truckLoadoutPanel.startLoadout(truck);
-        menuView.showPanel("TRUCK_LOADOUT");
-    }
-
-    public void showTruckInformationPanel(CoffeeTruck truck){
-
-        truckInfoPanel.displayTruckInfo(truck);
-    }
-
-
 
     /**
      * Prompts user to enter a unique truck name

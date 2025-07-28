@@ -1,24 +1,32 @@
 package Metthy.View;
 
-import Metthy.Controller.MenuController;
+import Metthy.Controller.TruckController;
+import Metthy.Model.CoffeeTruck;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MenuView extends View{
 
-    private MenuController menuController;
-    private JFrame frame;
+    private TruckController truckController;
     private JPanel cardPanel;
     private CardLayout cardLayout;
-    private MainMenuPanel mainMenuPanel;
 
-    public MenuView(MenuController menuController){
+    private MainMenuPanel mainMenuPanel;
+    private CreateTruckPanel createTruckPanel;
+    private TruckLoadoutPanel truckLoadoutPanel;
+    private RemoveTruckPanel removeTruckPanel;
+    private SimulateTruckPanel simulateTruckPanel;
+    private TruckInfoPanel truckInfoPanel;
+    private TruckMaintenancePanel truckMaintenancePanel;
+    private DashboardPanel dashboardPanel;
+
+    public MenuView(TruckController truckController){
 
         super();
-        this.menuController = menuController;
+        this.truckController = truckController;
 
-        frame = new JFrame("Main Menu");
+        JFrame frame = new JFrame("Main Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
@@ -26,35 +34,114 @@ public class MenuView extends View{
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // Initialize panels
-        mainMenuPanel = new MainMenuPanel(this, menuController);
+        //Initialize panels
+        mainMenuPanel = new MainMenuPanel(truckController);
+        createTruckPanel = new CreateTruckPanel(truckController);
+        truckLoadoutPanel = new TruckLoadoutPanel(truckController);
+        removeTruckPanel = new RemoveTruckPanel(truckController);
+        simulateTruckPanel = new SimulateTruckPanel(truckController);
+        truckInfoPanel = new TruckInfoPanel(truckController); //Move to truckView
+        truckMaintenancePanel = new TruckMaintenancePanel(truckController);
+        //dashboardPanel = new DashboardPanel(truckController, menuView);
 
-        // Add panels to cardPanel
+        //Add to card layout
         cardPanel.add(mainMenuPanel, "MAIN_MENU");
+        cardPanel.add(createTruckPanel, "CREATE_TRUCK");
+        cardPanel.add(truckLoadoutPanel, "TRUCK_LOADOUT");
+        cardPanel.add(removeTruckPanel, "REMOVE_TRUCK");
+        cardPanel.add(simulateTruckPanel, "SIMULATE_TRUCK");
+        cardPanel.add(truckInfoPanel, "TRUCK_INFO");
+        //cardPanel.add(dashboardPanel, "DASHBOARD");
+
+        cardPanel.setVisible(true);
 
         frame.add(cardPanel);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize
         frame.setVisible(true);
     }
 
-    public MenuController getMenuController(){
-
-        return menuController;
-    }
-
-    public void registerTruckPanels(TruckView truckView){
-
-        cardPanel.add(truckView.getCreateTruckPanel(), "CREATE_TRUCK");
-        cardPanel.add(truckView.getTruckLoadoutPanel(), "TRUCK_LOADOUT");
-        cardPanel.add(truckView.getRemoveTruckPanel(), "REMOVE_TRUCK");
-        cardPanel.add(truckView.getSimulateTruckPanel(), "SIMULATE_TRUCK");
-        cardPanel.add(truckView.getTruckInfoPanel(), "TRUCK_INFO");
-        //cardPanel.add(truckView.getDashboardPanel(), "DASHBOARD");
-    }
+    //PANEL DISPLAYERS
 
     public void showPanel(String panelName){
 
         cardLayout.show(cardPanel, panelName);
+    }
+
+    public void showMainMenu(){
+
+        showPanel("MAIN_MENU");
+    }
+
+    public void showTruckCreationPanel(){
+
+        showPanel("CREATE_TRUCK");
+    }
+
+    public void showTruckLoadoutPanel(CoffeeTruck truck) {
+
+        truckLoadoutPanel.startLoadout(truck);
+        showPanel("TRUCK_LOADOUT");
+    }
+
+    public void showRemoveTruckPanel(){
+
+        removeTruckPanel.start();
+        showPanel("REMOVE_TRUCK");
+    }
+
+    public void showTruckInformationPanel(CoffeeTruck truck){
+
+        truckInfoPanel.displayTruckInfo(truck);
+        showPanel("TRUCK_INFO");
+    }
+
+    public void showTruckSimulationMenu(){
+
+        simulateTruckPanel.startSimulation();
+        showPanel("SIMULATE_TRUCK");
+    }
+
+    public void showTruckMaintenancePanel(CoffeeTruck truck){
+
+        truckMaintenancePanel.startMaintenance(truck);
+        showPanel("TRUCK_MAINTENANCE");
+    }
+
+
+    //GETTERS (might not need)
+    public CreateTruckPanel getCreateTruckPanel(){
+
+        return createTruckPanel;
+    }
+
+    public TruckLoadoutPanel getTruckLoadoutPanel(){
+
+        return truckLoadoutPanel;
+    }
+
+    public RemoveTruckPanel getRemoveTruckPanel(){
+
+        return removeTruckPanel;
+    }
+
+    public SimulateTruckPanel getSimulateTruckPanel(){
+
+        return simulateTruckPanel;
+    }
+
+    public TruckInfoPanel getTruckInfoPanel(){
+
+        return truckInfoPanel;
+    }
+
+    public TruckMaintenancePanel getTruckMaintenancePanel() {
+
+        return truckMaintenancePanel;
+    }
+
+    public DashboardPanel getDashboardPanel(){
+
+        return dashboardPanel;
     }
 
     public void displayWelcomeMessage(){

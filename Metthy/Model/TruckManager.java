@@ -9,6 +9,10 @@ public class TruckManager extends Model{
     public ArrayList<CoffeeTruck> trucks;
     private final ArrayList<BinContent> ingredientList;
 
+    /**
+     * Sets up the loadout of a truck.
+     */
+
     public TruckManager(){
 
         this.trucks = new ArrayList<>();
@@ -16,7 +20,7 @@ public class TruckManager extends Model{
         setIngredients();
     }
 
-    private void setIngredients() {
+    private void setIngredients(){
 
         ingredientList.add(new SmallCup());
         ingredientList.add(new MediumCup());
@@ -73,21 +77,6 @@ public class TruckManager extends Model{
 
         return flag; //Return true if location is unique, false otherwise
     }
-
-    public boolean checkTruckType(int choice){
-
-        boolean valid = true;
-
-        if((choice != 1 && choice != 2)){
-
-            System.out.println("Invalid choice. Please try again");
-            valid = false;
-        }
-
-        return valid;
-    }
-
-    // move above to truck view??
 
     public BinContent getIngredientFromOption(int option) {
 

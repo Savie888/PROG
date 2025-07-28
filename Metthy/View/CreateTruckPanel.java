@@ -9,7 +9,6 @@ import java.awt.*;
 public class CreateTruckPanel extends BasePanel {
 
     private final TruckController truckController;
-    private final MenuView menuView;
 
     private JLabel errorLabel;
     private JTextField nameField, locationField;
@@ -17,10 +16,9 @@ public class CreateTruckPanel extends BasePanel {
 
     private CoffeeTruck truck;
 
-    public CreateTruckPanel(TruckController controller, MenuView menuView, TruckView truckView){
+    public CreateTruckPanel(TruckController truckController){
 
-        this.truckController = controller;
-        this.menuView = menuView;
+        this.truckController = truckController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -28,31 +26,8 @@ public class CreateTruckPanel extends BasePanel {
         BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
         //Setup Title
-        JPanel titleWrapper = new JPanel(new BorderLayout());
-        titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.X_AXIS));
-        titleWrapper.setOpaque(false);
-        titleWrapper.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0)); // Adds spacing from top
-
-        //Stylized title
-        JLabel titleLabel = new JLabel("Truck Creation", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
-        titleLabel.setMaximumSize(new Dimension(5, 50));
-        titleLabel.setForeground(Color.BLACK);
-        titleLabel.setOpaque(false);
-
-        //Force label to hug its text
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleLabel.setMaximumSize(titleLabel.getPreferredSize());
-
-        //Add label centered in wrapper
-        titleWrapper.add(Box.createHorizontalGlue());
-        titleWrapper.add(titleLabel);
-        titleWrapper.add(Box.createHorizontalGlue());
-
-        backgroundPanel.add(titleWrapper, BorderLayout.NORTH);
-
-        this.setLayout(new BorderLayout());
-        this.add(backgroundPanel, BorderLayout.CENTER);
+        TitleWrapper title = new TitleWrapper("Truck Creation");
+        backgroundPanel.add(title, BorderLayout.NORTH);
 
         //Form Background Panel
         JPanel formBackgroundPanel = new TranslucentPanel();
@@ -128,7 +103,8 @@ public class CreateTruckPanel extends BasePanel {
                 errorLabel.setText("Name can't be empty.");
                 return;
             }
-            if (!controller.isTruckNameUnique(name)) {
+
+            if (!truckController.isTruckNameUnique(name)) {
                 errorLabel.setText("Name already used.");
                 return;
             }
@@ -138,7 +114,7 @@ public class CreateTruckPanel extends BasePanel {
                 errorLabel.setText("Location can't be empty.");
                 return;
             }
-            if (!controller.isTruckLocationUnique(location)) {
+            if (!truckController.isTruckLocationUnique(location)) {
                 errorLabel.setText("Location already used.");
                 return;
             }
@@ -146,7 +122,7 @@ public class CreateTruckPanel extends BasePanel {
             //Clear errors and continue
             errorLabel.setText(" ");
 
-            truck = controller.truckCreation(name, location, type); //Create truck
+            truck = truckController.truckCreation(name, location, type); //Create truck
 
             //Set loadout option
             int setLoadout = setLoadoutOption();
@@ -156,13 +132,13 @@ public class CreateTruckPanel extends BasePanel {
                 int setDefault = setDefaultLoadoutOption();
 
                 if(setDefault == JOptionPane.YES_OPTION){
-                    truckController.setDefaultTruckLoadout(truck);
+                    truckController.setDefaultTruckLoadout(truck); //Set to default loadout
                     repeat();
                 }
 
                 else{
                     resetFields();
-                    truckView.showTruckLoadoutPanel(truck);
+                    truckController.truckLoadoutPanel(truck); //Show truck loadout panel
                 }
             }
 
@@ -185,13 +161,16 @@ public class CreateTruckPanel extends BasePanel {
 
         exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            menuView.showPanel("MAIN_MENU");
+            truckController.mainMenuPanel();
         });
 
         //Add formPanel into the background container
         formBackgroundPanel.add(formPanel, BorderLayout.CENTER);
         backgroundPanel.add(formBackgroundPanel, BorderLayout.CENTER);
         backgroundPanel.add(bottomPanel, BorderLayout.SOUTH); //Add bottom panel
+
+        this.setLayout(new BorderLayout());
+        this.add(backgroundPanel, BorderLayout.CENTER);
     }
 
     public int setLoadoutOption(){
@@ -242,6 +221,6 @@ public class CreateTruckPanel extends BasePanel {
         resetFields();
 
         if(choice == 1)
-            menuView.showPanel("MAIN_MENU");
+            truckController.mainMenuPanel();
     }
 }
