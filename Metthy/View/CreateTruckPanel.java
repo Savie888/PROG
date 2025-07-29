@@ -139,7 +139,7 @@ public class CreateTruckPanel extends BasePanel {
 
                 else{
                     resetFields();
-                    truckController.truckLoadoutPanel(truck); //Show truck loadout panel
+                    truckController.truckLoadoutPanel(truck, () -> truckController.truckCreationPanel(), true); //Show truck loadout panel
                 }
             }
 

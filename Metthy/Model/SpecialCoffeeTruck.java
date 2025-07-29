@@ -1,7 +1,5 @@
 package Metthy.Model;
 
-import Metthy.Controller.DrinkController;
-
 import java.util.ArrayList;
 
 /**
@@ -16,10 +14,10 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
      * @param name         the name of the coffee truck
      * @param location     the initial location of the truck
      */
-    public SpecialCoffeeTruck(String name, String location, TruckManager truckManager, DrinkController drinkController){
+    public SpecialCoffeeTruck(String name, String location, TruckManager truckManager, DrinkManager drinkManager){
 
         //Call regular coffee truck constructor
-        super(name, location, truckManager, drinkController);
+        super(name, location, truckManager, drinkManager);
 
         int i;
 
@@ -178,9 +176,9 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
         String brewType = drinkView.selectBrewType();
         double ratio = drinkView.getBrewRatio(brewType);
 
-        Drink drink = drinkController.getDrink(coffeeType, coffeeSize);
+        Drink drink = drinkManager.getDrink(coffeeType, coffeeSize);
 
-        ingredients = drinkController.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
+        ingredients = drinkManager.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
         drinkView.showIngredients(coffeeType, coffeeSize, brewType, ingredients); //Show required ingredients
 
         StorageBin beanBin = findBin("Coffee Bean"); //Find bin with coffee beans
@@ -190,14 +188,14 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
         StorageBin[] bins = {beanBin, milkBin, waterBin, cupBin};
 
         //Check if storage bins have sufficient ingredients and syrup quantities
-        if(drinkController.hasSufficientIngredients(bins, ingredients)){
+        if(drinkManager.hasSufficientIngredients(bins, ingredients)){
 
             coffeeGrams = ingredients[0];
             milkOz = ingredients[1];
             waterOz = ingredients[2];
             price = drink.getPrice();
 
-            drinkController.useIngredients(bins, ingredients); //Deduct ingredients from storage bins
+            drinkManager.useIngredients(bins, ingredients); //Deduct ingredients from storage bins
 
             remainingCoffeeGrams = beanBin.getItemQuantity(); //Get remaining coffee bean quantity
 
@@ -214,7 +212,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
                 extraShots = selectExtraShots(coffeeGrams, remainingCoffeeGrams);
                 extraCoffeeGrams = coffeeGrams * extraShots;
                 beanBin.useQuantity(coffeeGrams * extraShots);
-                extraShotCost = extraShots * drinkController.getExtraShotPrice();
+                extraShotCost = extraShots * drinkManager.getExtraShotPrice();
             }
 
             System.out.printf("\n>>> Preparing %s Cup...\n", coffeeSize);
@@ -230,7 +228,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
                 for(i = 0; i < addOns.size(); i++){
                     BinContent addOn = addOns.get(i);
                     System.out.println(">>> Adding " + addOn.getName() + " Syrup");
-                    price += drinkController.getSyrupOzPrice();
+                    price += drinkManager.getSyrupOzPrice();
                 }
             }
 

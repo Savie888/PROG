@@ -142,6 +142,7 @@ public class SimulateTruckPanel extends BasePanel{
 
         prepareDrinkButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
+            truckController.prepareDrinkPanel(selectedTruck);
             //menuView.showPanel("PREPARE_DRINK");
             resetTruckSelector();
         });
@@ -160,8 +161,7 @@ public class SimulateTruckPanel extends BasePanel{
 
         exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //Add a slight delay before exiting so the sound plays
-            truckController.mainMenuPanel();
+            truckController.mainMenuPanel(); //Add a slight delay before exiting so sound effect can play
             resetTruckSelector();
         });
 

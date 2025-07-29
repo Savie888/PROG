@@ -1,6 +1,6 @@
 package Metthy;
 
-import Metthy.Controller.DrinkController;
+import Metthy.Model.DrinkManager;
 import Metthy.Model.CoffeeTruck;
 import Metthy.Model.RegularCoffeeTruck;
 import Metthy.Model.SpecialCoffeeTruck;
@@ -36,7 +36,7 @@ public class TruckManager {
     /**
      * Manages drink preparation, ingredient calculations, and pricing.
      */
-    private final DrinkController drinkManager = new DrinkController();
+    private final DrinkManager drinkManager = new DrinkManager();
 
     /**
      * Flag to indicate whether drink prices have been initialized.

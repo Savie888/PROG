@@ -1,7 +1,5 @@
 package Metthy.Model;
 
-import Metthy.Controller.DrinkController;
-
 /**
  * This class represents a regular coffee truck
  */
@@ -13,9 +11,9 @@ public class RegularCoffeeTruck extends CoffeeTruck{
      * @param name         the name of the coffee truck
      * @param location     the initial location of the truck
      */
-    public RegularCoffeeTruck(String name, String location, TruckManager truckManager, DrinkController drinkController){
+    public RegularCoffeeTruck(String name, String location, TruckManager truckManager, DrinkManager drinkManager){
 
-        super(name, location, truckManager, drinkController);
+        super(name, location, truckManager, drinkManager);
 
         int i;
 

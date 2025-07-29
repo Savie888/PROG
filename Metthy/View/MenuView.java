@@ -17,6 +17,7 @@ public class MenuView extends View{
     private TruckLoadoutPanel truckLoadoutPanel;
     private RemoveTruckPanel removeTruckPanel;
     private SimulateTruckPanel simulateTruckPanel;
+    private PrepareDrinkPanel prepareDrinkPanel;
     private TruckInfoPanel truckInfoPanel;
     private TruckMaintenancePanel truckMaintenancePanel;
     private DashboardPanel dashboardPanel;
@@ -40,7 +41,8 @@ public class MenuView extends View{
         truckLoadoutPanel = new TruckLoadoutPanel(truckController);
         removeTruckPanel = new RemoveTruckPanel(truckController);
         simulateTruckPanel = new SimulateTruckPanel(truckController);
-        truckInfoPanel = new TruckInfoPanel(truckController); //Move to truckView
+        prepareDrinkPanel = new PrepareDrinkPanel(truckController);
+        truckInfoPanel = new TruckInfoPanel(truckController);
         truckMaintenancePanel = new TruckMaintenancePanel(truckController);
         //dashboardPanel = new DashboardPanel(truckController, menuView);
 
@@ -50,6 +52,7 @@ public class MenuView extends View{
         cardPanel.add(truckLoadoutPanel, "TRUCK_LOADOUT");
         cardPanel.add(removeTruckPanel, "REMOVE_TRUCK");
         cardPanel.add(simulateTruckPanel, "SIMULATE_TRUCK");
+        cardPanel.add(prepareDrinkPanel, "PREPARE_DRINK");
         cardPanel.add(truckInfoPanel, "TRUCK_INFO");
         cardPanel.add(truckMaintenancePanel, "TRUCK_MAINTENANCE");
         //cardPanel.add(dashboardPanel, "DASHBOARD");
@@ -78,9 +81,9 @@ public class MenuView extends View{
         showPanel("CREATE_TRUCK");
     }
 
-    public void showTruckLoadoutPanel(CoffeeTruck truck) {
+    public void showTruckLoadoutPanel(CoffeeTruck truck, Runnable backAction, boolean fromTruckCreation) {
 
-        truckLoadoutPanel.startLoadout(truck);
+        truckLoadoutPanel.startLoadout(truck, backAction, fromTruckCreation);
         showPanel("TRUCK_LOADOUT");
     }
 
@@ -88,12 +91,6 @@ public class MenuView extends View{
 
         removeTruckPanel.start();
         showPanel("REMOVE_TRUCK");
-    }
-
-    public void showTruckInformationPanel(CoffeeTruck truck){
-
-        truckInfoPanel.displayTruckInfo(truck);
-        showPanel("TRUCK_INFO");
     }
 
     /**
@@ -110,6 +107,18 @@ public class MenuView extends View{
 
         simulateTruckPanel.startSimulation();
         showPanel("SIMULATE_TRUCK");
+    }
+
+    public void showPrepareDrinkPanel(CoffeeTruck truck){
+
+        prepareDrinkPanel.startPreparation(truck);
+        showPanel("PREPARE_DRINK");
+    }
+
+    public void showTruckInformationPanel(CoffeeTruck truck){
+
+        truckInfoPanel.displayTruckInfo(truck);
+        showPanel("TRUCK_INFO");
     }
 
     /**

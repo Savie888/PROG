@@ -1,6 +1,5 @@
 package Metthy.Model;
 
-import Metthy.Controller.DrinkController;
 import Metthy.View.DrinkView;
 
 import java.util.ArrayList;
@@ -32,18 +31,18 @@ public abstract class CoffeeTruck {
     protected final Scanner scanner = new Scanner(System.in);
 
     protected TruckManager truckManager; //Consider removing
-    protected DrinkController drinkController;
+    protected DrinkManager drinkManager;
     protected DrinkView drinkView;
 
-    public CoffeeTruck(String name, String location, TruckManager truckManager, DrinkController drinkController){
+    public CoffeeTruck(String name, String location, TruckManager truckManager, DrinkManager drinkManager){
 
         this.name = name;
         this.location = location;
         this.bins = new ArrayList<>();
         this.salesLog = new ArrayList<>();
         this.truckManager = truckManager;
-        this.drinkController = drinkController;
-        this.drinkView = drinkController.getDrinkView();
+        this.drinkManager = drinkManager;
+        this.drinkView = drinkManager.getDrinkView();
     }
 
     /**
@@ -216,8 +215,8 @@ public abstract class CoffeeTruck {
         brewType = "Standard"; //Set brew type to standard by default
         ratio = drinkView.getBrewRatio(brewType);
 
-        Drink drink = drinkController.getDrink(coffeeType, coffeeSize);
-        ingredients = drinkController.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
+        Drink drink = drinkManager.getDrink(coffeeType, coffeeSize);
+        ingredients = drinkManager.getAdjustedIngredients(coffeeType, coffeeSize, ratio); //Get the ingredients needed for the drink
 
         drinkView.showIngredients(coffeeType, coffeeSize, brewType, ingredients); //Show required ingredients
 
@@ -228,7 +227,7 @@ public abstract class CoffeeTruck {
         StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
 
         //Check if storage bins have sufficient ingredients
-        if(drinkController.hasSufficientIngredients(bins, ingredients)){
+        if(drinkManager.hasSufficientIngredients(bins, ingredients)){
 
             espressoGrams = ingredients[0];
             milkOz = ingredients[1];
@@ -236,7 +235,7 @@ public abstract class CoffeeTruck {
             price = drink.getPrice();
 
             //Deduct ingredients from storage bins
-            drinkController.useIngredients(bins, ingredients);
+            drinkManager.useIngredients(bins, ingredients);
 
             drinkView.displayPreparationSteps(coffeeType, coffeeSize, "Standard", ingredients);
             drinkView.showTotalPrice(drink.getPrice());

@@ -70,5 +70,9 @@ public abstract class Drink {
         this.price = price;
     }
 
+    @Override
+    public String toString(){
 
+        return String.format("%s (%s) - $%.2f", type, size, price);
+    }
 }

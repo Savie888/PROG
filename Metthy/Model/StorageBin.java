@@ -98,6 +98,7 @@ public class StorageBin {
     /**
      * Adds a specified amount to the bin's current quantity.
      * Quantity must not exceed item capacity
+     *
      * @param amount the amount of item to add
      */
     public void addQuantity(double amount){

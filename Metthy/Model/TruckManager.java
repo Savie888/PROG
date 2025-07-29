@@ -1,7 +1,5 @@
 package Metthy.Model;
 
-import Metthy.Controller.DrinkController;
-
 import java.util.ArrayList;
 
 public class TruckManager extends Model{
@@ -110,17 +108,17 @@ public class TruckManager extends Model{
         trucks.add(truck);
     }
 
-    public CoffeeTruck createTruck(String name, String location, int truckType, DrinkController drinkController){
+    public CoffeeTruck createTruck(String name, String location, int truckType, DrinkManager drinkManager){
 
         CoffeeTruck truck;
 
         //Create a Regular Coffee Truck
         if(truckType == 1)
-            truck = new RegularCoffeeTruck(name, location, this, drinkController);
+            truck = new RegularCoffeeTruck(name, location, this, drinkManager);
 
         //Create a Special Coffee Truck
         else
-            truck = new SpecialCoffeeTruck(name, location, this, drinkController);
+            truck = new SpecialCoffeeTruck(name, location, this, drinkManager);
 
         addTruck(truck);
 

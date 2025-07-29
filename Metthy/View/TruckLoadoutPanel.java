@@ -17,12 +17,12 @@ public class TruckLoadoutPanel extends BasePanel {
     private JLabel binLabel, capacityLabel, errorLabel;
     private JComboBox<BinContent> ingredientBox;
     private JSpinner quantitySpinner;
-    private JButton backButton;
 
     private CoffeeTruck truck;
     private ArrayList<StorageBin> bins;
     private int currentBinIndex = 0;
-
+    private Runnable backAction;
+    private boolean fromTruckCreation = false;
 
     public TruckLoadoutPanel(TruckController truckController){
 
@@ -36,9 +36,6 @@ public class TruckLoadoutPanel extends BasePanel {
         //Setup Title
         TitleWrapper title = new TitleWrapper("Truck Loadout");
         backgroundPanel.add(title, BorderLayout.NORTH);
-
-        this.setLayout(new BorderLayout());
-        this.add(backgroundPanel, BorderLayout.CENTER);
 
         // === Form Background Panel ===
         JPanel formBackgroundPanel = new TranslucentPanel();
@@ -124,30 +121,30 @@ public class TruckLoadoutPanel extends BasePanel {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.setOpaque(false);
 
-        backButton = createButton("Exit to Previous Menu");
+        JButton backButton = createButton("Exit to Previous Menu");
         bottomPanel.add(backButton);
 
         backButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.truckCreationPanel();
+            backAction.run();
         });
 
         //Add formPanel into the background container
         formBackgroundPanel.add(formPanel, BorderLayout.CENTER);
         backgroundPanel.add(formBackgroundPanel, BorderLayout.CENTER);
         backgroundPanel.add(bottomPanel, BorderLayout.SOUTH); //Add south panel
+
+        this.setLayout(new BorderLayout());
+        this.add(backgroundPanel, BorderLayout.CENTER);
     }
 
-    public void startLoadout(CoffeeTruck truck){
+    public void startLoadout(CoffeeTruck truck, Runnable backAction, boolean fromTruckCreation){
 
         this.truck = truck;
         this.bins = truck.getBins();
         this.currentBinIndex = 0;
-
-        backButton.addActionListener(e -> {
-            playSound("select_sound_effect.wav");
-            truckController.truckCreationPanel();
-        });
+        this.backAction = backAction;
+        this.fromTruckCreation = fromTruckCreation;
 
         updateUIForCurrentBin();
     }
@@ -156,15 +153,21 @@ public class TruckLoadoutPanel extends BasePanel {
 
         if(currentBinIndex >= bins.size()){
 
-            truckController.mainMenuPanel();
+            if(fromTruckCreation){
 
-            //Delay repeat option until after returning to truck creation menu
-            SwingUtilities.invokeLater(() -> {
-                int repeat = repeat();
+                truckController.mainMenuPanel();
 
-                if (repeat == JOptionPane.NO_OPTION)
-                    truckController.mainMenuPanel();
-            });
+                //Delay repeat option until after returning to truck creation menu
+                SwingUtilities.invokeLater(() -> {
+                    int repeat = repeat();
+
+                    if (repeat == JOptionPane.NO_OPTION)
+                        truckController.mainMenuPanel();
+                });
+            }
+
+            else
+                backAction.run(); //Return to previous menu
 
             return;
         }

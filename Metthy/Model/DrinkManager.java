@@ -1,9 +1,7 @@
-package Metthy.Controller;
+package Metthy.Model;
 
-import Metthy.Model.*;
 import Metthy.View.DrinkView;
 
-import java.util.Scanner;
 import java.util.ArrayList;
 
 /**
@@ -19,12 +17,8 @@ import java.util.ArrayList;
  * </ul>
  *
  */
-public class DrinkController {
+public class DrinkManager {
 
-    /**
-     * Scanner object for reading user input from the console.
-     */
-    private final Scanner scanner = new Scanner(System.in);
     /**
      * List of available drinks that can be prepared by the coffee trucks.
      */
@@ -36,14 +30,17 @@ public class DrinkController {
      * Price per gram of coffee beans.
      */
     private double coffeeGramPrice;
+
     /**
      * Price per fluid ounce of milk.
      */
     private double milkOzPrice;
+
     /**
      * Price per fluid ounce of water.
      */
     private double waterOzPrice;
+
     /**
      * Price of a syrup add-on.
      */
@@ -54,7 +51,7 @@ public class DrinkController {
     /**
      * Constructs a new DrinkManager and sets up the drink menu
      */
-    public DrinkController(){
+    public DrinkManager(){
 
         drinks = new ArrayList<>();
         drinkView = new DrinkView();
@@ -120,7 +117,6 @@ public class DrinkController {
 
     /**
      * Displays the drinks menu
-     *
      */
     public void displayDrinksMenu(){
 
@@ -433,6 +429,11 @@ public class DrinkController {
         double waterCost = waterOzPrice * getWaterOz(coffeeType, ingredients, ratio);
 
         return coffeeCost + milkCost + waterCost;
+    }
+
+    public ArrayList<Drink> getDrinks(){
+
+        return drinks;
     }
 
     public DrinkView getDrinkView(){

@@ -10,14 +10,14 @@ public class TruckController{
 
     private final MenuView menuView;
     private final TruckManager truckManager;
-    private final DrinkController drinkController;
+    private final DrinkManager drinkManager;
     //private static boolean pricesInitialized = true;
 
     public TruckController(){
 
         this.menuView = new MenuView(this);
         this.truckManager = new TruckManager();
-        this.drinkController = new DrinkController();
+        this.drinkManager = new DrinkManager();
     }
 
     public void mainMenuPanel(){
@@ -35,14 +35,19 @@ public class TruckController{
         menuView.showRemoveTruckPanel();
     }
 
+    public void simulateTruckPanel(){
+
+        menuView.showTruckSimulationMenu();
+    }
+
     public void truckInformationPanel(CoffeeTruck truck){
 
         menuView.showTruckInformationPanel(truck);
     }
 
-    public void simulateTruckPanel(){
+    public void prepareDrinkPanel(CoffeeTruck truck){
 
-        menuView.showTruckSimulationMenu();
+        menuView.showPrepareDrinkPanel(truck);
     }
 
     public void truckMaintenancePanel(CoffeeTruck truck){
@@ -50,9 +55,9 @@ public class TruckController{
         menuView.showTruckMaintenancePanel(truck);
     }
 
-    public void truckLoadoutPanel(CoffeeTruck truck){
+    public void truckLoadoutPanel(CoffeeTruck truck, Runnable backAction, boolean fromTruckCreation){
 
-        menuView.showTruckLoadoutPanel(truck);
+        menuView.showTruckLoadoutPanel(truck, backAction, fromTruckCreation);
     }
 
     /**
@@ -92,7 +97,7 @@ public class TruckController{
 
     public CoffeeTruck truckCreation(String name, String location, int truckType) {
 
-        return truckManager.createTruck(name, location, truckType, drinkController);
+        return truckManager.createTruck(name, location, truckType, drinkManager);
     }
 
     public ArrayList<BinContent> getIngredients(){
@@ -159,6 +164,11 @@ public class TruckController{
     public ArrayList<CoffeeTruck> getTrucks(){
 
         return truckManager.getTrucks();
+    }
+
+    public ArrayList<Drink> getDrinks(){
+
+        return drinkManager.getDrinks();
     }
 
     /*

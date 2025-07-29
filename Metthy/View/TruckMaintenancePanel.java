@@ -84,8 +84,10 @@ public class TruckMaintenancePanel extends BasePanel {
             if(option == 0) //Restock all bins
                 restockAll();
 
-            else if(option == 1)
-                restock();
+            else if(option == 1){
+                int binNumber = selectBin(selectedTruck); //Get a bin number
+                restock(binNumber);
+            }
         });
 
         modifyButton.addActionListener(e -> {
@@ -93,7 +95,7 @@ public class TruckMaintenancePanel extends BasePanel {
             int option = selectBinOption();
 
             if(option == 0)
-                truckController.truckLoadoutPanel(selectedTruck);
+                truckController.truckLoadoutPanel(selectedTruck, () -> truckController.truckMaintenancePanel(selectedTruck), false);
 
             else if(option == 1)
                 modify();
@@ -246,31 +248,40 @@ public class TruckMaintenancePanel extends BasePanel {
         return option;
     }
 
-    public int getRestockQuantity(){
+    public double getRestockQuantity(int capacity, double currentQuantity){
 
-        SpinnerNumberModel model = new SpinnerNumberModel(0, 1, 1000, 1);
+        double max = capacity - currentQuantity;
+
+        SpinnerNumberModel model = new SpinnerNumberModel(0, 0, max, 1);
         JSpinner spinner = new JSpinner(model);
 
-        int result = JOptionPane.showConfirmDialog(
+        JLabel infoLabel = new JLabel(
+                String.format("Current: %.0f / %d  |  Enter quantity to add (0 = full restock)", currentQuantity, capacity)
+        );
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(infoLabel);
+        panel.add(Box.createVerticalStrut(10)); // spacing
+        panel.add(spinner);
+
+        double result = JOptionPane.showConfirmDialog(
                 this,
-                spinner,
-                "Enter quantity to add (0 for full restock)",
+                panel,
+                "Restock Bin",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE
         );
 
-        if(result == JOptionPane.OK_OPTION)
-            return (int) spinner.getValue();
-
+        if (result == JOptionPane.OK_OPTION)
+            return (double) spinner.getValue();
         else
             return -1; //User cancelled
     }
 
-    public void restock(){
+    public void restock(int binNumber){
 
         double quantity;
-
-        int binNumber = selectBin(selectedTruck); //Get a bin number
 
         if(binNumber == -1) //User cancelled
             return;
@@ -288,17 +299,17 @@ public class TruckMaintenancePanel extends BasePanel {
             truckController.fullRestockBin(selectedTruck, bin);
 
         else{
-            quantity = getRestockQuantity();
+            int capacity = bin.getContent().getCapacity();
+            double currentQuantity = bin.getContent().getQuantity();
+
+            quantity = getRestockQuantity(capacity, currentQuantity);
             truckController.restockBin(selectedTruck, bin, quantity);
         }
     }
 
     public void restockAll(){
 
-        int binNumber, mode;
-        double quantity;
-
-        mode = selectRestockMode();
+        int mode = selectRestockMode();
 
         if(mode == -1)
             return;
@@ -308,34 +319,37 @@ public class TruckMaintenancePanel extends BasePanel {
 
         else{
             for(int i = 0; i < selectedTruck.getBins().size(); i++){
-                binNumber = i + 1;
-                StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
-                quantity = getRestockQuantity();
 
-                if(quantity == 0) //Full Restock
-                    truckController.fullRestockBin(selectedTruck, bin);
-
-                else
-                    truckController.restockBin(selectedTruck, bin, quantity);
+                restock(i + 1);
             }
         }
     }
 
-    private int getIngredientQuantity(int capacity){
+    private double getIngredientQuantity(int capacity){
 
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, capacity, 1);
         JSpinner spinner = new JSpinner(model);
 
-        int result = JOptionPane.showConfirmDialog(
+        JLabel infoLabel = new JLabel(
+                String.format("Bin capacity: %d units", capacity)
+        );
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(infoLabel);
+        panel.add(Box.createVerticalStrut(10)); // spacing
+        panel.add(spinner);
+
+        double result = JOptionPane.showConfirmDialog(
                 this,
                 spinner,
-                "Enter quantity to add",
+                "Enter quantity",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE
         );
 
         if(result == JOptionPane.OK_OPTION)
-            return (int) spinner.getValue();
+            return (double) spinner.getValue();
 
         else
             return -1; //User cancelled
