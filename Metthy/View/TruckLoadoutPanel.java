@@ -17,6 +17,7 @@ public class TruckLoadoutPanel extends BasePanel {
     private JLabel binLabel, capacityLabel, errorLabel;
     private JComboBox<BinContent> ingredientBox;
     private JSpinner quantitySpinner;
+    private JButton backButton;
 
     private CoffeeTruck truck;
     private ArrayList<StorageBin> bins;
@@ -123,7 +124,7 @@ public class TruckLoadoutPanel extends BasePanel {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.setOpaque(false);
 
-        JButton backButton = createButton("Exit to Previous Menu");
+        backButton = createButton("Exit to Previous Menu");
         bottomPanel.add(backButton);
 
         backButton.addActionListener(e -> {
@@ -142,6 +143,11 @@ public class TruckLoadoutPanel extends BasePanel {
         this.truck = truck;
         this.bins = truck.getBins();
         this.currentBinIndex = 0;
+
+        backButton.addActionListener(e -> {
+            playSound("select_sound_effect.wav");
+            truckController.truckCreationPanel();
+        });
 
         updateUIForCurrentBin();
     }

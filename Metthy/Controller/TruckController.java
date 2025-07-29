@@ -132,6 +132,11 @@ public class TruckController{
         truck.fullRestockAllBins();
     }
 
+    public void modifyBin(CoffeeTruck truck, StorageBin bin, BinContent ingredient, double quantity){
+
+        truck.assignItemToBin(bin, ingredient, quantity);
+    }
+
     public void modifyAllBins(CoffeeTruck truck){
 
     }

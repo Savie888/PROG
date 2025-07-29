@@ -1,12 +1,14 @@
 package Metthy.View;
 
 import Metthy.Controller.TruckController;
+import Metthy.Model.BinContent;
 import Metthy.Model.CoffeeTruck;
 import Metthy.Model.SpecialCoffeeTruck;
 import Metthy.Model.StorageBin;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class TruckMaintenancePanel extends BasePanel {
 
@@ -88,50 +90,24 @@ public class TruckMaintenancePanel extends BasePanel {
 
         modifyButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            /*int option = selectBinOption();
-            int binNumber;
+            int option = selectBinOption();
 
-            if(option == 0) //Empty all bins
-                truckController.modifyAllBins(selectedTruck);
+            if(option == 0)
+                truckController.truckLoadoutPanel(selectedTruck);
 
-            else if(option == 1){
-                binNumber = selectBin(selectedTruck); //Get a bin number
-
-                if(binNumber == -1) //User cancelled
-                    return;
-
-                if(!truckController.validBinNumber(binNumber)){
-                    JOptionPane.showMessageDialog(null, "Invalid bin number");
-                    return;
-                }
-
-                StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
-                //truckController.emptyBin(selectedTruck, bin); //Empty one bin
-            }*/
+            else if(option == 1)
+                modify();
         });
 
         emptyButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
             int option = selectBinOption();
-            int binNumber;
 
             if(option == 0) //Empty all bins
                 truckController.emptyAllBins(selectedTruck);
 
-            else if(option == 1){
-                binNumber = selectBin(selectedTruck); //Get a bin number
-
-                if(binNumber == -1) //User cancelled
-                    return;
-
-                if(!truckController.validBinNumber(binNumber)){
-                    JOptionPane.showMessageDialog(null, "Invalid bin number");
-                    return;
-                }
-
-                StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
-                truckController.emptyBin(selectedTruck, bin); //Empty one bin
-            }
+            else if(option == 1)
+                empty(); //Call empty method
         });
 
         editNameButton.addActionListener(e -> {
@@ -252,7 +228,7 @@ public class TruckMaintenancePanel extends BasePanel {
             return -1; //Cancelled
     }
 
-    public int selectRestockMode(){
+    private int selectRestockMode(){
 
         String[] options = {"Fully Restock", "Add Quantities"};
 
@@ -345,20 +321,94 @@ public class TruckMaintenancePanel extends BasePanel {
         }
     }
 
-    public void modify(){
+    private int getIngredientQuantity(int capacity){
 
+        SpinnerNumberModel model = new SpinnerNumberModel(1, 1, capacity, 1);
+        JSpinner spinner = new JSpinner(model);
+
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                spinner,
+                "Enter quantity to add",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if(result == JOptionPane.OK_OPTION)
+            return (int) spinner.getValue();
+
+        else
+            return -1; //User cancelled
     }
 
-    public void modifyAll(){
+    private BinContent selectIngredient(){
 
+        JComboBox<BinContent> ingredientBox = new JComboBox<>();
+        ingredientBox.setMaximumSize(new Dimension(200, 30));
+
+        ArrayList<BinContent> ingredients = truckController.getIngredients();
+
+        for(int i = 0; i < ingredients.size(); i++){
+
+            BinContent ingredient = ingredients.get(i);
+            ingredientBox.addItem(ingredient);
+        }
+
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                ingredientBox,
+                "Select Ingredient",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION)
+            return (BinContent) ingredientBox.getSelectedItem();
+
+        else
+            return null; //User cancelled
+    }
+
+    public void modify(){
+
+        double quantity;
+
+        int binNumber = selectBin(selectedTruck); //Get a bin number;
+
+        if(binNumber == -1) //User cancelled
+            return;
+
+        if(!truckController.validBinNumber(binNumber)){
+            JOptionPane.showMessageDialog(null, "Invalid bin number");
+            return;
+        }
+
+        StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
+
+        BinContent ingredient = selectIngredient();
+
+        if(ingredient == null)
+            return;
+
+        quantity = getIngredientQuantity(ingredient.getCapacity());
+
+        truckController.modifyBin(selectedTruck, bin, ingredient, quantity);
     }
 
     public void empty(){
 
-    }
+        int binNumber = selectBin(selectedTruck); //Get a bin number;
 
-    public void emptyAll(){
+        if(binNumber == -1) //User cancelled
+            return;
 
+        if(!truckController.validBinNumber(binNumber)){
+            JOptionPane.showMessageDialog(null, "Invalid bin number");
+            return;
+        }
+
+        StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
+        truckController.emptyBin(selectedTruck, bin); //Empty one bin
     }
 }
 
