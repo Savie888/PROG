@@ -3,6 +3,8 @@ package Metthy.View;
 import Metthy.Controller.TruckController;
 import Metthy.Model.CoffeeTruck;
 import Metthy.Model.Drink;
+import Metthy.Model.SpecialCoffeeTruck;
+import Metthy.Model.StorageBin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +17,8 @@ public class PrepareDrinkPanel extends BasePanel{
     private JPanel formPanel, drinkListPanel;
     private DefaultListModel<Drink> drinkListModel;
     private JList<Drink> drinkList;
+
+    private CoffeeTruck selectedTruck;
 
     public PrepareDrinkPanel(TruckController truckController){
 
@@ -75,16 +79,16 @@ public class PrepareDrinkPanel extends BasePanel{
         JLabel typeLabel = new JLabel("Select Drink Type");
         String[] drinkTypes = {"Americano", "Latte", "Cappuccino"};
         JComboBox<String> drinkTypeCombo = new JComboBox<>(drinkTypes);
-        drinkPrepPanel.add(typeLabel);
-        drinkPrepPanel.add(drinkTypeCombo);
+        drinkPrepPanel.add(typeLabel, CENTER_ALIGNMENT);
+        drinkPrepPanel.add(drinkTypeCombo, CENTER_ALIGNMENT);
         drinkPrepPanel.add(Box.createVerticalStrut(10));
 
         //Drink size selector
         JLabel sizeLabel = new JLabel("Select Size");
         String[] sizes = { "Small", "Medium", "Large" };
         JComboBox<String> sizeCombo = new JComboBox<>(sizes);
-        drinkPrepPanel.add(sizeLabel);
-        drinkPrepPanel.add(sizeCombo);
+        drinkPrepPanel.add(sizeLabel, CENTER_ALIGNMENT);
+        drinkPrepPanel.add(sizeCombo, CENTER_ALIGNMENT);
         drinkPrepPanel.add(Box.createVerticalStrut(10));
 
         //Prepare button
@@ -92,6 +96,13 @@ public class PrepareDrinkPanel extends BasePanel{
 
         drinkPrepPanel.add(prepareButton);
 
+        prepareButton.addActionListener(e -> {
+            playSound("select_sound_effect.wav");
+
+            String type = (String) drinkTypeCombo.getSelectedItem();
+            String size = (String) sizeCombo.getSelectedItem();
+            prepareDrink(type, size);
+        });
 
         //Bottom Panel
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -118,6 +129,13 @@ public class PrepareDrinkPanel extends BasePanel{
 
     public void startPreparation(CoffeeTruck truck){
 
+        this.selectedTruck = truck;
+
+        setupDrinkMenu();
+    }
+
+    public void setupDrinkMenu(){
+
         ArrayList<Drink> drinks = truckController.getDrinks();
 
         drinkListModel.clear();
@@ -137,4 +155,49 @@ public class PrepareDrinkPanel extends BasePanel{
         drinkListPanel.revalidate();
         drinkListPanel.repaint();
     }
+
+    public String selectBrewType(){
+
+
+
+
+    }
+
+    public void prepareDrink(String type, String size){
+
+        Drink drink = truckController.getDrink(type, size); //Get drink object
+
+        double ratio;
+
+        //Get brew type and ratios
+        if(selectedTruck instanceof SpecialCoffeeTruck){
+
+            String brewType = selectBrewType();
+            ratio = truckController.getBrewRatio(brewType);
+        }
+
+        else
+            ratio = truckController.getBrewRatio("Standard");
+
+        double[] ingredients = truckController.getRequiredIngredients(type, size, ratio); //Get required ingredients
+
+        //StorageBin beanBin = findBin("Coffee Bean");
+        //StorageBin milkBin = findBin("Milk");
+        //StorageBin waterBin = findBin("Water");
+        //StorageBin cupBin = findBin(size + " Cup");
+        //StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
+
+        if (truckController.hasSufficientIngredients(bins, ingredients)) {
+            truckController.useIngredients(bins, ingredients);
+            //drinkView.displayPreparationSteps(type, size, "Standard", ingredients);
+            //drinkView.showTotalPrice(drink.getPrice());
+            //addToTotalSales(drink.getPrice());
+            //recordSale(type, size, ingredients[0], ingredients[1], ingredients[2], drink.getPrice());
+        }
+
+        else {
+            //drinkView.showInsufficientIngredients();
+        }
+    }
+
 }

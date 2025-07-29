@@ -440,4 +440,29 @@ public class DrinkManager {
 
         return drinkView;
     }
+
+    public double getBrewRatio(String brewType){
+
+        double ratio;
+
+        switch(brewType){
+
+            case "Strong":
+                ratio = 15.0;
+                break;
+            case "Light":
+                ratio = 20.0;
+                break;
+                /*
+            case "Custom":
+                System.out.println("Enter custom ratio (Standard ratio is 18.0): ");
+                ratio = scanner.nextDouble();
+                break;*/
+            default:
+                ratio = 18.0;
+                break;
+        }
+
+        return ratio;
+    }
 }

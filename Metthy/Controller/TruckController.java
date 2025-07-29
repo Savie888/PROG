@@ -166,9 +166,37 @@ public class TruckController{
         return truckManager.getTrucks();
     }
 
+
+    //DRINK PREPARATION
+
+    public Drink getDrink(String type, String size){
+
+        return drinkManager.getDrink(type, size);
+    }
+
     public ArrayList<Drink> getDrinks(){
 
         return drinkManager.getDrinks();
+    }
+
+    public double getBrewRatio(String brewType){
+
+        return drinkManager.getBrewRatio(brewType);
+    }
+
+    public double[] getRequiredIngredients(String type, String size, double ratio){
+
+        return drinkManager.getAdjustedIngredients(type, size, ratio);
+    }
+
+    public boolean hasSufficientIngredients(StorageBin[] bins, double[] ingredients){
+
+        return drinkManager.hasSufficientIngredients(bins, ingredients);
+    }
+
+    public void useIngredients(StorageBin[] bins, double[] ingredients){
+
+        drinkManager.useIngredients(bins, ingredients);
     }
 
     /*
