@@ -1,22 +1,13 @@
 package Metthy;
 
-//Drinks
-    //use Cup object in getCupSize
-    //transaction format
 
 //GUI
-
-    //Simulate Menu
-        //Truck Maintenance Menu
-
     //Eventually remove error label in remove truck and simulate truck once main menu button disablers set up
 
     //Bin Maintenance: move logic to controller
 
-    //Truck display in dashboard
 
-
-import Metthy.Controller.TruckController;
+import Metthy.Controller.MainController;
 
 
 /**
@@ -40,6 +31,6 @@ public class Driver {
 
     public static void main(String[] args){
 
-        TruckController truckController = new TruckController();
+        MainController mainController = new MainController();
     }
 }

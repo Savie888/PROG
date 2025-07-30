@@ -1,6 +1,6 @@
 package Metthy.View;
 
-import Metthy.Controller.TruckController;
+import Metthy.Controller.MainController;
 import Metthy.Model.CoffeeTruck;
 
 import javax.swing.*;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class RemoveTruckPanel extends BasePanel{
 
-    private TruckController truckController;
+    private MainController truckController;
 
     private JPanel formPanel;
     private JLabel truckSelectorLabel;
@@ -17,9 +17,9 @@ public class RemoveTruckPanel extends BasePanel{
     private JComboBox<CoffeeTruck> truckComboBox;
     private CoffeeTruck selectedTruck;
 
-    public RemoveTruckPanel(TruckController truckController){
+    public RemoveTruckPanel(MainController mainController){
 
-        this.truckController = truckController;
+        this.truckController = mainController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -109,7 +109,7 @@ public class RemoveTruckPanel extends BasePanel{
         removeButton.addActionListener(e ->{
             playSound("select_sound_effect.wav");
             selectedTruck = (CoffeeTruck) truckComboBox.getSelectedItem();
-            truckController.truckRemoval(selectedTruck);
+            mainController.truckRemoval(selectedTruck);
             resetTruckSelector();
         });
 
@@ -122,7 +122,7 @@ public class RemoveTruckPanel extends BasePanel{
 
         exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.mainMenuPanel();
+            mainController.mainMenuPanel();
             resetTruckSelector();
         });
 

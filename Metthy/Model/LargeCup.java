@@ -4,7 +4,7 @@ public class LargeCup extends Cup{
 
     public LargeCup(){
 
-        super("Large Cup", 40, 0, 16.0);
+        super("Large Cup", 40);
     }
 
     @Override

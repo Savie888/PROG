@@ -1,6 +1,6 @@
 package Metthy.View;
 
-import Metthy.Controller.TruckController;
+import Metthy.Controller.MainController;
 import Metthy.Model.CoffeeTruck;
 
 import javax.swing.*;
@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class CreateTruckPanel extends BasePanel {
 
-    private final TruckController truckController;
+    private final MainController mainController;
 
     private JLabel errorLabel;
     private JTextField nameField, locationField;
@@ -16,9 +16,9 @@ public class CreateTruckPanel extends BasePanel {
     private CoffeeTruck truck;
     private static boolean pricesInitialized = false;
 
-    public CreateTruckPanel(TruckController truckController){
+    public CreateTruckPanel(MainController mainController){
 
-        this.truckController = truckController;
+        this.mainController = mainController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -104,7 +104,7 @@ public class CreateTruckPanel extends BasePanel {
                 return;
             }
 
-            if (!truckController.isTruckNameUnique(name)) {
+            if (!mainController.isTruckNameUnique(name)) {
                 errorLabel.setText("Name already used.");
                 return;
             }
@@ -115,7 +115,7 @@ public class CreateTruckPanel extends BasePanel {
                 return;
             }
 
-            if (!truckController.isTruckLocationUnique(location)) {
+            if (!mainController.isTruckLocationUnique(location)) {
                 errorLabel.setText("Location already used.");
                 return;
             }
@@ -123,7 +123,7 @@ public class CreateTruckPanel extends BasePanel {
             //Clear errors and continue
             errorLabel.setText(" ");
 
-            truck = truckController.truckCreation(name, location, type); //Create truck
+            truck = mainController.truckCreation(name, location, type); //Create truck
 
             //Set loadout option
             int setLoadout = setLoadoutOption();
@@ -133,13 +133,13 @@ public class CreateTruckPanel extends BasePanel {
                 int setDefault = setDefaultLoadoutOption();
 
                 if(setDefault == JOptionPane.YES_OPTION){
-                    truckController.setDefaultTruckLoadout(truck); //Set to default loadout
+                    mainController.setDefaultTruckLoadout(truck); //Set to default loadout
                     repeat();
                 }
 
                 else{
                     resetFields();
-                    truckController.truckLoadoutPanel(truck, () -> truckController.truckCreationPanel(), true); //Show truck loadout panel
+                    mainController.truckLoadoutPanel(truck, () -> mainController.truckCreationPanel(), true); //Show truck loadout panel
                 }
             }
 
@@ -162,7 +162,7 @@ public class CreateTruckPanel extends BasePanel {
 
         exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.mainMenuPanel();
+            mainController.mainMenuPanel();
         });
 
         //Add formPanel into the background container
@@ -228,7 +228,7 @@ public class CreateTruckPanel extends BasePanel {
         }
 
         if(choice == 1)
-            truckController.mainMenuPanel(); //Return to main menu
+            mainController.mainMenuPanel(); //Return to main menu
     }
 
     /**
@@ -237,22 +237,22 @@ public class CreateTruckPanel extends BasePanel {
     private void initializeIngredientPrices(){
 
         double cupPrice = enterPrice("Enter price of a cup");
-        truckController.setCupPrice(cupPrice);
+        mainController.setCupPrice(cupPrice);
 
         double coffeeGramPrice = enterPrice("Enter price of coffee per gram:");
-        truckController.setCoffeeGramPrice(coffeeGramPrice);
+        mainController.setCoffeeGramPrice(coffeeGramPrice);
 
         double milkOzPrice = enterPrice("Enter price of milk per oz:");
-        truckController.setMilkOzPrice(milkOzPrice);
+        mainController.setMilkOzPrice(milkOzPrice);
 
         double waterOzPrice = enterPrice("Enter price of water per oz:");
-        truckController.setWaterOzPrice(waterOzPrice);
+        mainController.setWaterOzPrice(waterOzPrice);
 
         double syrupOzPrice = enterPrice("Enter price of syrup per oz:");
-        truckController.setSyrupOzPrice(syrupOzPrice);
+        mainController.setSyrupOzPrice(syrupOzPrice);
 
         double extraShotPrice = enterPrice("Enter price for extra espresso shot:");
-        truckController.setExtraShotPrice(extraShotPrice);
+        mainController.setExtraShotPrice(extraShotPrice);
     }
 
     private double enterPrice(String message){

@@ -5,15 +5,11 @@ public abstract class Cup implements BinContent{
     protected String size;
     protected double quantity;
     protected int capacity;
-    protected double cost;
-    protected double volume;
 
-    public Cup(String size, int capacity, double cost, double volume){
+    public Cup(String size, int capacity){
 
         this.size = size;
         this.capacity = capacity;
-        this.cost = cost;
-        this.volume = volume;
     }
 
     public String getName() {
@@ -51,15 +47,6 @@ public abstract class Cup implements BinContent{
         quantity -= amount;
     }
 
-    public double getCost() {
-
-        return cost;
-    }
-
-    public double getVolume() {
-
-        return volume;
-    }
 
     public abstract Cup clone();
 

@@ -1,6 +1,6 @@
 package Metthy.View;
 
-import Metthy.Controller.TruckController;
+import Metthy.Controller.MainController;
 import Metthy.Model.CoffeeTruck;
 
 import javax.swing.*;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class SimulateTruckPanel extends BasePanel{
 
-    private final TruckController truckController;
+    private final MainController mainController;
 
     private JPanel formPanel;
     private JLabel truckSelectorLabel, errorLabel;
@@ -18,9 +18,9 @@ public class SimulateTruckPanel extends BasePanel{
 
     private CoffeeTruck selectedTruck;
 
-    public SimulateTruckPanel(TruckController truckController){
+    public SimulateTruckPanel(MainController mainController){
 
-        this.truckController = truckController;
+        this.mainController = mainController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -142,25 +142,25 @@ public class SimulateTruckPanel extends BasePanel{
 
         prepareDrinkButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.prepareDrinkPanel(selectedTruck);
+            mainController.prepareDrinkPanel(selectedTruck);
             resetTruckSelector();
         });
 
         displayTruckInfoButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.truckInformationPanel(selectedTruck);
+            mainController.truckInformationPanel(selectedTruck);
             resetTruckSelector();
         });
 
         truckMaintenanceButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.truckMaintenancePanel(selectedTruck);
+            mainController.truckMaintenancePanel(selectedTruck);
             resetTruckSelector();
         });
 
         exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.mainMenuPanel(); //Add a slight delay before exiting so sound effect can play
+            mainController.mainMenuPanel(); //Add a slight delay before exiting so sound effect can play
             resetTruckSelector();
         });
 
@@ -174,7 +174,7 @@ public class SimulateTruckPanel extends BasePanel{
 
     public void startSimulation(){
 
-        ArrayList<CoffeeTruck> trucks = truckController.getTrucks();
+        ArrayList<CoffeeTruck> trucks = mainController.getTrucks();
 
         if (trucks.isEmpty()) {
             errorLabel.setText("No trucks available");

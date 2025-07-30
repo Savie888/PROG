@@ -1,5 +1,7 @@
 package Metthy.Model;
 
+import Metthy.Controller.MainController;
+
 import java.util.ArrayList;
 
 /**
@@ -14,10 +16,10 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
      * @param name         the name of the coffee truck
      * @param location     the initial location of the truck
      */
-    public SpecialCoffeeTruck(String name, String location, TruckManager truckManager, DrinkManager drinkManager){
+    public SpecialCoffeeTruck(String name, String location, MainController mainController, DrinkManager drinkManager){
 
         //Call regular coffee truck constructor
-        super(name, location, truckManager, drinkManager);
+        super(name, location, mainController, drinkManager);
 
         int i;
 
@@ -28,76 +30,6 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
         //Create the 2 extra storage bins for syrups
         getBins().add(new StorageBin(9));
         getBins().add(new StorageBin(10));
-    }
-
-    public ArrayList<BinContent> selectAddOns(){
-
-        String repeat;
-        boolean validAddOn;
-        BinContent addOn;
-        ArrayList<BinContent> addOns = new ArrayList<>();
-
-        if(!drinkView.hasAvailableSyrup(bins))
-            System.out.println("No syrup available");
-
-        else{
-            do{
-                drinkView.displayAvailableSyrup(bins);
-
-                addOn = drinkView.selectAddOn(bins);
-
-                validAddOn = hasSufficientSyrup(addOn.getName());
-
-                if(validAddOn){
-                    addOns.add(addOn);
-                    addOn.useQuantity(1); //Deduct ingredients from syrup bins
-                }
-
-                System.out.println("Continue adding? (yes/no): ");
-                repeat = drinkView.yesOrNo();
-
-            } while(repeat.equalsIgnoreCase("yes"));
-        }
-
-        return addOns;
-    }
-
-    public boolean hasSufficientSyrup(String syrupType){
-
-        boolean validAddOns = true;
-
-        StorageBin syrupBin = findBin(syrupType); //Find the bin containing the specified add-on
-
-        if(syrupBin == null){
-            drinkView.missingSyrupBinMessage(syrupType);
-            validAddOns = false;
-        }
-
-        else if(syrupBin.getItemQuantity() < 1){
-            drinkView.notEnoughSyrupMessage(syrupType);
-            validAddOns = false;
-        }
-
-        return validAddOns;
-    }
-
-    public int selectExtraShots(double coffeeGrams, double remainingCoffeeGrams){
-
-        int shots, maxShots;
-
-        maxShots = (int) (remainingCoffeeGrams / coffeeGrams);
-
-        do{
-            System.out.printf("Enter number of extra espresso shots (0 - %d): ", maxShots);
-            shots = scanner.nextInt();
-            scanner.nextLine(); //Clear excess line
-
-            if(shots < 0 || shots > maxShots)
-                System.out.println("Invalid number entered");
-
-        } while(shots < 0 || shots > maxShots);
-
-        return shots;
     }
 
     /**
@@ -159,7 +91,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
      * Handles the process of preparing a drink.
      *
      */
-
+/*
     @Override
     public void prepareDrink(){
 
@@ -248,5 +180,5 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
         else
             System.out.println("Not enough ingredients. Drink preparation cancelled.");
 
-    }
+    }*/
 }

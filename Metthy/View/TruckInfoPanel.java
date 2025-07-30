@@ -1,6 +1,6 @@
 package Metthy.View;
 
-import Metthy.Controller.TruckController;
+import Metthy.Controller.MainController;
 import Metthy.Model.BinContent;
 import Metthy.Model.CoffeeTruck;
 import Metthy.Model.SpecialCoffeeTruck;
@@ -13,7 +13,7 @@ public class TruckInfoPanel extends BasePanel{
 
     private JPanel infoDisplayPanel;
 
-    public TruckInfoPanel(TruckController truckController){
+    public TruckInfoPanel(MainController mainController){
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -44,7 +44,7 @@ public class TruckInfoPanel extends BasePanel{
 
         backButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.simulateTruckPanel();
+            mainController.simulateTruckPanel();
         });
 
         formBackgroundPanel.add(infoDisplayPanel, BorderLayout.CENTER);

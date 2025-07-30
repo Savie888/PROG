@@ -1,6 +1,6 @@
 package Metthy.View;
 
-import Metthy.Controller.TruckController;
+import Metthy.Controller.MainController;
 import Metthy.Model.*;
 
 import javax.swing.*;
@@ -9,15 +9,14 @@ import java.util.ArrayList;
 
 public class DashboardPanel extends BasePanel{
 
-    private final TruckController truckController;
+    private final MainController mainController;
 
     private JPanel formPanel, centerWrapper;
-    private JLabel titleLabel;
     private ArrayList<CoffeeTruck> trucks;
 
-    public DashboardPanel(TruckController truckController){
+    public DashboardPanel(MainController mainController){
 
-        this.truckController = truckController;
+        this.mainController = mainController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -48,7 +47,7 @@ public class DashboardPanel extends BasePanel{
 
         backButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.mainMenuPanel();
+            mainController.mainMenuPanel();
         });
 
         formBackgroundPanel.add(formPanel, BorderLayout.CENTER);
@@ -61,7 +60,7 @@ public class DashboardPanel extends BasePanel{
 
     public void displayDashboard(){
 
-        this.trucks = truckController.getTrucks();
+        this.trucks = mainController.getTrucks();
 
         formPanel.removeAll(); // Clear previous content
 
@@ -90,8 +89,8 @@ public class DashboardPanel extends BasePanel{
 
     private void displayTruckDeployment(){
 
-        int regularCount = truckController.getRegularTruckCount();
-        int specialCount = truckController.getSpecialTruckCount();
+        int regularCount = mainController.getRegularTruckCount();
+        int specialCount = mainController.getSpecialTruckCount();
         int total = regularCount + specialCount;
 
         // Deployment details
@@ -115,7 +114,7 @@ public class DashboardPanel extends BasePanel{
 
         int totalSmallCups = 0, totalMediumCups = 0, totalLargeCups = 0;
         double totalCoffeeGrams = 0, totalMilkOz = 0, totalWaterOz = 0;
-        ArrayList<CoffeeTruck> trucks = truckController.getTrucks();
+        ArrayList<CoffeeTruck> trucks = mainController.getTrucks();
 
         for (CoffeeTruck truck : trucks){
 

@@ -1,6 +1,6 @@
 package Metthy.View;
 
-import Metthy.Controller.TruckController;
+import Metthy.Controller.MainController;
 import Metthy.Model.*;
 
 import javax.swing.*;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class PrepareDrinkPanel extends BasePanel{
 
-    private TruckController truckController;
+    private MainController mainController;
 
     private JPanel formPanel, drinkListPanel;
     private DefaultListModel<Drink> drinkListModel;
@@ -17,9 +17,9 @@ public class PrepareDrinkPanel extends BasePanel{
 
     private CoffeeTruck selectedTruck;
 
-    public PrepareDrinkPanel(TruckController truckController){
+    public PrepareDrinkPanel(MainController mainController){
 
-        this.truckController = truckController;
+        this.mainController = mainController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -130,7 +130,7 @@ public class PrepareDrinkPanel extends BasePanel{
 
         exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.simulateTruckPanel();
+            mainController.simulateTruckPanel();
         });
 
         formPanel.add(drinkMenuPanel, BorderLayout.WEST);
@@ -151,9 +151,12 @@ public class PrepareDrinkPanel extends BasePanel{
         setupDrinkMenu();
     }
 
+    /**
+     * Sets up the drinks menu
+     */
     private void setupDrinkMenu(){
 
-        ArrayList<Drink> drinks = truckController.getDrinks();
+        ArrayList<Drink> drinks = mainController.getDrinks();
 
         drinkListModel.clear();
         drinkListPanel.removeAll();
@@ -163,7 +166,7 @@ public class PrepareDrinkPanel extends BasePanel{
         drinkListPanel.add(drinkHeader);
         drinkListPanel.add(Box.createVerticalStrut(10));
 
-        truckController.setBaseDrinkPrices();
+        mainController.setBaseDrinkPrices();
 
         for (Drink drink : drinks) {
             JLabel drinkLabel = new JLabel(drink.toString(), SwingConstants.CENTER);
@@ -218,10 +221,10 @@ public class PrepareDrinkPanel extends BasePanel{
 
     private StorageBin[] getStorageBins(String size){
 
-        StorageBin beanBin = truckController.findBin(selectedTruck, "Coffee Bean");
-        StorageBin milkBin = truckController.findBin(selectedTruck, "Milk");
-        StorageBin waterBin = truckController.findBin(selectedTruck, "Water");
-        StorageBin cupBin = truckController.findBin(selectedTruck, size + " Cup");
+        StorageBin beanBin = mainController.findBin(selectedTruck, "Coffee Bean");
+        StorageBin milkBin = mainController.findBin(selectedTruck, "Milk");
+        StorageBin waterBin = mainController.findBin(selectedTruck, "Water");
+        StorageBin cupBin = mainController.findBin(selectedTruck, size + " Cup");
         StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
 
         return bins;
@@ -259,23 +262,23 @@ public class PrepareDrinkPanel extends BasePanel{
 
     private void prepareDrink(String type, String size){
 
-        Drink drink = truckController.getDrink(type, size); //Get drink object
+        Drink drink = mainController.getDrink(type, size); //Get drink object
 
         double ratio;
         String brewType;
 
         //Get brew type and ratios
         brewType = "Standard";
-        ratio = truckController.getBrewRatio(brewType); //Regular truck drinks can only brew standard drinks
+        ratio = mainController.getBrewRatio(brewType); //Regular truck drinks can only brew standard drinks
 
-        double[] ingredients = truckController.getRequiredIngredients(type, size, ratio); //Get required ingredients
+        double[] ingredients = mainController.getRequiredIngredients(type, size, ratio); //Get required ingredients
         StorageBin[] bins = getStorageBins(size); //Get storage bins to use
 
-        if (truckController.hasSufficientIngredients(bins, ingredients)) {
-            truckController.useIngredients(bins, ingredients); //Use ingredients from bins
+        if (mainController.hasSufficientIngredients(bins, ingredients)) {
+            mainController.useIngredients(bins, ingredients); //Use ingredients from bins
             displayPreparationSteps(type, size, brewType, drink.getPrice(), ingredients);
-            truckController.addToTotalSales(selectedTruck, drink.getPrice());
-            truckController.recordSale(selectedTruck, type, size, ingredients[0], ingredients[1], ingredients[2], drink.getPrice());
+            mainController.addToTotalSales(selectedTruck, drink.getPrice());
+            mainController.recordSale(selectedTruck, type, size, ingredients[0], ingredients[1], ingredients[2], drink.getPrice());
         }
 
         else {
@@ -311,7 +314,7 @@ public class PrepareDrinkPanel extends BasePanel{
     private ArrayList<BinContent> selectAddOns(){
 
         boolean continueAdding = true;
-        ArrayList<Syrup> availableSyrups = truckController.getAvailableSyrup(selectedTruck);
+        ArrayList<Syrup> availableSyrups = mainController.getAvailableSyrup(selectedTruck);
         ArrayList<BinContent> addOns = new ArrayList<>();
 
         if (availableSyrups.isEmpty()) {
@@ -351,7 +354,7 @@ public class PrepareDrinkPanel extends BasePanel{
             }
 
             // Validate and add
-            if (addOn != null && truckController.hasSufficientSyrup(selectedTruck, addOn.getName())) {
+            if (addOn != null && mainController.hasSufficientSyrup(selectedTruck, addOn.getName())) {
                 addOns.add(addOn);
                 addOn.useQuantity(1);
             }
@@ -430,7 +433,7 @@ public class PrepareDrinkPanel extends BasePanel{
         if(!addOns.isEmpty()){
             for(BinContent addOn : addOns){
                 steps.append(">>> Adding " + addOn.getName() + " Syrup\n");
-                price += truckController.getSyrupOzPrice();
+                price += mainController.getSyrupOzPrice();
             }
         }
 
@@ -462,7 +465,7 @@ public class PrepareDrinkPanel extends BasePanel{
         double coffeeGrams, remainingCoffeeGrams, extraCoffeeGrams = 0, extraShotCost = 0;
         int extraShots = 0;
 
-        Drink drink = truckController.getDrink(type, size); //Get drink object
+        Drink drink = mainController.getDrink(type, size); //Get drink object
 
         double ratio;
         String brewType;
@@ -474,15 +477,15 @@ public class PrepareDrinkPanel extends BasePanel{
             ratio = getCustomBrewRatio();
 
         else
-            ratio = truckController.getBrewRatio(brewType);
+            ratio = mainController.getBrewRatio(brewType);
 
-        double[] ingredients = truckController.getRequiredIngredients(type, size, ratio); //Get required ingredients
+        double[] ingredients = mainController.getRequiredIngredients(type, size, ratio); //Get required ingredients
         StorageBin[] bins = getStorageBins(size); //Get storage bins to use
 
-        if (truckController.hasSufficientIngredients(bins, ingredients)) {
+        if (mainController.hasSufficientIngredients(bins, ingredients)) {
 
             coffeeGrams = ingredients[0]; //Get coffee beans prior to using
-            truckController.useIngredients(bins, ingredients); //Use ingredients from bins
+            mainController.useIngredients(bins, ingredients); //Use ingredients from bins
             remainingCoffeeGrams = bins[0].getItemQuantity(); //Get remaining coffee beans
 
             boolean addOn = addSyrup();
@@ -496,14 +499,14 @@ public class PrepareDrinkPanel extends BasePanel{
                 extraShots = selectExtraShots(coffeeGrams, remainingCoffeeGrams);
                 extraCoffeeGrams = coffeeGrams * extraShots;
                 bins[0].useQuantity(extraCoffeeGrams);
-                extraShotCost = extraShots * truckController.getExtraShotPrice();
+                extraShotCost = extraShots * mainController.getExtraShotPrice();
             }
 
             displaySpecialPreparationSteps(type, size, brewType, drink.getPrice(), ingredients, addOns, extraShots, extraShotCost, extraCoffeeGrams);
 
-            double price = drink.getPrice() + addOns.size() * truckController.getSyrupOzPrice() + extraShotCost;
-            truckController.addToTotalSales(selectedTruck, price);
-            truckController.recordSpecialSale((SpecialCoffeeTruck) selectedTruck, type, size, brewType,
+            double price = drink.getPrice() + addOns.size() * mainController.getSyrupOzPrice() + extraShotCost;
+            mainController.addToTotalSales(selectedTruck, price);
+            mainController.recordSpecialSale((SpecialCoffeeTruck) selectedTruck, type, size, brewType,
                     ingredients[0], ingredients[1], ingredients[2], addOns, extraShots, price);
         }
 

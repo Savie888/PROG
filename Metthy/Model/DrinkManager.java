@@ -1,7 +1,6 @@
 package Metthy.Model;
 
-import Metthy.Controller.TruckController;
-import Metthy.View.DrinkView;
+import Metthy.Controller.MainController;
 
 import java.util.ArrayList;
 
@@ -20,14 +19,12 @@ import java.util.ArrayList;
  */
 public class DrinkManager {
 
-    private final TruckController truckController;
+    private final MainController mainController;
 
     /**
      * List of available drinks that can be prepared by the coffee trucks.
      */
     private final ArrayList<Drink> drinks;
-
-    private final DrinkView drinkView;
 
     private double cupPrice;
 
@@ -56,24 +53,14 @@ public class DrinkManager {
     /**
      * Constructs a new DrinkManager and sets up the drink menu
      */
-    public DrinkManager(TruckController truckController){
+    public DrinkManager(MainController mainController){
 
-        this.truckController = truckController;
+        this.mainController = mainController;
         drinks = new ArrayList<>();
-        drinkView = new DrinkView();
 
-        initializeDrinkMenu(); //Set up the drink menu
+        initializeDrinkMenu();
     }
 
-    public void setBaseDrinkPrices(){
-
-        for(Drink drink : drinks){
-
-            double[] ingredients = getBaseIngredients(drink.getType(), drink.getSize());
-            double price = calculateCoffeeCost(drink.getType(), ingredients, 18.0); //Calculate base coffee cost
-            drink.setPrice(price);
-        }
-    }
 
     /**
      * Initializes the drink menu with all combinations of coffee types and sizes.
@@ -105,71 +92,13 @@ public class DrinkManager {
         }
     }
 
-    /**
-     * Displays the drinks menu
-     */
-    public void displayDrinksMenu(){
+    public void setBaseDrinkPrices(){
 
-        int i, j, k;
-        double price;
-        double[] ingredients;
+        for(Drink drink : drinks){
 
-        String[] types = {"Americano", "Latte", "Cappuccino"};
-        String[] sizes = {"Small", "Medium", "Large"};
-
-        drinkView.drinkMenuHeader();
-
-        for(i = 0; i < types.length; i++){
-
-            String type = types[i];
-            System.out.println(type + ":");
-
-            for(j = 0; j < sizes.length; j++){
-
-                String size = sizes[j];
-
-                //Find the matching drink
-                for(k = 0; k < drinks.size(); k++){
-
-                    Drink drink = drinks.get(k);
-
-                    if(drink.getType().equalsIgnoreCase(type) && drink.getSize().equalsIgnoreCase(size)){
-                        ingredients = getBaseIngredients(type, size);
-                        price = calculateCoffeeCost(type, ingredients, 18.0); //Calculate total coffee cost
-                        drink.setPrice(price); //Set the coffee's price
-                        System.out.printf("  %s - $%.2f\n", size, price);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Displays the main coffee menu for the truck, allowing the user to view
-     * available drinks or prepare a new drink.
-     */
-    public void prepareCoffeeMenu(CoffeeTruck truck){
-
-        int option;
-
-        boolean running = true;
-
-        while(running){
-
-            drinkView.displayCoffeeMenu();
-            option = drinkView.getCoffeeMenuInput();
-
-            switch (option){
-
-                case 1:
-                    displayDrinksMenu();
-                    truck.prepareDrink(); //Prepare Drink
-                    break;
-                case 2:
-                    running = false;
-                    System.out.println("Returning to main menu...");
-                    break;
-            }
+            double[] ingredients = getBaseIngredients(drink.getType(), drink.getSize());
+            double price = calculateCoffeeCost(drink.getType(), ingredients, 18.0); //Calculate base coffee cost
+            drink.setPrice(price);
         }
     }
 
@@ -452,11 +381,6 @@ public class DrinkManager {
         return drinks;
     }
 
-    public DrinkView getDrinkView(){
-
-        return drinkView;
-    }
-
     public double getBrewRatio(String brewType){
 
         double ratio;
@@ -503,7 +427,7 @@ public class DrinkManager {
 
         boolean validAddOn = true;
 
-        StorageBin syrupBin = truckController.findBin(truck, syrupType); //Find the bin containing the specified add-on
+        StorageBin syrupBin = mainController.findBin(truck, syrupType); //Find the bin containing the specified add-on
 
         if(syrupBin == null)
             validAddOn = false;

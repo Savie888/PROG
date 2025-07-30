@@ -1,6 +1,6 @@
 package Metthy.View;
 
-import Metthy.Controller.TruckController;
+import Metthy.Controller.MainController;
 import Metthy.Model.BinContent;
 import Metthy.Model.CoffeeTruck;
 import Metthy.Model.StorageBin;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class TruckLoadoutPanel extends BasePanel {
 
-    private final TruckController truckController;
+    private final MainController mainController;
 
     private JPanel formPanel;
     private JLabel binLabel, capacityLabel, errorLabel;
@@ -25,9 +25,9 @@ public class TruckLoadoutPanel extends BasePanel {
     private Runnable backAction;
     private boolean fromTruckCreation = false;
 
-    public TruckLoadoutPanel(TruckController truckController){
+    public TruckLoadoutPanel(MainController mainController){
 
-        this.truckController = truckController;
+        this.mainController = mainController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("special.png"));
@@ -171,7 +171,7 @@ public class TruckLoadoutPanel extends BasePanel {
 
         int binNumber = binIndex + 1;
 
-        StorageBin bin = truckController.getBinByNumber(truck, binNumber);
+        StorageBin bin = mainController.getBinByNumber(truck, binNumber);
 
         JOptionPane.showMessageDialog(null, "Setup for Syrup Bin #" + binNumber, "Bin Setup", JOptionPane.INFORMATION_MESSAGE);
 
@@ -223,14 +223,14 @@ public class TruckLoadoutPanel extends BasePanel {
 
             if(fromTruckCreation){
 
-                truckController.mainMenuPanel();
+                mainController.mainMenuPanel();
 
                 //Delay repeat option until after returning to truck creation menu
                 SwingUtilities.invokeLater(() -> {
                     int repeat = repeat();
 
                     if (repeat == JOptionPane.NO_OPTION)
-                        truckController.mainMenuPanel();
+                        mainController.mainMenuPanel();
                 });
             }
 
@@ -241,7 +241,7 @@ public class TruckLoadoutPanel extends BasePanel {
         }
 
         StorageBin bin = bins.get(currentBinIndex);
-        ArrayList<BinContent> ingredients = truckController.getIngredients();
+        ArrayList<BinContent> ingredients = mainController.getIngredients();
 
         binLabel.setText("Setting up Bin #" + bin.getBinNumber());
 
@@ -289,7 +289,7 @@ public class TruckLoadoutPanel extends BasePanel {
         }
 
         StorageBin bin = bins.get(currentBinIndex);
-        truckController.assignItemToBin(truck, bin, selected.clone(), quantity);
+        mainController.assignItemToBin(truck, bin, selected.clone(), quantity);
 
         JOptionPane.showMessageDialog(this, "Bin #" + bin.getBinNumber() + " loaded with " + quantity + " of " + selected.getName());
 

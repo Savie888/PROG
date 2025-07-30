@@ -1,6 +1,6 @@
 package Metthy.View;
 
-import Metthy.Controller.TruckController;
+import Metthy.Controller.MainController;
 import Metthy.Model.*;
 
 import javax.swing.*;
@@ -9,12 +9,12 @@ import java.util.ArrayList;
 
 public class TruckMaintenancePanel extends BasePanel {
 
-    private final TruckController truckController;
+    private final MainController truckController;
     private CoffeeTruck selectedTruck;
 
-    public TruckMaintenancePanel(TruckController truckController){
+    public TruckMaintenancePanel(MainController mainController){
 
-        this.truckController = truckController;
+        this.truckController = mainController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("special.png"));
@@ -92,7 +92,7 @@ public class TruckMaintenancePanel extends BasePanel {
             int option = selectBinOption();
 
             if(option == 0)
-                truckController.truckLoadoutPanel(selectedTruck, () -> truckController.truckMaintenancePanel(selectedTruck), false);
+                mainController.truckLoadoutPanel(selectedTruck, () -> mainController.truckMaintenancePanel(selectedTruck), false);
 
             else if(option == 1)
                 modify();
@@ -103,7 +103,7 @@ public class TruckMaintenancePanel extends BasePanel {
             int option = selectBinOption();
 
             if(option == 0) //Empty all bins
-                truckController.emptyAllBins(selectedTruck);
+                mainController.emptyAllBins(selectedTruck);
 
             else if(option == 1)
                 empty(); //Call empty method
@@ -120,7 +120,7 @@ public class TruckMaintenancePanel extends BasePanel {
             if(newName.isEmpty())
                 errorLabel.setText("Name can't be empty.");
 
-            else if(!truckController.isTruckNameUnique(newName))
+            else if(!mainController.isTruckNameUnique(newName))
                 errorLabel.setText("Name already used.");
 
             else{
@@ -141,7 +141,7 @@ public class TruckMaintenancePanel extends BasePanel {
             if(newLocation.isEmpty())
                 errorLabel.setText("Location can't be empty.");
 
-            else if(!truckController.isTruckLocationUnique(newLocation))
+            else if(!mainController.isTruckLocationUnique(newLocation))
                 errorLabel.setText("Location already used.");
 
             else{
@@ -158,7 +158,7 @@ public class TruckMaintenancePanel extends BasePanel {
 
         exitButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            truckController.simulateTruckPanel(); //Return to simulate truck panel
+            mainController.simulateTruckPanel(); //Return to simulate truck panel
         });
 
         //Panel for error display

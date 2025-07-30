@@ -1,20 +1,25 @@
 package Metthy.Model;
 
+import Metthy.Controller.MainController;
+
 import java.util.ArrayList;
 
 public class TruckManager{
 
     public ArrayList<CoffeeTruck> trucks;
     private final ArrayList<BinContent> ingredientList;
+    private final MainController mainController;
 
     /**
      * Sets up the loadout of a truck.
      */
 
-    public TruckManager(){
+    public TruckManager(MainController mainController){
 
         this.trucks = new ArrayList<>();
         ingredientList = new ArrayList<>();
+        this.mainController = mainController;
+
         setIngredients();
     }
 
@@ -114,11 +119,11 @@ public class TruckManager{
 
         //Create a Regular Coffee Truck
         if(truckType == 1)
-            truck = new RegularCoffeeTruck(name, location, this, drinkManager);
+            truck = new RegularCoffeeTruck(name, location, mainController, drinkManager);
 
         //Create a Special Coffee Truck
         else
-            truck = new SpecialCoffeeTruck(name, location, this, drinkManager);
+            truck = new SpecialCoffeeTruck(name, location, mainController, drinkManager);
 
         addTruck(truck);
 
