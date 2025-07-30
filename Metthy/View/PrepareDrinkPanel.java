@@ -71,30 +71,45 @@ public class PrepareDrinkPanel extends BasePanel{
         drinkMenuPanel.add(drinkListPanel, gbc);
 
         //Drink Utilities Panel
-        JPanel drinkPrepPanel = new TranslucentPanel();
-        drinkPrepPanel.setLayout(new BoxLayout(drinkPrepPanel, BoxLayout.Y_AXIS));
+        JPanel drinkPrepPanel = new JPanel();
+        drinkPrepPanel.setLayout(new GridBagLayout());
+        drinkPrepPanel.setPreferredSize(new Dimension(300, 25));
         drinkPrepPanel.setOpaque(false);
 
-        //Drink type selector
+        //Row 0: Drink type label
+        gbc.gridy = 0;
         JLabel typeLabel = new JLabel("Select Drink Type");
         String[] drinkTypes = {"Americano", "Latte", "Cappuccino"};
+        drinkPrepPanel.add(typeLabel, gbc);
+
+        //Row 1: Drink type selector
+        gbc.gridy++;
         JComboBox<String> drinkTypeCombo = new JComboBox<>(drinkTypes);
-        drinkPrepPanel.add(typeLabel, CENTER_ALIGNMENT);
-        drinkPrepPanel.add(drinkTypeCombo, CENTER_ALIGNMENT);
+        drinkTypeCombo.setMaximumSize(new Dimension(150, 30));
+        drinkPrepPanel.add(drinkTypeCombo, gbc);
         drinkPrepPanel.add(Box.createVerticalStrut(10));
 
-        //Drink size selector
+        //Row 2: Drink size label
+        gbc.gridy++;
         JLabel sizeLabel = new JLabel("Select Size");
         String[] sizes = { "Small", "Medium", "Large" };
+        drinkPrepPanel.add(sizeLabel, gbc);
+
+        //Row 3: Drink size selector
+        gbc.gridy++;
         JComboBox<String> sizeCombo = new JComboBox<>(sizes);
-        drinkPrepPanel.add(sizeLabel, CENTER_ALIGNMENT);
-        drinkPrepPanel.add(sizeCombo, CENTER_ALIGNMENT);
+        sizeCombo.setMaximumSize(new Dimension(150, 30));
+        drinkPrepPanel.add(sizeCombo, gbc);
         drinkPrepPanel.add(Box.createVerticalStrut(10));
 
-        //Prepare button
-        JButton prepareButton = createButton("Prepare Drink");
-
-        drinkPrepPanel.add(prepareButton);
+        //Row 4: Prepare button
+        gbc.gridy++;
+        JButton prepareButton = new JButton("Prepare Drink");
+        prepareButton.setBackground(Color.black);
+        prepareButton.setForeground(Color.WHITE);
+        prepareButton.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4));
+        prepareButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        drinkPrepPanel.add(prepareButton, gbc);
 
         prepareButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
@@ -134,7 +149,7 @@ public class PrepareDrinkPanel extends BasePanel{
         setupDrinkMenu();
     }
 
-    public void setupDrinkMenu(){
+    private void setupDrinkMenu(){
 
         ArrayList<Drink> drinks = truckController.getDrinks();
 
@@ -156,48 +171,129 @@ public class PrepareDrinkPanel extends BasePanel{
         drinkListPanel.repaint();
     }
 
-    public String selectBrewType(){
+    private String selectBrewType(){
 
+        String[] options = { "Standard", "Light", "Strong", "Custom" };
+        String brewType = (String) JOptionPane.showInputDialog(
+                null,
+                "Select Brew Type:",
+                "Brew Type Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                "Standard"
+        );
 
+        // If user cancels or closes dialog
+        if (brewType == null) {
+            return "Standard";
+        }
 
-
+        return brewType;
     }
 
-    public void prepareDrink(String type, String size){
+    private double getCustomBrewRatio(){
+
+        SpinnerNumberModel model = new SpinnerNumberModel(1.0, 0.1, 10.0, 0.1); // default, min, max, step
+        JSpinner spinner = new JSpinner(model);
+
+        double result = JOptionPane.showConfirmDialog(
+                null,
+                spinner,
+                "Select Custom Espresso-to-Water Ratio (Standard ratio is 18.0)",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION)
+            return (double) spinner.getValue();
+
+        else
+            return 18.0; //Default brew ratio
+    }
+
+    private StorageBin[] getStorageBins(String size){
+
+        StorageBin beanBin = truckController.findBin(selectedTruck, "Coffee Bean");
+        StorageBin milkBin = truckController.findBin(selectedTruck, "Milk");
+        StorageBin waterBin = truckController.findBin(selectedTruck, "Water");
+        StorageBin cupBin = truckController.findBin(selectedTruck, size + " Cup");
+        StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
+
+        return bins;
+    }
+
+    public void displayPreparationSteps(String type, String size, String brewType, double price, double[] ingredients){
+
+        StringBuilder steps = new StringBuilder();
+
+        steps.append(String.format(">>> Preparing %s Cup...\n", size));
+        steps.append(String.format(">>> Brewing %s Espresso - %.2f grams of coffee...\n", brewType, ingredients[0]));
+
+        if (ingredients[1] > 0)
+            steps.append(">>> Adding Milk...\n");
+
+        if (type.equalsIgnoreCase("Americano"))
+            steps.append(">>> Adding Water...\n");
+
+        steps.append(String.format(">>> %s Done!", type));
+        steps.append(String.format("\nTotal Price: $%.2f", price));
+
+        JTextArea textArea = new JTextArea(steps.toString());
+        textArea.setEditable(false);
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(400, 200));
+
+        JOptionPane.showMessageDialog(
+                null,
+                scrollPane,
+                "Drink Preparation",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    private void prepareDrink(String type, String size){
 
         Drink drink = truckController.getDrink(type, size); //Get drink object
 
         double ratio;
+        String brewType;
 
         //Get brew type and ratios
         if(selectedTruck instanceof SpecialCoffeeTruck){
 
-            String brewType = selectBrewType();
-            ratio = truckController.getBrewRatio(brewType);
+            brewType = selectBrewType();
+
+            if(brewType.equals("Custom"))
+                ratio = getCustomBrewRatio();
+
+            else
+                ratio = truckController.getBrewRatio(brewType);
         }
 
-        else
-            ratio = truckController.getBrewRatio("Standard");
+        else{
+            brewType = "Standard";
+            ratio = truckController.getBrewRatio(brewType); //Regular truck drinks can only brew standard drinks
+        }
 
         double[] ingredients = truckController.getRequiredIngredients(type, size, ratio); //Get required ingredients
-
-        //StorageBin beanBin = findBin("Coffee Bean");
-        //StorageBin milkBin = findBin("Milk");
-        //StorageBin waterBin = findBin("Water");
-        //StorageBin cupBin = findBin(size + " Cup");
-        //StorageBin[] bins = { beanBin, milkBin, waterBin, cupBin };
+        StorageBin[] bins = getStorageBins(size); //Get storage bins to use
 
         if (truckController.hasSufficientIngredients(bins, ingredients)) {
-            truckController.useIngredients(bins, ingredients);
-            //drinkView.displayPreparationSteps(type, size, "Standard", ingredients);
-            //drinkView.showTotalPrice(drink.getPrice());
-            //addToTotalSales(drink.getPrice());
-            //recordSale(type, size, ingredients[0], ingredients[1], ingredients[2], drink.getPrice());
+            truckController.useIngredients(bins, ingredients); //Use ingredients from bins
+            displayPreparationSteps(type, size, brewType, drink.getPrice(), ingredients);
+            truckController.addToTotalSales(selectedTruck, drink.getPrice());
+            truckController.recordSale(selectedTruck, type, size, ingredients[0], ingredients[1], ingredients[2], drink.getPrice());
         }
 
         else {
-            //drinkView.showInsufficientIngredients();
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Not enough ingredients or cups.\nDrink preparation cancelled.",
+                    "Insufficient Ingredients",
+                    JOptionPane.WARNING_MESSAGE
+            );
         }
     }
-
 }

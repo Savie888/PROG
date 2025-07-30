@@ -56,7 +56,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
                 System.out.println("Continue adding? (yes/no): ");
                 repeat = drinkView.yesOrNo();
 
-            } while(truckManager.isYes(repeat));
+            } while(repeat.equalsIgnoreCase("yes"));
         }
 
         return addOns;

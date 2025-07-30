@@ -231,4 +231,52 @@ public class CreateTruckPanel extends BasePanel {
         if(choice == 1)
             truckController.mainMenuPanel();
     }
+
+    public void showSetIngredientPricesDialog(){
+
+        double coffeeGramPrice = getPositivePrice("Enter price per gram of coffee:");
+        truckController.setCoffeeGramPrice(coffeeGramPrice);
+
+        double milkOzPrice = getPositivePrice("Enter price per oz of milk:");
+        truckController.setMilkOzPrice(milkOzPrice);
+
+        double waterOzPrice = getPositivePrice("Enter price per oz of water:");
+        truckController.setWaterOzPrice(waterOzPrice);
+
+        double syrupOzPrice = getPositivePrice("Enter price per oz of syrup:");
+
+
+        double extraShotPrice = getPositivePrice("Enter price for extra espresso shot:");
+
+
+    }
+
+    private double getPositivePrice(String message){
+
+        double value = -1;
+
+        while (value < 0) {
+            JSpinner spinner = new JSpinner(new SpinnerNumberModel(0.00, 0.00, 100.00, 0.05));
+            spinner.setPreferredSize(new Dimension(100, 25));
+
+            int option = JOptionPane.showOptionDialog(
+                    null,
+                    spinner,
+                    message,
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null
+            );
+
+            if (option == JOptionPane.OK_OPTION) {
+                value = (double) spinner.getValue();
+            } else {
+                break; // User cancelled
+            }
+        }
+
+        return value;
+    }
 }

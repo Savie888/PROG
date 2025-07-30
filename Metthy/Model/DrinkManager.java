@@ -398,6 +398,28 @@ public class DrinkManager {
         return drink;
     }
 
+
+
+    public void setCoffeeGramPrice(double price){
+
+        coffeeGramPrice = price;
+    }
+
+    public double getCoffeeGramPrice(){
+
+        return coffeeGramPrice;
+    }
+
+    public void setMilkOzPrice(double price){
+
+        milkOzPrice = price;
+    }
+
+    public void setWaterOzPrice(double price){
+
+        waterOzPrice = price;
+    }
+
     public double getSyrupOzPrice(){
 
         return syrupOzPrice;
@@ -406,11 +428,6 @@ public class DrinkManager {
     public double getExtraShotPrice(){
 
         return extraShotPrice;
-    }
-
-    public double getCoffeeGramPrice(){
-
-        return coffeeGramPrice;
     }
 
     /**

@@ -168,6 +168,21 @@ public class TruckController{
 
     //DRINK MANAGEMENT
 
+    public void setCoffeeGramPrice(double price){
+
+        drinkManager.setCoffeeGramPrice(price);
+    }
+
+    public void setMilkOzPrice(double price){
+
+        drinkManager.setMilkOzPrice(price);
+    }
+
+    public void setWaterOzPrice(double price){
+
+        drinkManager.setWaterOzPrice(price);
+    }
+
     public Drink getDrink(String type, String size){
 
         return drinkManager.getDrink(type, size);
@@ -196,6 +211,21 @@ public class TruckController{
     public void useIngredients(StorageBin[] bins, double[] ingredients){
 
         drinkManager.useIngredients(bins, ingredients);
+    }
+
+    public StorageBin findBin(CoffeeTruck truck, String ingredient){
+
+        return truck.findBin(ingredient);
+    }
+
+    public void addToTotalSales(CoffeeTruck truck, double price){
+
+        truck.addToTotalSales(price);
+    }
+
+    public void recordSale(CoffeeTruck truck, String type, String size, double coffeeGrams, double milk, double water, double price){
+
+        truck.recordSale(type, size, coffeeGrams, milk, water, price);
     }
 
     /*

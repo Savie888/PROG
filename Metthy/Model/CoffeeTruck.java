@@ -165,7 +165,7 @@ public abstract class CoffeeTruck {
      *
      * @param amount the amount to add to total sales
      */
-    protected void addToTotalSales(double amount){
+    public void addToTotalSales(double amount){
 
         totalSales += amount;
     }
@@ -180,7 +180,7 @@ public abstract class CoffeeTruck {
      * @param water       the ounces of water used.
      * @param price       the price of the drink.
      */
-    private void recordSale(String coffeeType, String size, double coffeeGrams, double milk, double water, double price){
+    public void recordSale(String coffeeType, String size, double coffeeGrams, double milk, double water, double price){
 
         String ingredients;
         String addOnText;
