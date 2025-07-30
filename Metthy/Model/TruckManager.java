@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class TruckManager{
 
     /** List of all coffee trucks managed by the system. */
-    public ArrayList<CoffeeTruck> trucks;
+    private ArrayList<CoffeeTruck> trucks;
 
     /** List of available ingredients used for loading into trucks. */
     private final ArrayList<BinContent> ingredientList;

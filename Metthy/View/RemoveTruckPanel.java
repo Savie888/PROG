@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class RemoveTruckPanel extends BasePanel{
 
-    private MainController truckController;
+    private final MainController mainController;
 
     private JPanel formPanel;
     private JLabel truckSelectorLabel;
@@ -19,7 +19,7 @@ public class RemoveTruckPanel extends BasePanel{
 
     public RemoveTruckPanel(MainController mainController){
 
-        this.truckController = mainController;
+        this.mainController = mainController;
 
         //Setup Background Image
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
@@ -134,7 +134,7 @@ public class RemoveTruckPanel extends BasePanel{
 
     public void start(){
 
-        ArrayList<CoffeeTruck> trucks = truckController.getTrucks();
+        ArrayList<CoffeeTruck> trucks = mainController.getTrucks();
 
         truckSelectorLabel.setText("Select a Coffee Truck:");
 
@@ -152,7 +152,7 @@ public class RemoveTruckPanel extends BasePanel{
         formPanel.repaint();
     }
 
-    public void resetTruckSelector(){
+    private void resetTruckSelector(){
 
         truckComboBox.setSelectedItem(null); //Deselect
         selectedTruck = null;

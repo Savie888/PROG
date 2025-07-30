@@ -11,7 +11,7 @@ public class MainMenuPanel extends BasePanel{
     public MainMenuPanel(MainController mainController) {
 
         //Setup Background Image
-        ImageIcon backgroundImage = new ImageIcon(getClass().getResource("BG_jeep.png"));
+        ImageIcon backgroundImage = new ImageIcon(getClass().getResource("regular.png"));
         Image image = backgroundImage.getImage();
         BackgroundPanel backgroundPanel = new BackgroundPanel(image);
 
