@@ -139,41 +139,7 @@ public class MenuView extends View{
     }
 
 
-    //GETTERS (might not need)
-    public CreateTruckPanel getCreateTruckPanel(){
-
-        return createTruckPanel;
-    }
-
-    public TruckLoadoutPanel getTruckLoadoutPanel(){
-
-        return truckLoadoutPanel;
-    }
-
-    public RemoveTruckPanel getRemoveTruckPanel(){
-
-        return removeTruckPanel;
-    }
-
-    public SimulateTruckPanel getSimulateTruckPanel(){
-
-        return simulateTruckPanel;
-    }
-
-    public TruckInfoPanel getTruckInfoPanel(){
-
-        return truckInfoPanel;
-    }
-
-    public TruckMaintenancePanel getTruckMaintenancePanel() {
-
-        return truckMaintenancePanel;
-    }
-
-    public DashboardPanel getDashboardPanel(){
-
-        return dashboardPanel;
-    }
+    //MIGHT BE OBSOLETE
 
     public void displayWelcomeMessage(){
 

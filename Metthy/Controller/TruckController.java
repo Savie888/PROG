@@ -20,6 +20,8 @@ public class TruckController{
         this.drinkManager = new DrinkManager();
     }
 
+    //PANEL DISPLAYS
+
     public void mainMenuPanel(){
 
         menuView.showMainMenu();
@@ -59,6 +61,8 @@ public class TruckController{
 
         menuView.showTruckLoadoutPanel(truck, backAction, fromTruckCreation);
     }
+
+    //TRUCK MANAGEMENT
 
     /**
      * Checks if a name is unique
@@ -115,7 +119,7 @@ public class TruckController{
         truck.assignItemToBin(bin, content, itemQuantity);
     }
 
-    //Bin Maintenance
+    //BIN MANAGEMENT
 
     public StorageBin getBinByNumber(CoffeeTruck truck, int binNumber){
 
@@ -142,10 +146,6 @@ public class TruckController{
         truck.assignItemToBin(bin, ingredient, quantity);
     }
 
-    public void modifyAllBins(CoffeeTruck truck){
-
-    }
-
     public void emptyBin(CoffeeTruck truck, StorageBin bin){
 
         truck.emptyBin(bin);
@@ -166,8 +166,7 @@ public class TruckController{
         return truckManager.getTrucks();
     }
 
-
-    //DRINK PREPARATION
+    //DRINK MANAGEMENT
 
     public Drink getDrink(String type, String size){
 

@@ -157,7 +157,6 @@ public class DrinkManager {
     /**
      * Displays the main coffee menu for the truck, allowing the user to view
      * available drinks or prepare a new drink.
-     *
      */
     public void prepareCoffeeMenu(CoffeeTruck truck){
 
@@ -190,26 +189,26 @@ public class DrinkManager {
      * @param size the drink size (e.g., "Small", "Medium", "Large")
      * @return the size of the cup in fluid ounces, or 0 if the size is invalid
      */
-    private double getCupSize(String size){
+    private double getCupVolume(String size){
 
-        double cupSize;
+        double volume;
 
         switch(size){
 
             case "Small":
-                cupSize = 8.0;
+                volume = 8.0;
                 break;
             case "Medium":
-                cupSize = 12.0;
+                volume = 12.0;
                 break;
             case "Large":
-                cupSize = 16.0;
+                volume = 16.0;
                 break;
             default:
-                cupSize = 0;
+                volume = 0;
                 break;
         }
-        return cupSize;
+        return volume;
     }
 
     /**
@@ -225,7 +224,7 @@ public class DrinkManager {
      */
     private double[] getBaseIngredients(String coffeeType, String size){
 
-        double cupSize = getCupSize(size);
+        double cupSize = getCupVolume(size);
         double espressoVolumeOz = 0, milkOz = 0, waterOz = 0;
         double[] ingredients ={0, 0, 0, 1};
 

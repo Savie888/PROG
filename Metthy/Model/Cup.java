@@ -16,18 +16,6 @@ public abstract class Cup implements BinContent{
         this.volume = volume;
     }
 
-    @Override
-    public boolean store() {
-
-        return true;
-    }
-
-    @Override
-    public boolean retrieve() {
-
-        return true;
-    }
-
     public String getName() {
 
         return size;

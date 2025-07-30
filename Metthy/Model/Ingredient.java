@@ -20,18 +20,6 @@ public abstract class Ingredient implements BinContent{
         this.capacity = capacity;
     }
 
-    @Override
-    public boolean store() {
-
-        return true;
-    }
-
-    @Override
-    public boolean retrieve() {
-
-        return true;
-    }
-
     /**
      * Returns the name of the item.
      *
