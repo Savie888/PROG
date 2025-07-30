@@ -1,14 +1,7 @@
 package Metthy;
 
 
-//GUI
-    //Eventually remove error label in remove truck and simulate truck once main menu button disablers set up
-
-    //Bin Maintenance: move logic to controller
-
-
 import Metthy.Controller.MainController;
-
 
 /**
  * This is a simulation of a Coffee Truck Business.

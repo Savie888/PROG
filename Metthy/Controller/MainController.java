@@ -113,27 +113,9 @@ public class MainController {
         return truckManager.getIngredientList();
     }
 
-    public BinContent getIngredientFromOption(int option) {
-
-        return truckManager.getIngredientFromOption(option);
-    }
-
     public BinContent getIngredientFromName(String name){
 
-        int i;
-        BinContent content;
-        ArrayList<BinContent> ingredientList = getIngredients();
-
-        for(i = 0; i < ingredientList.size(); i++){
-
-            content = ingredientList.get(i);
-
-            if(content.getName().equalsIgnoreCase(name)){
-                return content.clone();
-            }
-        }
-
-        return null; //Not found
+        return truckManager.getIngredientFromName(name);
     }
 
     public void assignItemToBin(CoffeeTruck truck, StorageBin bin, BinContent content, double itemQuantity){

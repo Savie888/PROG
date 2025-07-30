@@ -260,6 +260,9 @@ public class PrepareDrinkPanel extends BasePanel{
         );
     }
 
+    /**
+     * Handles the process of preparing a drink.
+     */
     private void prepareDrink(String type, String size){
 
         Drink drink = mainController.getDrink(type, size); //Get drink object

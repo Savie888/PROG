@@ -4,15 +4,21 @@ import Metthy.Controller.MainController;
 
 import java.util.ArrayList;
 
+/**
+ * The TruckManager class is responsible for managing all coffee trucks in the simulation.
+ * It provides utilities for truck creation, ingredient setup, name/location validation, and truck counting.
+ */
 public class TruckManager{
 
+    /** List of all coffee trucks managed by the system. */
     public ArrayList<CoffeeTruck> trucks;
+
+    /** List of available ingredients used for loading into trucks. */
     private final ArrayList<BinContent> ingredientList;
+
+    /** The MainController. */
     private final MainController mainController;
 
-    /**
-     * Sets up the loadout of a truck.
-     */
 
     public TruckManager(MainController mainController){
 
@@ -23,6 +29,7 @@ public class TruckManager{
         setIngredients();
     }
 
+    /** Initializes the ingredients to be used. */
     private void setIngredients(){
 
         ingredientList.add(new SmallCup());
@@ -81,16 +88,23 @@ public class TruckManager{
         return flag; //Return true if location is unique, false otherwise
     }
 
+    /**
+     * Checks if the bin number is within the valid range (1 to 10).
+     *
+     * @param binNumber the bin number to validate
+     * @return true if bin number is valid, false otherwise
+     */
     public boolean checkBinNumber(int binNumber){
 
         return binNumber > 0 && binNumber <= 10;
     }
 
-    public BinContent getIngredientFromOption(int option) {
-
-        return ingredientList.get(option - 1);
-    }
-
+    /**
+     * Searches for an ingredient in the list by name and returns a clone of it.
+     *
+     * @param name the name of the ingredient to search for
+     * @return a cloned copy of the ingredient if found, null otherwise
+     */
     public BinContent getIngredientFromName(String name){
 
         int i;
@@ -108,11 +122,21 @@ public class TruckManager{
         return null; // Not found
     }
 
+    /** Add truck to the list of trucks. */
     public void addTruck(CoffeeTruck truck){
 
         trucks.add(truck);
     }
 
+    /**
+     * Creates a new coffee truck of the specified type and adds it to the system.
+     *
+     * @param name            truck name
+     * @param location        truck location
+     * @param truckType       1 for regular, otherwise special
+     * @param drinkManager    reference to the DrinkManager
+     * @return the created CoffeeTruck
+     */
     public CoffeeTruck createTruck(String name, String location, int truckType, DrinkManager drinkManager){
 
         CoffeeTruck truck;
@@ -125,16 +149,22 @@ public class TruckManager{
         else
             truck = new SpecialCoffeeTruck(name, location, mainController, drinkManager);
 
-        addTruck(truck);
+        addTruck(truck); //Add to list
 
         return truck;
     }
 
+    /** Remove truck from the list of trucks. */
     public void removeTruck(CoffeeTruck truck){
 
         trucks.remove(truck);
     }
 
+    /**
+     * Returns the number of regular coffee trucks.
+     *
+     * @return the count of RegularCoffeeTruck instances
+     */
     public int getRegularTruckCount(){
 
         int i, count = 0;
@@ -150,6 +180,11 @@ public class TruckManager{
         return count;
     }
 
+    /**
+     * Returns the number of special coffee trucks.
+     *
+     * @return the count of SpecialCoffeeTruck instances
+     */
     public int getSpecialTruckCount(){
 
         int i, count = 0;
@@ -165,11 +200,13 @@ public class TruckManager{
         return count;
     }
 
+    /** Returns the arraylist of trucks*/
     public ArrayList<CoffeeTruck> getTrucks(){
 
         return trucks;
     }
 
+    /** Returns the ingredient list*/
     public ArrayList<BinContent> getIngredientList() {
 
         return ingredientList;
