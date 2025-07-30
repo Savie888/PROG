@@ -7,6 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * DashboardPanel represents the main dashboard screen showing trucks and controls.
+ * Currently displays a background image and a title label.
+ * Future improvements can include real-time data on coffee trucks and actions.
+ */
+
 public class DashboardPanel extends BasePanel{
 
     private final MainController mainController;
