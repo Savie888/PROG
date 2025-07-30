@@ -106,11 +106,21 @@ public class StorageBin {
         content.addQuantity(amount);
     }
 
+    /**
+     * Gets the content (item) currently stored in the bin.
+     *
+     * @return the BinContent object
+     */
     public BinContent getContent() {
 
         return content;
     }
 
+    /**
+     * Gets the quantity of the item currently stored in the bin.
+     *
+     * @return the current quantity
+     */
     public double getItemQuantity(){
 
         return content.getQuantity();
