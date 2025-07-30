@@ -15,6 +15,7 @@ public class CreateTruckPanel extends BasePanel {
     private JComboBox<String> typeBox;
 
     private CoffeeTruck truck;
+    private static boolean pricesInitialized = true;
 
     public CreateTruckPanel(TruckController truckController){
 
@@ -145,6 +146,11 @@ public class CreateTruckPanel extends BasePanel {
 
             else
                 repeat();
+
+            if(pricesInitialized == false){
+                //initializeDrinkPrices();
+                pricesInitialized = true;
+            }
         });
 
         //Row 6: Error Label
@@ -174,7 +180,7 @@ public class CreateTruckPanel extends BasePanel {
         this.add(backgroundPanel, BorderLayout.CENTER);
     }
 
-    public int setLoadoutOption(){
+    private int setLoadoutOption(){
 
         int response = JOptionPane.showConfirmDialog(
                 this,
@@ -186,7 +192,7 @@ public class CreateTruckPanel extends BasePanel {
         return response;
     }
 
-    public int setDefaultLoadoutOption(){
+    private int setDefaultLoadoutOption(){
 
         int set = JOptionPane.showConfirmDialog(
                 this,

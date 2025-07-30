@@ -2,7 +2,7 @@ package Metthy.Model;
 
 import java.util.ArrayList;
 
-public class TruckManager extends Model{
+public class TruckManager{
 
     public ArrayList<CoffeeTruck> trucks;
     private final ArrayList<BinContent> ingredientList;
