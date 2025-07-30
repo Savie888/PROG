@@ -94,7 +94,7 @@ public class MainMenuPanel extends BasePanel{
 
         dashboardButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //menuView.showPanel("DASHBOARD");
+            truckController.dashboardPanel();
         });
 
         exitButton.addActionListener(e -> {

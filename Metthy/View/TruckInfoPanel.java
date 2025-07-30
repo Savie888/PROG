@@ -24,15 +24,12 @@ public class TruckInfoPanel extends BasePanel{
         TitleWrapper title = new TitleWrapper("Truck Information");
         backgroundPanel.add(title, BorderLayout.NORTH);
 
-        this.setLayout(new BorderLayout());
-        this.add(backgroundPanel, BorderLayout.CENTER);
-
         //Form Background Panel
         JPanel formBackgroundPanel = new TranslucentPanel();
         formBackgroundPanel.setLayout(new BorderLayout());
         formBackgroundPanel.setBorder(BorderFactory.createEmptyBorder(0, 200, 20, 200));
 
-        //Main content panel where truck info will be dynamically inserted
+        //Main content panel where truck info will be inserted
         infoDisplayPanel = new JPanel();
         infoDisplayPanel.setLayout(new BorderLayout());
         infoDisplayPanel.setOpaque(false);
@@ -53,6 +50,9 @@ public class TruckInfoPanel extends BasePanel{
         formBackgroundPanel.add(infoDisplayPanel, BorderLayout.CENTER);
         backgroundPanel.add(formBackgroundPanel, BorderLayout.CENTER);
         backgroundPanel.add(bottomPanel, BorderLayout.SOUTH); //Add bottom panel
+
+        this.setLayout(new BorderLayout());
+        this.add(backgroundPanel, BorderLayout.CENTER);
     }
 
     public void displayTruckInfo(CoffeeTruck truck){
@@ -133,6 +133,7 @@ public class TruckInfoPanel extends BasePanel{
         label.setFont(new Font("SansSerif", Font.PLAIN, 18));
         label.setForeground(Color.BLACK);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         return label;
     }
 }

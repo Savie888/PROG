@@ -44,7 +44,7 @@ public class MenuView extends View{
         prepareDrinkPanel = new PrepareDrinkPanel(truckController);
         truckInfoPanel = new TruckInfoPanel(truckController);
         truckMaintenancePanel = new TruckMaintenancePanel(truckController);
-        //dashboardPanel = new DashboardPanel(truckController, menuView);
+        dashboardPanel = new DashboardPanel(truckController);
 
         //Add to card layout
         cardPanel.add(mainMenuPanel, "MAIN_MENU");
@@ -55,7 +55,7 @@ public class MenuView extends View{
         cardPanel.add(prepareDrinkPanel, "PREPARE_DRINK");
         cardPanel.add(truckInfoPanel, "TRUCK_INFO");
         cardPanel.add(truckMaintenancePanel, "TRUCK_MAINTENANCE");
-        //cardPanel.add(dashboardPanel, "DASHBOARD");
+        cardPanel.add(dashboardPanel, "DASHBOARD");
 
         cardPanel.setVisible(true);
 
@@ -136,6 +136,12 @@ public class MenuView extends View{
 
         truckMaintenancePanel.startMaintenance(truck);
         showPanel("TRUCK_MAINTENANCE");
+    }
+
+    public void showDashboardPanel(){
+
+        dashboardPanel.displayDashboard();
+        showPanel("DASHBOARD");
     }
 
 

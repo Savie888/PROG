@@ -1,19 +1,10 @@
 package Metthy;
 
-//Implement MVC
-    //Continue on method refactoring
-    //Error messages for duplicate name and location
-
 //Drinks
     //use Cup object in getCupSize
     //transaction format
 
-//Change currency to peso
-
 //GUI
-
-    //Truck Loadout Menu
-        //Change JOptionPanel with Label
 
     //Simulate Menu
         //Truck Maintenance Menu
@@ -22,9 +13,7 @@ package Metthy;
 
     //Bin Maintenance: move logic to controller
 
-    //Drinks Time
-
-    //Truck display in dashboard //POSTPONED
+    //Truck display in dashboard
 
 
 import Metthy.Controller.TruckController;

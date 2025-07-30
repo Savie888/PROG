@@ -62,6 +62,10 @@ public class TruckController{
         menuView.showTruckLoadoutPanel(truck, backAction, fromTruckCreation);
     }
 
+    public void dashboardPanel(){
+
+        menuView.showDashboardPanel();
+    }
     //TRUCK MANAGEMENT
 
     /**
@@ -159,6 +163,16 @@ public class TruckController{
     public boolean validBinNumber(int binNumber){
 
         return truckManager.checkBinNumber(binNumber);
+    }
+
+    public int getRegularTruckCount(){
+
+        return truckManager.getRegularTruckCount();
+    }
+
+    public int getSpecialTruckCount(){
+
+        return truckManager.getSpecialTruckCount();
     }
 
     public ArrayList<CoffeeTruck> getTrucks(){

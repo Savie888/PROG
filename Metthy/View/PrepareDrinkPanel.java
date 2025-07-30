@@ -481,9 +481,9 @@ public class PrepareDrinkPanel extends BasePanel{
 
         if (truckController.hasSufficientIngredients(bins, ingredients)) {
 
-            coffeeGrams = bins[0].getContent().getQuantity(); //Get coffee beans prior to using
+            coffeeGrams = ingredients[0]; //Get coffee beans prior to using
             truckController.useIngredients(bins, ingredients); //Use ingredients from bins
-            remainingCoffeeGrams = bins[0].getContent().getQuantity(); //Get remaining coffee beans
+            remainingCoffeeGrams = bins[0].getItemQuantity(); //Get remaining coffee beans
 
             boolean addOn = addSyrup();
 
