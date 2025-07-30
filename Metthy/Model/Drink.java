@@ -73,6 +73,6 @@ public abstract class Drink {
     @Override
     public String toString(){
 
-        return String.format("%s (%s) - $%.2f", type, size, price);
+        return String.format("%s (%s) - ₱%.2f", type, size, price);
     }
 }

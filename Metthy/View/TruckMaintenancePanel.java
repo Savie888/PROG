@@ -1,10 +1,7 @@
 package Metthy.View;
 
 import Metthy.Controller.TruckController;
-import Metthy.Model.BinContent;
-import Metthy.Model.CoffeeTruck;
-import Metthy.Model.SpecialCoffeeTruck;
-import Metthy.Model.StorageBin;
+import Metthy.Model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -156,7 +153,7 @@ public class TruckMaintenancePanel extends BasePanel {
 
         editPricesButton.addActionListener(e -> {
             playSound("select_sound_effect.wav");
-            //menuView.showPanel("DASHBOARD");
+            setIngredientPrices();
         });
 
         exitButton.addActionListener(e -> {
@@ -248,7 +245,7 @@ public class TruckMaintenancePanel extends BasePanel {
         return option;
     }
 
-    public double getRestockQuantity(int capacity, double currentQuantity){
+    private double getRestockQuantity(int capacity, double currentQuantity){
 
         double max = capacity - currentQuantity;
 
@@ -279,7 +276,7 @@ public class TruckMaintenancePanel extends BasePanel {
             return -1; //User cancelled
     }
 
-    public void restock(int binNumber){
+    private void restock(int binNumber){
 
         double quantity;
 
@@ -307,7 +304,7 @@ public class TruckMaintenancePanel extends BasePanel {
         }
     }
 
-    public void restockAll(){
+    private void restockAll(){
 
         int mode = selectRestockMode();
 
@@ -383,7 +380,7 @@ public class TruckMaintenancePanel extends BasePanel {
             return null; //User cancelled
     }
 
-    public void modify(){
+    private void modify(){
 
         double quantity;
 
@@ -397,19 +394,90 @@ public class TruckMaintenancePanel extends BasePanel {
             return;
         }
 
-        StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
+        if(binNumber == 9 || binNumber == 10)
+            modifySyrupBin(binNumber);
 
-        BinContent ingredient = selectIngredient();
+        else{
+            StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
 
-        if(ingredient == null)
-            return;
+            BinContent ingredient = selectIngredient();
 
-        quantity = getIngredientQuantity(ingredient.getCapacity());
+            if(ingredient == null)
+                return;
 
-        truckController.modifyBin(selectedTruck, bin, ingredient, quantity);
+            quantity = getIngredientQuantity(ingredient.getCapacity());
+
+            truckController.modifyBin(selectedTruck, bin, ingredient, quantity);
+        }
+
     }
 
-    public void empty(){
+    private BinContent createSyrup() {
+
+        String name = JOptionPane.showInputDialog(
+                null,
+                "Enter syrup name (e.g., Vanilla, Grape):",
+                "Create Syrup",
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (name == null || name.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No name entered. Syrup creation cancelled.", "Cancelled", JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+
+        return new Syrup(name.trim());
+    }
+
+    private void modifySyrupBin(int binNumber) {
+
+        StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
+
+        JOptionPane.showMessageDialog(null, "Setup for Syrup Bin #" + binNumber, "Bin Setup", JOptionPane.INFORMATION_MESSAGE);
+
+        //Let user create a syrup
+        BinContent content = createSyrup();
+
+        if (content == null)
+            return; // User cancelled
+
+        int max = content.getCapacity();
+        double quantity = -1;
+
+        //Ask user to enter a quantity
+        boolean valid = false;
+
+        while (!valid) {
+            String input = JOptionPane.showInputDialog(
+                    null,
+                    "Enter quantity to store (Max: " + max + ")",
+                    "Quantity Entry",
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            if (input == null) return; // cancelled
+
+            try {
+                quantity = Double.parseDouble(input);
+                if (quantity < 0 || quantity > max) {
+                    JOptionPane.showMessageDialog(null, "Invalid quantity. Try again.");
+                } else {
+                    valid = true;
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please enter a valid number.");
+            }
+        }
+
+        // Step 3: Assign to bin
+        selectedTruck.assignItemToBin(bin, content, quantity);
+        JOptionPane.showMessageDialog(null,
+                String.format("Bin #%d loaded with %.2f oz of %s syrup.", binNumber, quantity, content.getName()),
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void empty(){
 
         int binNumber = selectBin(selectedTruck); //Get a bin number;
 
@@ -423,6 +491,55 @@ public class TruckMaintenancePanel extends BasePanel {
 
         StorageBin bin = truckController.getBinByNumber(selectedTruck, binNumber);
         truckController.emptyBin(selectedTruck, bin); //Empty one bin
+    }
+
+    /**
+     * Prompts the user to input the prices for coffee ingredients (cups, coffee beans, milk, and water).
+     */
+    private void setIngredientPrices(){
+
+        double cupPrice = enterPrice("Enter price of a cup");
+        truckController.setCupPrice(cupPrice);
+
+        double coffeeGramPrice = enterPrice("Enter price of coffee per gram:");
+        truckController.setCoffeeGramPrice(coffeeGramPrice);
+
+        double milkOzPrice = enterPrice("Enter price of milk per oz:");
+        truckController.setMilkOzPrice(milkOzPrice);
+
+        double waterOzPrice = enterPrice("Enter price of water per oz:");
+        truckController.setWaterOzPrice(waterOzPrice);
+
+        double syrupOzPrice = enterPrice("Enter price of syrup per oz:");
+        truckController.setSyrupOzPrice(syrupOzPrice);
+
+        double extraShotPrice = enterPrice("Enter price for extra espresso shot:");
+        truckController.setExtraShotPrice(extraShotPrice);
+    }
+
+    private double enterPrice(String message){
+
+        double value = 0;
+
+        while (value <= 0) {
+            JSpinner spinner = new JSpinner(new SpinnerNumberModel(0.00, 0.00, 100.00, 0.5));
+            spinner.setPreferredSize(new Dimension(100, 25));
+
+            int option = JOptionPane.showOptionDialog(
+                    this,
+                    spinner,
+                    message,
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null
+            );
+
+            value = (double) spinner.getValue();
+        }
+
+        return value;
     }
 }
 

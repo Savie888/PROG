@@ -13,9 +13,8 @@ public class CreateTruckPanel extends BasePanel {
     private JLabel errorLabel;
     private JTextField nameField, locationField;
     private JComboBox<String> typeBox;
-
     private CoffeeTruck truck;
-    private static boolean pricesInitialized = true;
+    private static boolean pricesInitialized = false;
 
     public CreateTruckPanel(TruckController truckController){
 
@@ -146,11 +145,6 @@ public class CreateTruckPanel extends BasePanel {
 
             else
                 repeat();
-
-            if(pricesInitialized == false){
-                //initializeDrinkPrices();
-                pricesInitialized = true;
-            }
         });
 
         //Row 6: Error Label
@@ -228,53 +222,59 @@ public class CreateTruckPanel extends BasePanel {
 
         resetFields();
 
+        if (!pricesInitialized) {
+            initializeIngredientPrices();
+            pricesInitialized = true;
+        }
+
         if(choice == 1)
-            truckController.mainMenuPanel();
+            truckController.mainMenuPanel(); //Return to main menu
     }
 
-    public void showSetIngredientPricesDialog(){
+    /**
+     * Prompts the user to input the prices for coffee ingredients (cups, coffee beans, milk, and water).
+     */
+    private void initializeIngredientPrices(){
 
-        double coffeeGramPrice = getPositivePrice("Enter price per gram of coffee:");
+        double cupPrice = enterPrice("Enter price of a cup");
+        truckController.setCupPrice(cupPrice);
+
+        double coffeeGramPrice = enterPrice("Enter price of coffee per gram:");
         truckController.setCoffeeGramPrice(coffeeGramPrice);
 
-        double milkOzPrice = getPositivePrice("Enter price per oz of milk:");
+        double milkOzPrice = enterPrice("Enter price of milk per oz:");
         truckController.setMilkOzPrice(milkOzPrice);
 
-        double waterOzPrice = getPositivePrice("Enter price per oz of water:");
+        double waterOzPrice = enterPrice("Enter price of water per oz:");
         truckController.setWaterOzPrice(waterOzPrice);
 
-        double syrupOzPrice = getPositivePrice("Enter price per oz of syrup:");
+        double syrupOzPrice = enterPrice("Enter price of syrup per oz:");
+        truckController.setSyrupOzPrice(syrupOzPrice);
 
-
-        double extraShotPrice = getPositivePrice("Enter price for extra espresso shot:");
-
-
+        double extraShotPrice = enterPrice("Enter price for extra espresso shot:");
+        truckController.setExtraShotPrice(extraShotPrice);
     }
 
-    private double getPositivePrice(String message){
+    private double enterPrice(String message){
 
-        double value = -1;
+        double value = 0;
 
-        while (value < 0) {
-            JSpinner spinner = new JSpinner(new SpinnerNumberModel(0.00, 0.00, 100.00, 0.05));
+        while (value <= 0) {
+            JSpinner spinner = new JSpinner(new SpinnerNumberModel(0.00, 0.00, 100.00, 0.5));
             spinner.setPreferredSize(new Dimension(100, 25));
 
             int option = JOptionPane.showOptionDialog(
-                    null,
+                    this,
                     spinner,
                     message,
-                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.DEFAULT_OPTION,
                     JOptionPane.PLAIN_MESSAGE,
                     null,
                     null,
                     null
             );
 
-            if (option == JOptionPane.OK_OPTION) {
-                value = (double) spinner.getValue();
-            } else {
-                break; // User cancelled
-            }
+            value = (double) spinner.getValue();
         }
 
         return value;

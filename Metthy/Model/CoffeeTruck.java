@@ -190,13 +190,13 @@ public abstract class CoffeeTruck {
         ingredients = String.format("%.2f g beans, %.2f oz milk, %.2f oz water", coffeeGrams, milk, water);
 
         //Build formatted drink info line
-        drinkInfo = String.format("Drink: %s %s (Standard)", coffeeType, size);
+        drinkInfo = String.format("Drink: %s %s (Standard)", size, coffeeType);
 
         //No add-ons for regular trucks
         addOnText = "No Add-Ons";
 
         //Format and add to the sales log
-        salesLog.add(String.format("%-30s | %-45s | %s | $%.2f", drinkInfo, ingredients, addOnText, price));
+        salesLog.add(String.format("%-30s | %-45s | %s | ₱%.2f", drinkInfo, ingredients, addOnText, price));
     }
 
     /**

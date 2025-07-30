@@ -11,7 +11,6 @@ import java.awt.*;
 
 public class TruckInfoPanel extends BasePanel{
 
-
     private JPanel infoDisplayPanel;
 
     public TruckInfoPanel(TruckController truckController){
@@ -118,7 +117,7 @@ public class TruckInfoPanel extends BasePanel{
         centerWrapper.add(Box.createVerticalStrut(20));
 
         // Total Sales
-        JLabel totalSalesLabel = createInfoLabel("Total Sales: $" + String.format("%.2f", truck.getTotalSales()));
+        JLabel totalSalesLabel = createInfoLabel("Total Sales: ₱" + String.format("%.2f", truck.getTotalSales()));
         totalSalesLabel.setAlignmentX(CENTER_ALIGNMENT);
         centerWrapper.add(totalSalesLabel);
 

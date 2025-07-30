@@ -30,7 +30,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
         getBins().add(new StorageBin(10));
     }
 
-    private ArrayList<BinContent> selectAddOns(){
+    public ArrayList<BinContent> selectAddOns(){
 
         String repeat;
         boolean validAddOn;
@@ -62,7 +62,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
         return addOns;
     }
 
-    private boolean hasSufficientSyrup(String syrupType){
+    public boolean hasSufficientSyrup(String syrupType){
 
         boolean validAddOns = true;
 
@@ -81,7 +81,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
         return validAddOns;
     }
 
-    private int selectExtraShots(double coffeeGrams, double remainingCoffeeGrams){
+    public int selectExtraShots(double coffeeGrams, double remainingCoffeeGrams){
 
         int shots, maxShots;
 
@@ -112,8 +112,8 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
      * @param extraShots   number of extra espresso shots.
      * @param price        the price of the drink.
      */
-    private void recordSale(String coffeeType, String size, String brewType, double coffeeGrams,
-                              double milk, double water, ArrayList<BinContent> addOns, int extraShots, double price){
+    public void recordSpecialSale(String coffeeType, String size, String brewType, double coffeeGrams,
+                                  double milk, double water, ArrayList<BinContent> addOns, int extraShots, double price){
 
         int i;
         double extraCoffeeGrams;
@@ -126,7 +126,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
         ingredients.append(String.format("%.2f g beans, %.2f oz milk, %.2f oz water", coffeeGrams, milk, water));
 
         //Build formatted drink info line
-        drinkInfo = String.format("Drink: %s %s (%s)", coffeeType, size, brewType);
+        drinkInfo = String.format("Drink: %s %s (%s)", size, coffeeType, brewType);
 
         //Include extra shot info if any
         if(extraShots > 0){
@@ -242,7 +242,7 @@ public class SpecialCoffeeTruck extends CoffeeTruck {
             System.out.printf("Total Price: $%.2f\n", price);
 
             addToTotalSales(price); //Update truck's total sales
-            recordSale(coffeeType, coffeeSize, brewType, coffeeGrams, milkOz, waterOz, addOns, extraShots, price); //Update sales log
+            recordSpecialSale(coffeeType, coffeeSize, brewType, coffeeGrams, milkOz, waterOz, addOns, extraShots, price); //Update sales log
         }
 
         else

@@ -1,10 +1,7 @@
 package Metthy.View;
 
 import Metthy.Controller.TruckController;
-import Metthy.Model.CoffeeTruck;
-import Metthy.Model.Drink;
-import Metthy.Model.SpecialCoffeeTruck;
-import Metthy.Model.StorageBin;
+import Metthy.Model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,7 +113,12 @@ public class PrepareDrinkPanel extends BasePanel{
 
             String type = (String) drinkTypeCombo.getSelectedItem();
             String size = (String) sizeCombo.getSelectedItem();
-            prepareDrink(type, size);
+
+            if(selectedTruck instanceof SpecialCoffeeTruck)
+                prepareSpecialDrink(type, size);
+
+            else
+                prepareDrink(type, size);
         });
 
         //Bottom Panel
@@ -161,6 +163,8 @@ public class PrepareDrinkPanel extends BasePanel{
         drinkListPanel.add(drinkHeader);
         drinkListPanel.add(Box.createVerticalStrut(10));
 
+        truckController.setBaseDrinkPrices();
+
         for (Drink drink : drinks) {
             JLabel drinkLabel = new JLabel(drink.toString(), SwingConstants.CENTER);
             drinkLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -194,7 +198,7 @@ public class PrepareDrinkPanel extends BasePanel{
 
     private double getCustomBrewRatio(){
 
-        SpinnerNumberModel model = new SpinnerNumberModel(1.0, 0.1, 10.0, 0.1); // default, min, max, step
+        SpinnerNumberModel model = new SpinnerNumberModel(1.0, 0.1, 50.0, 0.1); // default, min, max, step
         JSpinner spinner = new JSpinner(model);
 
         double result = JOptionPane.showConfirmDialog(
@@ -223,7 +227,7 @@ public class PrepareDrinkPanel extends BasePanel{
         return bins;
     }
 
-    public void displayPreparationSteps(String type, String size, String brewType, double price, double[] ingredients){
+    private void displayPreparationSteps(String type, String size, String brewType, double price, double[] ingredients){
 
         StringBuilder steps = new StringBuilder();
 
@@ -237,7 +241,7 @@ public class PrepareDrinkPanel extends BasePanel{
             steps.append(">>> Adding Water...\n");
 
         steps.append(String.format(">>> %s Done!", type));
-        steps.append(String.format("\nTotal Price: $%.2f", price));
+        steps.append(String.format("\nTotal Price: ₱%.2f", price));
 
         JTextArea textArea = new JTextArea(steps.toString());
         textArea.setEditable(false);
@@ -261,21 +265,8 @@ public class PrepareDrinkPanel extends BasePanel{
         String brewType;
 
         //Get brew type and ratios
-        if(selectedTruck instanceof SpecialCoffeeTruck){
-
-            brewType = selectBrewType();
-
-            if(brewType.equals("Custom"))
-                ratio = getCustomBrewRatio();
-
-            else
-                ratio = truckController.getBrewRatio(brewType);
-        }
-
-        else{
-            brewType = "Standard";
-            ratio = truckController.getBrewRatio(brewType); //Regular truck drinks can only brew standard drinks
-        }
+        brewType = "Standard";
+        ratio = truckController.getBrewRatio(brewType); //Regular truck drinks can only brew standard drinks
 
         double[] ingredients = truckController.getRequiredIngredients(type, size, ratio); //Get required ingredients
         StorageBin[] bins = getStorageBins(size); //Get storage bins to use
@@ -285,6 +276,235 @@ public class PrepareDrinkPanel extends BasePanel{
             displayPreparationSteps(type, size, brewType, drink.getPrice(), ingredients);
             truckController.addToTotalSales(selectedTruck, drink.getPrice());
             truckController.recordSale(selectedTruck, type, size, ingredients[0], ingredients[1], ingredients[2], drink.getPrice());
+        }
+
+        else {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Not enough ingredients or cups.\nDrink preparation cancelled.",
+                    "Insufficient Ingredients",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }
+
+    //Yes or No option pane
+    private boolean askYesNo(String question) {
+
+        int result = JOptionPane.showConfirmDialog(
+                null,
+                question,
+                "Special Drink Customization",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        return result == JOptionPane.YES_OPTION;
+    }
+
+    private boolean addSyrup(){
+
+        boolean addSyrupAddOns = askYesNo("Add syrup add-ons?");
+
+        return addSyrupAddOns;
+    }
+
+    private ArrayList<BinContent> selectAddOns(){
+
+        boolean continueAdding = true;
+        ArrayList<Syrup> availableSyrups = truckController.getAvailableSyrup(selectedTruck);
+        ArrayList<BinContent> addOns = new ArrayList<>();
+
+        if (availableSyrups.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No syrup available.");
+            return addOns;
+        }
+
+        while(continueAdding){
+
+            String[] syrupNames = new String[availableSyrups.size()];
+            for (int i = 0; i < availableSyrups.size(); i++) {
+                syrupNames[i] = availableSyrups.get(i).getName();
+            }
+
+            // Let the user pick a syrup
+            String selectedSyrup = (String) JOptionPane.showInputDialog(
+                    null,
+                    "Select a syrup add-on:",
+                    "Syrup Selection",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    syrupNames,
+                    syrupNames.length > 0 ? syrupNames[0] : null
+            );
+
+            if (selectedSyrup == null)
+                break; // user cancelled
+
+            BinContent addOn = null;
+
+            // Find the selected BinContent object
+            for (BinContent syrup : availableSyrups) {
+                if (syrup.getName().equals(selectedSyrup)) {
+                    addOn = syrup;
+                    break;
+                }
+            }
+
+            // Validate and add
+            if (addOn != null && truckController.hasSufficientSyrup(selectedTruck, addOn.getName())) {
+                addOns.add(addOn);
+                addOn.useQuantity(1);
+            }
+
+            else
+                JOptionPane.showMessageDialog(null, "Insufficient syrup for that option.");
+
+            // Ask if user wants to add more
+            int result = JOptionPane.showConfirmDialog(
+                    null,
+                    "Continue adding syrup?",
+                    "Add Another?",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            continueAdding = (result == JOptionPane.YES_OPTION);
+        }
+
+        return addOns;
+    }
+
+    private boolean addExtraShots(){
+
+        boolean addExtraShots = askYesNo("Add extra espresso shots?");
+
+        return addExtraShots;
+    }
+
+    private int selectExtraShots(double coffeeGrams, double remainingCoffeeGrams){
+
+        int maxShots;
+
+        maxShots = (int) (remainingCoffeeGrams / coffeeGrams);
+
+        if (maxShots == 0) {
+            JOptionPane.showMessageDialog(null, "Not enough beans for extra shots.");
+            return 0;
+        }
+
+        // Spinner for selecting shots
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, maxShots, 1));
+        spinner.setPreferredSize(new Dimension(100, 25));
+
+        int option = JOptionPane.showOptionDialog(
+                null,
+                spinner,
+                "Enter number of extra espresso shots (0 - " + maxShots + "):",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                null,
+                null
+        );
+
+        if (option == JOptionPane.OK_OPTION) {
+            return (int) spinner.getValue();
+        }
+
+        return 0;  //User cancelled
+    }
+
+    private void displaySpecialPreparationSteps(String type, String size, String brewType, double price, double[] ingredients,
+                                                ArrayList<BinContent> addOns, int extraShots, double extraShotCost, double extraCoffeeGrams){
+
+        StringBuilder steps = new StringBuilder();
+
+        steps.append(String.format(">>> Preparing %s Cup...\n", size));
+        steps.append(String.format(">>> Brewing %s Espresso - %.2f grams of coffee...\n", brewType, ingredients[0]));
+
+        if (ingredients[1] > 0)
+            steps.append(">>> Adding Milk...\n");
+
+        if (type.equalsIgnoreCase("Americano"))
+            steps.append(">>> Adding Water...\n");
+
+        if(!addOns.isEmpty()){
+            for(BinContent addOn : addOns){
+                steps.append(">>> Adding " + addOn.getName() + " Syrup\n");
+                price += truckController.getSyrupOzPrice();
+            }
+        }
+
+        if(extraShots != 0){
+            steps.append(String.format(">>> Added %d extra shot%s (%.2f g beans)\n", extraShots, extraShots == 1 ? "" : "s", extraCoffeeGrams));
+            price += extraShotCost;
+        }
+
+        steps.append(String.format(">>> %s Done!", type));
+        steps.append(String.format("\nTotal Price: ₱%.2f", price));
+
+        JTextArea textArea = new JTextArea(steps.toString());
+        textArea.setEditable(false);
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(400, 200));
+
+        JOptionPane.showMessageDialog(
+                null,
+                scrollPane,
+                "Drink Preparation",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    private void prepareSpecialDrink(String type, String size){
+
+        ArrayList<BinContent> addOns = new ArrayList<>();
+        double coffeeGrams, remainingCoffeeGrams, extraCoffeeGrams = 0, extraShotCost = 0;
+        int extraShots = 0;
+
+        Drink drink = truckController.getDrink(type, size); //Get drink object
+
+        double ratio;
+        String brewType;
+
+        //Get brew type and ratios
+        brewType = selectBrewType();
+
+        if(brewType.equals("Custom"))
+            ratio = getCustomBrewRatio();
+
+        else
+            ratio = truckController.getBrewRatio(brewType);
+
+        double[] ingredients = truckController.getRequiredIngredients(type, size, ratio); //Get required ingredients
+        StorageBin[] bins = getStorageBins(size); //Get storage bins to use
+
+        if (truckController.hasSufficientIngredients(bins, ingredients)) {
+
+            coffeeGrams = bins[0].getContent().getQuantity(); //Get coffee beans prior to using
+            truckController.useIngredients(bins, ingredients); //Use ingredients from bins
+            remainingCoffeeGrams = bins[0].getContent().getQuantity(); //Get remaining coffee beans
+
+            boolean addOn = addSyrup();
+
+            if(addOn)
+                addOns = selectAddOns();
+
+            boolean extra = addExtraShots();
+
+            if(extra){
+                extraShots = selectExtraShots(coffeeGrams, remainingCoffeeGrams);
+                extraCoffeeGrams = coffeeGrams * extraShots;
+                bins[0].useQuantity(extraCoffeeGrams);
+                extraShotCost = extraShots * truckController.getExtraShotPrice();
+            }
+
+            displaySpecialPreparationSteps(type, size, brewType, drink.getPrice(), ingredients, addOns, extraShots, extraShotCost, extraCoffeeGrams);
+
+            double price = drink.getPrice() + addOns.size() * truckController.getSyrupOzPrice() + extraShotCost;
+            truckController.addToTotalSales(selectedTruck, price);
+            truckController.recordSpecialSale((SpecialCoffeeTruck) selectedTruck, type, size, brewType,
+                    ingredients[0], ingredients[1], ingredients[2], addOns, extraShots, price);
         }
 
         else {

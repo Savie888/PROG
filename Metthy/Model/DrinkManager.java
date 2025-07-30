@@ -1,5 +1,6 @@
 package Metthy.Model;
 
+import Metthy.Controller.TruckController;
 import Metthy.View.DrinkView;
 
 import java.util.ArrayList;
@@ -19,12 +20,16 @@ import java.util.ArrayList;
  */
 public class DrinkManager {
 
+    private final TruckController truckController;
+
     /**
      * List of available drinks that can be prepared by the coffee trucks.
      */
     private final ArrayList<Drink> drinks;
 
     private final DrinkView drinkView;
+
+    private double cupPrice;
 
     /**
      * Price per gram of coffee beans.
@@ -51,38 +56,23 @@ public class DrinkManager {
     /**
      * Constructs a new DrinkManager and sets up the drink menu
      */
-    public DrinkManager(){
+    public DrinkManager(TruckController truckController){
 
+        this.truckController = truckController;
         drinks = new ArrayList<>();
         drinkView = new DrinkView();
 
         initializeDrinkMenu(); //Set up the drink menu
     }
 
-    /**
-     * Prompts the user to input the unit prices for coffee ingredients (coffee beans, milk, and water).
-     */
-    public void setIngredientPrices(){
+    public void setBaseDrinkPrices(){
 
-        do{
-            coffeeGramPrice = drinkView.enterCoffeeBeanGramPrice();
-        } while(coffeeGramPrice < 0);
+        for(Drink drink : drinks){
 
-        do{
-            milkOzPrice = drinkView.enterMilkOzPrice();
-        } while(milkOzPrice < 0);
-
-        do{
-            waterOzPrice = drinkView.enterWaterOzPrice();
-        } while(waterOzPrice < 0);
-
-        do{
-            syrupOzPrice = drinkView.enterSyrupOzPrice();
-        } while(syrupOzPrice < 0);
-
-        do{
-            extraShotPrice = drinkView.enterExtraShotPrice();
-        } while(extraShotPrice < 0);
+            double[] ingredients = getBaseIngredients(drink.getType(), drink.getSize());
+            double price = calculateCoffeeCost(drink.getType(), ingredients, 18.0); //Calculate base coffee cost
+            drink.setPrice(price);
+        }
     }
 
     /**
@@ -316,6 +306,7 @@ public class DrinkManager {
         adjustedIngredients[0] = getCoffeeBeanGrams(ingredients, ratio);
         adjustedIngredients[1] = getMilkOz(ingredients);
         adjustedIngredients[2] = getWaterOz(coffeeType, ingredients, ratio);
+        adjustedIngredients[3] = 1;
 
         return adjustedIngredients;
     }
@@ -398,16 +389,14 @@ public class DrinkManager {
         return drink;
     }
 
+    public void setCupPrice(double price){
 
+        cupPrice = price;
+    }
 
     public void setCoffeeGramPrice(double price){
 
         coffeeGramPrice = price;
-    }
-
-    public double getCoffeeGramPrice(){
-
-        return coffeeGramPrice;
     }
 
     public void setMilkOzPrice(double price){
@@ -418,6 +407,16 @@ public class DrinkManager {
     public void setWaterOzPrice(double price){
 
         waterOzPrice = price;
+    }
+
+    public void setSyrupOzPrice(double price){
+
+        syrupOzPrice = price;
+    }
+
+    public void setExtraShotPrice(double price){
+
+        extraShotPrice = price;
     }
 
     public double getSyrupOzPrice(){
@@ -440,11 +439,12 @@ public class DrinkManager {
      */
     public double calculateCoffeeCost(String coffeeType, double[] ingredients, double ratio){
 
+        double cupCost = cupPrice;
         double coffeeCost = coffeeGramPrice * getCoffeeBeanGrams(ingredients, ratio);
         double milkCost = milkOzPrice * getMilkOz(ingredients);
         double waterCost = waterOzPrice * getWaterOz(coffeeType, ingredients, ratio);
 
-        return coffeeCost + milkCost + waterCost;
+        return cupCost + coffeeCost + milkCost + waterCost;
     }
 
     public ArrayList<Drink> getDrinks(){
@@ -480,5 +480,37 @@ public class DrinkManager {
         }
 
         return ratio;
+    }
+
+    public ArrayList<Syrup> getAvailableSyrup(ArrayList<StorageBin> bins){
+
+        ArrayList<Syrup> availableSyrups = new ArrayList<>();
+
+        for (int i = 8; i < bins.size(); i++) {
+
+            StorageBin bin = bins.get(i);
+            BinContent content = bin.getContent();
+
+            if (content instanceof Syrup && content.getQuantity() > 0) {
+                availableSyrups.add((Syrup) content);
+            }
+        }
+
+        return availableSyrups;
+    }
+
+    public boolean hasSufficientSyrup(CoffeeTruck truck, String syrupType){
+
+        boolean validAddOn = true;
+
+        StorageBin syrupBin = truckController.findBin(truck, syrupType); //Find the bin containing the specified add-on
+
+        if(syrupBin == null)
+            validAddOn = false;
+
+        if(syrupBin.getItemQuantity() < 1)
+            validAddOn = false;
+
+        return validAddOn;
     }
 }

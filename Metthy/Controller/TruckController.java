@@ -17,7 +17,7 @@ public class TruckController{
 
         this.menuView = new MenuView(this);
         this.truckManager = new TruckManager();
-        this.drinkManager = new DrinkManager();
+        this.drinkManager = new DrinkManager(this);
     }
 
     //PANEL DISPLAYS
@@ -168,6 +168,11 @@ public class TruckController{
 
     //DRINK MANAGEMENT
 
+    public void setCupPrice(double price){
+
+        drinkManager.setCupPrice(price);
+    }
+
     public void setCoffeeGramPrice(double price){
 
         drinkManager.setCoffeeGramPrice(price);
@@ -181,6 +186,31 @@ public class TruckController{
     public void setWaterOzPrice(double price){
 
         drinkManager.setWaterOzPrice(price);
+    }
+
+    public void setSyrupOzPrice(double price){
+
+        drinkManager.setSyrupOzPrice(price);
+    }
+
+    public double getSyrupOzPrice(){
+
+        return drinkManager.getSyrupOzPrice();
+    }
+
+    public void setExtraShotPrice(double price){
+
+        drinkManager.setExtraShotPrice(price);
+    }
+
+    public double getExtraShotPrice(){
+
+        return drinkManager.getExtraShotPrice();
+    }
+
+    public void setBaseDrinkPrices(){
+
+        drinkManager.setBaseDrinkPrices();
     }
 
     public Drink getDrink(String type, String size){
@@ -226,6 +256,23 @@ public class TruckController{
     public void recordSale(CoffeeTruck truck, String type, String size, double coffeeGrams, double milk, double water, double price){
 
         truck.recordSale(type, size, coffeeGrams, milk, water, price);
+    }
+
+    public void recordSpecialSale(SpecialCoffeeTruck truck, String type, String size, String brewType, double coffeeGrams,
+                                  double milk, double water, ArrayList<BinContent> addOns, int extraShots, double price){
+
+        truck.recordSpecialSale(type, size, brewType, coffeeGrams, milk, water, addOns, extraShots, price);
+    }
+
+    public ArrayList<Syrup> getAvailableSyrup(CoffeeTruck truck){
+
+        return drinkManager.getAvailableSyrup(truck.getBins());
+    }
+
+    public boolean hasSufficientSyrup(CoffeeTruck truck, String syrupType){
+
+
+        return drinkManager.hasSufficientSyrup(truck, syrupType);
     }
 
     /*

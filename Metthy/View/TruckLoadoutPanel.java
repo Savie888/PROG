@@ -4,6 +4,7 @@ import Metthy.Controller.TruckController;
 import Metthy.Model.BinContent;
 import Metthy.Model.CoffeeTruck;
 import Metthy.Model.StorageBin;
+import Metthy.Model.Syrup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -149,6 +150,73 @@ public class TruckLoadoutPanel extends BasePanel {
         updateUIForCurrentBin();
     }
 
+    private BinContent createSyrup() {
+
+        String name = JOptionPane.showInputDialog(
+                null,
+                "Enter syrup name (e.g., Vanilla, Grape):",
+                "Create Syrup",
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (name == null || name.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No name entered. Syrup creation cancelled.", "Cancelled", JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+
+        return new Syrup(name.trim());
+    }
+
+    private void modifySyrupBin(int binIndex) {
+
+        int binNumber = binIndex + 1;
+
+        StorageBin bin = truckController.getBinByNumber(truck, binNumber);
+
+        JOptionPane.showMessageDialog(null, "Setup for Syrup Bin #" + binNumber, "Bin Setup", JOptionPane.INFORMATION_MESSAGE);
+
+        //Let user create a syrup
+        BinContent content = createSyrup();
+
+        if (content == null)
+            return; // User cancelled
+
+        int max = content.getCapacity();
+        double quantity = -1;
+
+        //Ask user to enter a quantity
+        boolean valid = false;
+
+        while (!valid) {
+            String input = JOptionPane.showInputDialog(
+                    null,
+                    "Enter quantity to store (Max: " + max + ")",
+                    "Quantity Entry",
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            if (input == null) return; // cancelled
+
+            try {
+                quantity = Double.parseDouble(input);
+                if (quantity < 0 || quantity > max) {
+                    JOptionPane.showMessageDialog(null, "Invalid quantity. Try again.");
+                } else {
+                    valid = true;
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please enter a valid number.");
+            }
+        }
+
+        // Step 3: Assign to bin
+        truck.assignItemToBin(bin, content, quantity);
+        JOptionPane.showMessageDialog(null,
+                String.format("Bin #%d loaded with %.2f oz of %s syrup.", binNumber, quantity, content.getName()),
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
     private void updateUIForCurrentBin(){
 
         if(currentBinIndex >= bins.size()){
@@ -179,24 +247,30 @@ public class TruckLoadoutPanel extends BasePanel {
 
         ingredientBox.removeAllItems();
 
-        for(int i = 0; i < ingredients.size(); i++){
+        if(currentBinIndex == 8 || currentBinIndex == 9)
+            modifySyrupBin(currentBinIndex);
 
-            BinContent ingredient = ingredients.get(i);
-            ingredientBox.addItem(ingredient);
-        }
+        else{
 
-        ingredientBox.addActionListener(e -> {
+            for(int i = 0; i < ingredients.size(); i++){
 
-            BinContent selected = (BinContent) ingredientBox.getSelectedItem();
-
-            if (selected != null) {
-                int capacity = selected.getCapacity();
-                double currentValue = (double) quantitySpinner.getValue();
-                double newValue = Math.min(currentValue, capacity);
-                quantitySpinner.setModel(new SpinnerNumberModel(newValue, 0.0, capacity, 1.0));
-                capacityLabel.setText("Max Capacity: " + capacity);
+                BinContent ingredient = ingredients.get(i);
+                ingredientBox.addItem(ingredient);
             }
-        });
+
+            ingredientBox.addActionListener(e -> {
+
+                BinContent selected = (BinContent) ingredientBox.getSelectedItem();
+
+                if (selected != null) {
+                    int capacity = selected.getCapacity();
+                    double currentValue = (double) quantitySpinner.getValue();
+                    double newValue = Math.min(currentValue, capacity);
+                    quantitySpinner.setModel(new SpinnerNumberModel(newValue, 0.0, capacity, 1.0));
+                    capacityLabel.setText("Max Capacity: " + capacity);
+                }
+            });
+        }
 
         formPanel.revalidate();
         formPanel.repaint();
