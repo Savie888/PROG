@@ -7,6 +7,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 
+/**
+ * BasePanel is an abstract utility JPanel that provides reusable methods
+ * for creating styled buttons with hover animations and sound effects.
+ */
+
 public class BasePanel extends JPanel {
 
     protected JButton createButton(String text) {
@@ -31,6 +36,11 @@ public class BasePanel extends JPanel {
         return button;
     }
 
+     /**
+     * Plays a sound from a specified file located in the resources directory.
+     *
+     * @param soundFileName the name of the sound file
+     */
     protected void playSound(String soundFileName) {
         try {
             URL soundURL = getClass().getResource(soundFileName);
@@ -77,6 +87,13 @@ public class BasePanel extends JPanel {
         }
     }
 
+    /**
+     * Adds a hover animation to the specified JButton.
+     * The button enlarges when hovered and returns to its original size when the mouse exits.
+     *
+     * @param btn     the JButton to animate
+     * @param ogSize  the original size of the button
+     */
     protected void addButtonHoverAnimation(JButton btn, Dimension ogSize) {
 
         Dimension hoverSize = new Dimension(310, 100);
@@ -99,6 +116,15 @@ public class BasePanel extends JPanel {
         });
     }
 
+    /**
+     * Performs animated resizing of a JButton between two sizes over a number of steps.
+     *
+     * @param button       the button to animate
+     * @param from         the starting size
+     * @param to           the target size
+     * @param steps        number of animation frames/steps
+     * @param currentTimer reference holder for stopping previous animations
+     */
     protected void startAnimation(JButton button, Dimension from, Dimension to, int steps, Timer[] currentTimer) {
         if (currentTimer[0] != null && currentTimer[0].isRunning()) {
             currentTimer[0].stop();
