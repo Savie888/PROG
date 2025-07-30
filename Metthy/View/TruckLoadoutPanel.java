@@ -10,6 +10,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * A panel that allows users to load ingredients into the storage bins of a Coffee Truck.
+ * Used during truck creation for both regular and special trucks.
+ */
 public class TruckLoadoutPanel extends BasePanel {
 
     private final MainController mainController;
@@ -217,6 +221,10 @@ public class TruckLoadoutPanel extends BasePanel {
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Updates the UI with ingredient choices and bin status for the current bin.
+     */
+
     private void updateUIForCurrentBin(){
 
         if(currentBinIndex >= bins.size()){
@@ -276,6 +284,9 @@ public class TruckLoadoutPanel extends BasePanel {
         formPanel.repaint();
     }
 
+    /**
+     * Handles confirmation of selected ingredient and quantity for the current bin.
+     */
     private void handleConfirm(){
 
         playSound("select_sound_effect.wav");
@@ -297,6 +308,9 @@ public class TruckLoadoutPanel extends BasePanel {
         updateUIForCurrentBin();
     }
 
+    /**
+     * Skips the current bin without assigning any ingredient.
+     */
     private void handleSkip(){
 
         playSound("select_sound_effect.wav");
@@ -308,6 +322,11 @@ public class TruckLoadoutPanel extends BasePanel {
         updateUIForCurrentBin();
     }
 
+    /**
+     * Prompts the user to decide whether to create another truck after finishing loadout.
+     *
+     * @return the option selected by the user: 0 for Yes, 1 for No
+     */
     public int repeat(){
 
         int choice = JOptionPane.showOptionDialog(
