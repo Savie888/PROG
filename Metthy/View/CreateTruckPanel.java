@@ -5,6 +5,11 @@ import Metthy.Model.CoffeeTruck;
 
 import javax.swing.*;
 import java.awt.*;
+/**
+ * CreateTruckPanel is a GUI panel that allows the user to create a CoffeeTruck.
+ * It includes input fields for name, location, truck type, and displays validation errors.
+ * It also provides options for setting up storage bins and default loadouts.
+ */
 
 public class CreateTruckPanel extends BasePanel {
 
@@ -198,6 +203,10 @@ public class CreateTruckPanel extends BasePanel {
         return set;
     }
 
+    /**
+     * Clears all form fields and resets error messages.
+     */
+
     private void resetFields(){
 
         nameField.setText("");
@@ -205,6 +214,11 @@ public class CreateTruckPanel extends BasePanel {
         typeBox.setSelectedIndex(0);
         errorLabel.setText(" ");
     }
+
+    /**
+     * Prompts the user to create another truck or return to the main menu.
+     * Resets fields regardless of option.
+     */
 
     private void repeat(){
 

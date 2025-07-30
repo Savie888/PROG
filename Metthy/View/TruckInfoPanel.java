@@ -8,7 +8,10 @@ import Metthy.Model.StorageBin;
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * A panel that displays detailed information about a selected Coffee Truck,
+ * including its type, name, location, storage bins, transactions, and total sales.
+ */
 public class TruckInfoPanel extends BasePanel{
 
     private JPanel infoDisplayPanel;
@@ -54,6 +57,14 @@ public class TruckInfoPanel extends BasePanel{
         this.setLayout(new BorderLayout());
         this.add(backgroundPanel, BorderLayout.CENTER);
     }
+
+    
+
+    /**
+     * Displays information about a selected truck on the panel.
+     *
+     * @param truck the CoffeeTruck object to display information for
+     */
 
     public void displayTruckInfo(CoffeeTruck truck){
 

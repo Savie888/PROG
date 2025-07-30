@@ -7,6 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Panel for maintaining truck-related settings and storage bins.
+ * Allows restocking, emptying, renaming, and relocating trucks.
+ */
 public class TruckMaintenancePanel extends BasePanel {
 
     private final MainController truckController;
@@ -181,6 +185,11 @@ public class TruckMaintenancePanel extends BasePanel {
         this.selectedTruck = truck;
     }
 
+    /**
+     * Prompts the user to choose between selecting all bins or one.
+     *
+     * @return selected option index
+     */
     private int selectBinOption(){
 
         String[] options = {"Select all bins", "Select one bin"};
@@ -198,6 +207,13 @@ public class TruckMaintenancePanel extends BasePanel {
 
         return result;
     }
+
+    /**
+     * Prompts user to choose a bin number.
+     *
+     * @param truck the truck to select a bin from
+     * @return selected bin number or -1 if cancelled
+     */
 
     private int selectBin(CoffeeTruck truck){
 
@@ -226,6 +242,12 @@ public class TruckMaintenancePanel extends BasePanel {
         else
             return -1; //Cancelled
     }
+
+    /**
+     * Prompts user to select restock mode.
+     *
+     * @return 0 for full restock, 1 for partial
+     */
 
     private int selectRestockMode(){
 
@@ -276,6 +298,10 @@ public class TruckMaintenancePanel extends BasePanel {
             return -1; //User cancelled
     }
 
+    /**
+     * Restocks a selected bin of the truck.
+     */
+
     private void restock(int binNumber){
 
         double quantity;
@@ -304,6 +330,9 @@ public class TruckMaintenancePanel extends BasePanel {
         }
     }
 
+     /**
+     * Restocks all bins of the truck.
+     */
     private void restockAll(){
 
         int mode = selectRestockMode();
